@@ -10,6 +10,7 @@
 .editorconfig
 
 # Dev tooling
+/build
 /node_modules
 /vendor
 composer.json

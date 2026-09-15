@@ -89,4 +89,9 @@ jobs:
             echo "::error::class-updater.php leaked into the wp.org package"
             exit 1
           fi
+          # A previous build left in the tree must not end up inside the next one.
+          if unzip -l "$zip" | grep -qE '\.zip$'; then
+            echo "::error::a ZIP was packaged inside the release package"
+            exit 1
+          fi
           echo "Package contents verified: $zip"
