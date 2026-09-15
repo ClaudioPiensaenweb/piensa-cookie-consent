@@ -33,6 +33,9 @@ Findings from a security and scalability review.
 ### Added
 - A retention period for consent records, two years by default, purged daily
   and cleared on deactivation.
+- A health check warning for the one case the fix above does not cover:
+  geo-targeting decides per visitor whether the banner runs at all, so with a
+  page cache in front the first version generated is served to everyone.
 
 ## [1.1.0] - 2026-09-15
 

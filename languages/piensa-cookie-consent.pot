@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Piensa Cookie Consent 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/piensaenweb/piensa-cookie-consent/issues\n"
-"POT-Creation-Date: 2026-09-15 12:52+0000\n"
+"POT-Creation-Date: 2026-09-15 13:03+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -764,28 +764,32 @@ msgstr ""
 msgid "Not authorized"
 msgstr ""
 
-#: includes/class-admin.php:2355
+#: includes/class-admin.php:2377
 msgid "The CMP is switched off by geo-targeting. Check that this meets your obligations."
 msgstr ""
 
-#: includes/class-admin.php:2358
+#: includes/class-admin.php:2380
 msgid "Geo-targeting is set to a custom list, but no countries are defined."
 msgstr ""
 
-#: includes/class-admin.php:2362
+#: includes/class-admin.php:2388
+msgid "Geo-targeting is on and a page cache is active. The cache cannot tell visitors apart, so it may serve the unblocked version to a visitor the banner should have been shown to. Either exclude the site from page caching or set geo-targeting to always show."
+msgstr ""
+
+#: includes/class-admin.php:2392
 msgid "The consent log is switched off."
 msgstr ""
 
 #. translators: %d: number of domains without a category
-#: includes/class-admin.php:2375
+#: includes/class-admin.php:2405
 msgid "%d domains are still unclassified."
 msgstr ""
 
-#: includes/class-admin.php:2380
+#: includes/class-admin.php:2410
 msgid "No cookie policy URL is set."
 msgstr ""
 
-#: includes/class-admin.php:2384
+#: includes/class-admin.php:2414
 msgid "No privacy policy URL is set."
 msgstr ""
 

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Piensa Cookie Consent 1.0.0\n"
-"PO-Revision-Date: 2026-09-15 12:52+0000\n"
+"PO-Revision-Date: 2026-09-15 13:03+0000\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -766,28 +766,32 @@ msgstr "Informe"
 msgid "Not authorized"
 msgstr "No autorizado"
 
-#: includes/class-admin.php:2355
+#: includes/class-admin.php:2377
 msgid "The CMP is switched off by geo-targeting. Check that this meets your obligations."
 msgstr "El CMP está desactivado por geolocalización. Verifica cumplimiento."
 
-#: includes/class-admin.php:2358
+#: includes/class-admin.php:2380
 msgid "Geo-targeting is set to a custom list, but no countries are defined."
 msgstr "Geo-targeting en modo custom sin países definidos."
 
-#: includes/class-admin.php:2362
+#: includes/class-admin.php:2388
+msgid "Geo-targeting is on and a page cache is active. The cache cannot tell visitors apart, so it may serve the unblocked version to a visitor the banner should have been shown to. Either exclude the site from page caching or set geo-targeting to always show."
+msgstr "El geo-targeting está activo y hay una cache de página en marcha. La cache no distingue visitantes, asi que puede servir la versión sin bloqueo a alguien a quien habria que mostrarle el aviso. Excluye el sitio de la cache de página o pon el geo-targeting en mostrar siempre."
+
+#: includes/class-admin.php:2392
 msgid "The consent log is switched off."
 msgstr "Registro de consentimiento desactivado."
 
 #. translators: %d: number of domains without a category
-#: includes/class-admin.php:2375
+#: includes/class-admin.php:2405
 msgid "%d domains are still unclassified."
 msgstr "Hay %d dominios sin clasificar."
 
-#: includes/class-admin.php:2380
+#: includes/class-admin.php:2410
 msgid "No cookie policy URL is set."
 msgstr "No hay URL de política de cookies."
 
-#: includes/class-admin.php:2384
+#: includes/class-admin.php:2414
 msgid "No privacy policy URL is set."
 msgstr "No hay URL de política de privacidad."
 

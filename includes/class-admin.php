@@ -2347,6 +2347,28 @@ class Piensa_Cookie_Consent_Admin {
 		wp_send_json_success( [ 'count' => count( $normalized ) ] );
 	}
 
+	/**
+	 * Whether a page cache appears to be running.
+	 *
+	 * Detection is best-effort: the point is to raise the question with the
+	 * site owner, not to be authoritative about which plugin is installed.
+	 *
+	 * @return bool
+	 */
+	private static function page_cache_detected() {
+		if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
+			return true;
+		}
+
+		foreach ( [ 'LSCWP_V', 'WPO_VERSION', 'W3TC', 'WP_ROCKET_VERSION', 'WPFC_MAIN_PATH', 'CACHE_ENABLER_VERSION' ] as $marker ) {
+			if ( defined( $marker ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private function get_health_issues() {
 		$issues   = [];
 		$settings = self::get_settings();
@@ -2356,6 +2378,14 @@ class Piensa_Cookie_Consent_Admin {
 		}
 		if ( $settings['geo_mode'] === 'custom' && trim( $settings['geo_countries'] ) === '' ) {
 			$issues[] = esc_html__( 'Geo-targeting is set to a custom list, but no countries are defined.', 'piensa-cookie-consent' );
+		}
+
+		// Geo-targeting decides per visitor whether the banner and the blocker
+		// run at all, which is the one thing left that makes the page vary by
+		// who is asking. With a page cache in front, whichever version is
+		// generated first is served to everyone.
+		if ( in_array( $settings['geo_mode'], [ 'eea', 'custom' ], true ) && self::page_cache_detected() ) {
+			$issues[] = esc_html__( 'Geo-targeting is on and a page cache is active. The cache cannot tell visitors apart, so it may serve the unblocked version to a visitor the banner should have been shown to. Either exclude the site from page caching or set geo-targeting to always show.', 'piensa-cookie-consent' );
 		}
 
 		if ( $settings['enable_consent_log'] === false ) {

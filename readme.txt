@@ -93,6 +93,7 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Consent records are purged daily past a retention period, two years by default and configurable. Keeping them indefinitely is its own compliance problem.
 * The CSV export covers every record. It silently stopped at the first thousand, which made it poor evidence of anything.
 * Settings are read once per request rather than on every call.
+* The health check warns when geo-targeting and a page cache are both active, which is the one remaining case where the page still varies by visitor.
 
 = 1.1.0 =
 * Third-party resources the plugin does not recognise are now blocked until consent is given, instead of being allowed through. This is what the ePrivacy consent requirement asks for. A technical exceptions list, pre-filled with asset CDNs and font providers, keeps layout and scripts working.
