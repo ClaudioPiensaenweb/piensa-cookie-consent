@@ -53,9 +53,9 @@ class Piensa_Cookie_Consent_Migrator {
 
 		// Run every step the site is behind on, oldest first, so an install
 		// several versions old ends up in the same state as a recent one.
-		foreach ( self::get_steps() as $version => $method ) {
+		foreach ( self::get_steps() as $version => $step ) {
 			if ( $stored < $version ) {
-				call_user_func( [ self::class, $method ] );
+				$step();
 			}
 		}
 
@@ -65,11 +65,16 @@ class Piensa_Cookie_Consent_Migrator {
 	/**
 	 * Migration steps, keyed by the schema version they bring the site up to.
 	 *
-	 * @return array<int, string> Version => method name.
+	 * Closures rather than callable arrays, so static analysis can see which
+	 * methods are reachable.
+	 *
+	 * @return array<int, callable(): void> Version => step.
 	 */
 	private static function get_steps() {
 		return [
-			2 => 'migrate_to_2',
+			2 => static function () {
+				self::migrate_to_2();
+			},
 		];
 	}
 
