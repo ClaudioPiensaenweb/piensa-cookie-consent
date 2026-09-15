@@ -3,7 +3,7 @@
  * Plugin Name:       Piensa Cookie Consent
  * Plugin URI:        https://github.com/ClaudioPiensaenweb/piensa-cookie-consent
  * Description:       GDPR and ePrivacy cookie consent banner with Google Consent Mode v2, automatic script blocking, cookie scanning, geo-targeting and a consent log.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Piensaenweb
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'PIENSA_COOKIE_CONSENT_VERSION', '1.0.0' );
+define( 'PIENSA_COOKIE_CONSENT_VERSION', '1.1.0' );
 define( 'PIENSA_COOKIE_CONSENT_FILE', __FILE__ );
 define( 'PIENSA_COOKIE_CONSENT_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PIENSA_COOKIE_CONSENT_URL', plugin_dir_url( __FILE__ ) );

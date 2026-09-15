@@ -32,6 +32,8 @@ class Piensa_Cookie_Consent_Blocker {
 		$this->placeholder_button = $settings['placeholder_button'];
 		$this->domain_overrides   = isset( $settings['domain_overrides'] ) && is_array( $settings['domain_overrides'] ) ? $settings['domain_overrides'] : [];
 		$this->site_host          = wp_parse_url( home_url(), PHP_URL_HOST );
+		$this->block_unknown      = ! empty( $settings['block_unknown_third_party'] );
+		$this->allowed_domains    = $this->parse_domains( isset( $settings['allowed_domains'] ) ? $settings['allowed_domains'] : '' );
 
 		if ( ! Piensa_Cookie_Consent_Geo::should_show_cmp( $settings ) ) {
 			$this->enabled = false;
@@ -70,7 +72,7 @@ class Piensa_Cookie_Consent_Blocker {
 		$category = $this->categorize_domain( $host );
 		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
 
-		if ( ! $this->should_block_category( $category ) && ! $this->is_domain_blocked( $src_url ) ) {
+		if ( ! $this->should_block_category( $category, $host ) && ! $this->is_domain_blocked( $src_url ) ) {
 			return $full_tag;
 		}
 
@@ -126,7 +128,7 @@ class Piensa_Cookie_Consent_Blocker {
 		$category = $this->categorize_domain( $host );
 		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
 
-		if ( ! $this->should_block_category( $category ) ) {
+		if ( ! $this->should_block_category( $category, $host ) && ! $this->is_domain_blocked( $src_url ) ) {
 			return $full_tag;
 		}
 
@@ -231,7 +233,7 @@ class Piensa_Cookie_Consent_Blocker {
 		$category = $this->categorize_domain( $host );
 		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
 
-		if ( ! $this->should_block_category( $category ) && ! $this->is_domain_blocked( $src_url ) ) {
+		if ( ! $this->should_block_category( $category, $host ) && ! $this->is_domain_blocked( $src_url ) ) {
 			return $full_tag;
 		}
 
@@ -262,7 +264,7 @@ class Piensa_Cookie_Consent_Blocker {
 		$category = $this->categorize_domain( $host );
 		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
 
-		if ( ! $this->should_block_category( $category ) && ! $this->is_domain_blocked( $href_url ) ) {
+		if ( ! $this->should_block_category( $category, $host ) && ! $this->is_domain_blocked( $href_url ) ) {
 			return $full_tag;
 		}
 
@@ -380,11 +382,89 @@ class Piensa_Cookie_Consent_Blocker {
 		return 'unknown';
 	}
 
-	private function should_block_category( $category ) {
-		if ( $category === 'unknown' || $category === 'necessary' ) {
+	/**
+	 * Whether a resource must be held back until consent is given.
+	 *
+	 * A domain the plugin does not recognise used to be let through, which
+	 * meant any third party it had never seen loaded before the visitor chose.
+	 * Unrecognised third parties are now blocked by default; first-party
+	 * resources and the technical exceptions list are not.
+	 *
+	 * @param string $category Category resolved for the host.
+	 * @param string $host     Host the resource is loaded from.
+	 *
+	 * @return bool
+	 */
+	private function should_block_category( $category, $host = '' ) {
+		if ( $category === 'necessary' ) {
 			return false;
 		}
 
-		return ! in_array( $category, $this->allowed_categories, true );
+		if ( $category !== 'unknown' ) {
+			return ! in_array( $category, $this->allowed_categories, true );
+		}
+
+		if ( ! $this->block_unknown ) {
+			return false;
+		}
+
+		if ( ! $this->is_third_party( $host ) || $this->is_domain_allowed( $host ) ) {
+			return false;
+		}
+
+		// Unclassified third parties are treated as marketing, the category
+		// that requires the most explicit consent. Once marketing is granted
+		// they load normally.
+		return ! in_array( 'marketing', $this->allowed_categories, true );
+	}
+
+	/**
+	 * Whether a host belongs to someone other than this site.
+	 *
+	 * @param string $host Host to test.
+	 *
+	 * @return bool
+	 */
+	private function is_third_party( $host ) {
+		if ( ! $host || ! $this->site_host ) {
+			return false;
+		}
+
+		$host = strtolower( $host );
+		$site = strtolower( $this->site_host );
+
+		if ( $host === $site ) {
+			return false;
+		}
+
+		// A subdomain of the site is still the site.
+		return substr( $host, - strlen( $site ) - 1 ) !== '.' . $site;
+	}
+
+	/**
+	 * Whether a host is on the technical exceptions list.
+	 *
+	 * @param string $host Host to test.
+	 *
+	 * @return bool
+	 */
+	private function is_domain_allowed( $host ) {
+		if ( ! $host ) {
+			return false;
+		}
+
+		$host = strtolower( $host );
+
+		foreach ( $this->allowed_domains as $allowed ) {
+			$allowed = strtolower( trim( $allowed ) );
+			if ( $allowed === '' ) {
+				continue;
+			}
+			if ( $host === $allowed || substr( $host, - strlen( $allowed ) - 1 ) === '.' . $allowed ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

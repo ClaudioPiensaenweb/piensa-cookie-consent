@@ -382,11 +382,51 @@ function sanitizeLang(value, fallback) {
     return fallback || 'es';
 }
 
-function buildTranslations(languageConfig, sectionsEs, sectionsEn, _policy, _brand) {
+// The banner has to link to the cookie policy: informing the visitor before
+// they choose is the whole point of asking. The URLs are configured in the
+// admin, and the footer is left empty when neither is set.
+function buildFooter(policy, brand, labels) {
+    const links = [];
+
+    if (policy && policy.cookiePolicyUrl) {
+        links.push('<a href="' + escapeAttribute(policy.cookiePolicyUrl) + '">' + escapeText(labels.cookiePolicy) + '</a>');
+    }
+
+    if (policy && policy.privacyPolicyUrl) {
+        links.push('<a href="' + escapeAttribute(policy.privacyPolicyUrl) + '">' + escapeText(labels.privacyPolicy) + '</a>');
+    }
+
+    if (brand && brand.name && !brand.hide) {
+        links.push(escapeText(brand.name));
+    }
+
+    return links.join(' &middot; ');
+}
+
+function escapeText(value) {
+    const node = document.createElement('span');
+    node.textContent = String(value == null ? '' : value);
+    return node.innerHTML;
+}
+
+function escapeAttribute(value) {
+    return escapeText(value).replace(/"/g, '&quot;');
+}
+
+function buildTranslations(languageConfig, sectionsEs, sectionsEn, policy, brand) {
     const texts = (languageConfig && languageConfig.texts) || {};
     const es = texts.es || {};
     const en = texts.en || {};
-    const footer = '';
+    const i18n = (window.PiensaCookieConsentConfig || {}).i18n || {};
+
+    const footerEs = buildFooter(policy, brand, {
+        cookiePolicy: i18n.cookiePolicyEs || 'Politica de cookies',
+        privacyPolicy: i18n.privacyPolicyEs || 'Politica de privacidad',
+    });
+    const footerEn = buildFooter(policy, brand, {
+        cookiePolicy: i18n.cookiePolicyEn || 'Cookie policy',
+        privacyPolicy: i18n.privacyPolicyEn || 'Privacy policy',
+    });
 
     return {
         es: {
@@ -396,7 +436,7 @@ function buildTranslations(languageConfig, sectionsEs, sectionsEn, _policy, _bra
                 acceptAllBtn: es.banner_accept_all || 'Aceptar todas',
                 acceptNecessaryBtn: es.banner_reject_all || 'Rechazar no necesarias',
                 showPreferencesBtn: es.banner_manage_prefs || 'Gestionar preferencias',
-                footer: footer,
+                footer: footerEs,
             },
             preferencesModal: {
                 title: es.banner_preferences_title || 'Preferencias de cookies',
@@ -413,7 +453,7 @@ function buildTranslations(languageConfig, sectionsEs, sectionsEn, _policy, _bra
                 acceptAllBtn: en.banner_accept_all || 'Accept all',
                 acceptNecessaryBtn: en.banner_reject_all || 'Reject non-essential',
                 showPreferencesBtn: en.banner_manage_prefs || 'Manage preferences',
-                footer: footer,
+                footer: footerEn,
             },
             preferencesModal: {
                 title: en.banner_preferences_title || 'Cookie preferences',

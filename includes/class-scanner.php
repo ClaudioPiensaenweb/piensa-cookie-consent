@@ -232,22 +232,30 @@ class Piensa_Cookie_Consent_Scanner {
 				'description' => $settings['necessary_description'],
 				'cookies'     => [
 					[
+						// The plugin's own consent record. Declaring it is not
+						// optional: it is a cookie the site sets.
+						'name'        => Piensa_Cookie_Consent_Consent::COOKIE,
+						'domain'      => $this->get_cookie_domain(),
+						'description' => __( 'Stores the cookie choices you have made on this site.', 'piensa-cookie-consent' ),
+						'duration'    => __( '6 months', 'piensa-cookie-consent' ),
+					],
+					[
 						'name'        => 'wordpress_*',
 						'domain'      => $this->get_cookie_domain(),
-						'description' => __( 'WordPress technical cookies.', 'piensa-cookie-consent' ),
-						'duration'    => 'variable',
+						'description' => __( 'Keeps you signed in to WordPress.', 'piensa-cookie-consent' ),
+						'duration'    => __( 'Session, or 14 days if you choose to be remembered', 'piensa-cookie-consent' ),
 					],
 					[
 						'name'        => 'wp-settings-*',
 						'domain'      => $this->get_cookie_domain(),
-						'description' => __( 'WordPress user preferences.', 'piensa-cookie-consent' ),
-						'duration'    => 'variable',
+						'description' => __( 'Remembers your WordPress interface preferences.', 'piensa-cookie-consent' ),
+						'duration'    => __( '1 year', 'piensa-cookie-consent' ),
 					],
 					[
 						'name'        => 'wp-settings-time-*',
 						'domain'      => $this->get_cookie_domain(),
-						'description' => __( 'WordPress time preferences.', 'piensa-cookie-consent' ),
-						'duration'    => 'variable',
+						'description' => __( 'Records when your WordPress preferences were set.', 'piensa-cookie-consent' ),
+						'duration'    => __( '1 year', 'piensa-cookie-consent' ),
 					],
 				],
 			],
@@ -272,19 +280,19 @@ class Piensa_Cookie_Consent_Scanner {
 				'name'        => '_ga',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: user identifier.', 'piensa-cookie-consent' ),
-				'duration'    => 'variable',
+				'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
 			];
 			$definitions['analytics']['cookies'][] = [
 				'name'        => '_gid',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: session identifier.', 'piensa-cookie-consent' ),
-				'duration'    => 'variable',
+				'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
 			];
 			$definitions['analytics']['cookies'][] = [
 				'name'        => '_gat',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: request throttling.', 'piensa-cookie-consent' ),
-				'duration'    => 'variable',
+				'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
 			];
 		}
 
@@ -299,13 +307,13 @@ class Piensa_Cookie_Consent_Scanner {
 					'name'        => '_fbp',
 					'domain'      => $this->get_cookie_domain(),
 					'description' => __( 'Meta Pixel: browser identifier.', 'piensa-cookie-consent' ),
-					'duration'    => 'variable',
+					'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
 				];
 				$definitions['marketing']['cookies'][] = [
 					'name'        => 'fr',
 					'domain'      => '.facebook.com',
 					'description' => __( 'Meta Pixel: advertising and measurement.', 'piensa-cookie-consent' ),
-					'duration'    => 'variable',
+					'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
 				];
 				break;
 			}
@@ -316,7 +324,7 @@ class Piensa_Cookie_Consent_Scanner {
 				'name'        => '_ga*',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics (via GTM).', 'piensa-cookie-consent' ),
-				'duration'    => 'variable',
+				'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
 			];
 		}
 

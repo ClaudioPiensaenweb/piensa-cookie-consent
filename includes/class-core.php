@@ -54,17 +54,6 @@ class Piensa_Cookie_Consent_Core {
 	}
 
 	/**
-	 * Load the self-hosted updater, when this build ships one.
-	 *
-	 * WordPress.org guideline #8 forbids a plugin in the directory from
-	 * serving its own updates, so `includes/class-updater.php` is stripped
-	 * from the wp.org package. The agency build keeps it, and a site can still
-	 * opt out by defining PIENSA_COOKIE_CONSENT_DISABLE_UPDATER.
-	 *
-	 * @return void
-	 */
-
-	/**
 	 * Load the translations.
 	 *
 	 * WordPress.org serves language packs on its own, but the agency build is
@@ -103,6 +92,16 @@ class Piensa_Cookie_Consent_Core {
 		return file_exists( PIENSA_COOKIE_CONSENT_PATH . 'includes/class-updater.php' );
 	}
 
+	/**
+	 * Load the self-hosted updater, when this build ships one.
+	 *
+	 * WordPress.org guideline #8 forbids a plugin in the directory from serving
+	 * its own updates, so `includes/class-updater.php` is stripped from the
+	 * wp.org package. The agency build keeps it, and a site can opt out by
+	 * defining PIENSA_COOKIE_CONSENT_DISABLE_UPDATER.
+	 *
+	 * @return void
+	 */
 	private function maybe_init_updater() {
 		if ( ! self::has_self_hosted_updater() ) {
 			return;
@@ -161,7 +160,14 @@ class Piensa_Cookie_Consent_Core {
 			[
 				'icons'             => Piensa_Cookie_Consent_Icons::get_all_paths(),
 				'i18n'              => [
-					'consentStatus' => __( 'Consent:', 'piensa-cookie-consent' ),
+					'consentStatus'   => __( 'Consent:', 'piensa-cookie-consent' ),
+					// The banner is bilingual regardless of the dashboard
+					// locale, so both footers use fixed labels rather than
+					// whatever language the admin happens to be in.
+					'cookiePolicyEs'  => 'Política de cookies',
+					'privacyPolicyEs' => 'Política de privacidad',
+					'cookiePolicyEn'  => 'Cookie policy',
+					'privacyPolicyEn' => 'Privacy policy',
 				],
 				'categories'        => $categories,
 				'cookieDefinitions' => $cookie_definitions,
@@ -278,34 +284,92 @@ class Piensa_Cookie_Consent_Core {
 		return '<svg class="ag-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l7 3v6c0 5-3.5 9-7 11-3.5-2-7-6-7-11V5l7-3zm0 5a1 1 0 00-1 1v4c0 .6.4 1 1 1h4a1 1 0 100-2h-3V8a1 1 0 00-1-1z"/></svg>';
 	}
 
+	/**
+	 * Render the cookie policy table.
+	 *
+	 * The columns are the ones a cookie policy is required to carry: which
+	 * cookie, whose it is, what it is for and how long it lasts. The closing
+	 * paragraph covers how to accept, refuse or withdraw consent, which has to
+	 * be stated rather than merely possible.
+	 *
+	 * @return string
+	 */
 	public function render_cookie_policy_shortcode() {
 		$definitions = $this->scanner->get_cookie_definitions();
+		$site_host   = wp_parse_url( home_url(), PHP_URL_HOST );
 
 		$output = '<div class="ag-cookie-policy">';
-		foreach ( $definitions as $category => $data ) {
-			$label       = esc_html( $data['label'] );
-			$description = esc_html( $data['description'] );
-			$output     .= '<h3>' . $label . '</h3>';
-			$output     .= '<p>' . $description . '</p>';
 
-			if ( ! empty( $data['cookies'] ) ) {
-				$output .= '<table class="ag-cookie-table">';
-				$output .= '<thead><tr><th>Cookie</th><th>Dominio</th><th>Finalidad</th><th>Duracion</th></tr></thead><tbody>';
-				foreach ( $data['cookies'] as $cookie ) {
-					$name     = esc_html( $cookie['name'] );
-					$domain   = esc_html( $cookie['domain'] );
-					$purpose  = esc_html( $cookie['description'] );
-					$duration = esc_html( $cookie['duration'] );
-					$output  .= '<tr><td>' . $name . '</td><td>' . $domain . '</td><td>' . $purpose . '</td><td>' . $duration . '</td></tr>';
-				}
-				$output .= '</tbody></table>';
-			} else {
+		foreach ( $definitions as $data ) {
+			$output .= '<h3>' . esc_html( $data['label'] ) . '</h3>';
+			$output .= '<p>' . esc_html( $data['description'] ) . '</p>';
+
+			if ( empty( $data['cookies'] ) ) {
 				$output .= '<p>' . esc_html__( 'No cookies have been declared in this category.', 'piensa-cookie-consent' ) . '</p>';
+				continue;
 			}
+
+			$output .= '<table class="ag-cookie-table">';
+			$output .= '<thead><tr>';
+			$output .= '<th>' . esc_html__( 'Cookie', 'piensa-cookie-consent' ) . '</th>';
+			$output .= '<th>' . esc_html__( 'Origin', 'piensa-cookie-consent' ) . '</th>';
+			$output .= '<th>' . esc_html__( 'Domain', 'piensa-cookie-consent' ) . '</th>';
+			$output .= '<th>' . esc_html__( 'Purpose', 'piensa-cookie-consent' ) . '</th>';
+			$output .= '<th>' . esc_html__( 'Retention', 'piensa-cookie-consent' ) . '</th>';
+			$output .= '</tr></thead><tbody>';
+
+			foreach ( $data['cookies'] as $cookie ) {
+				$domain = isset( $cookie['domain'] ) ? (string) $cookie['domain'] : '';
+				$origin = self::is_first_party_domain( $domain, $site_host )
+					? __( 'First-party', 'piensa-cookie-consent' )
+					: __( 'Third-party', 'piensa-cookie-consent' );
+
+				$output .= '<tr>';
+				$output .= '<td>' . esc_html( $cookie['name'] ) . '</td>';
+				$output .= '<td>' . esc_html( $origin ) . '</td>';
+				$output .= '<td>' . esc_html( $domain ) . '</td>';
+				$output .= '<td>' . esc_html( $cookie['description'] ) . '</td>';
+				$output .= '<td>' . esc_html( $cookie['duration'] ) . '</td>';
+				$output .= '</tr>';
+			}
+
+			$output .= '</tbody></table>';
 		}
+
+		$output .= '<h3>' . esc_html__( 'How to accept, refuse or withdraw your consent', 'piensa-cookie-consent' ) . '</h3>';
+		$output .= '<p>' . esc_html__( 'The banner shown on your first visit lets you accept all cookies, refuse every cookie that is not strictly necessary, or choose category by category. Refusing takes the same single click as accepting.', 'piensa-cookie-consent' ) . '</p>';
+		$output .= '<p>' . esc_html__( 'You can change or withdraw your choice at any time, with the same ease, using the cookie settings button on this site. Withdrawing consent deletes the cookies in the categories you no longer accept. Your browser settings also let you block or delete cookies for any site.', 'piensa-cookie-consent' ) . '</p>';
+		$output .= '<p>' . $this->render_consent_review_shortcode() . '</p>';
 		$output .= '</div>';
 
 		return $output;
+	}
+
+	/**
+	 * Whether a cookie domain belongs to this site rather than a third party.
+	 *
+	 * Cookie domains are commonly written with a leading dot, and a subdomain
+	 * of the site is still the site.
+	 *
+	 * @param string $domain    Cookie domain.
+	 * @param string $site_host Host of this site.
+	 *
+	 * @return bool
+	 */
+	private static function is_first_party_domain( $domain, $site_host ) {
+		if ( $domain === '' || ! $site_host ) {
+			return true;
+		}
+
+		$domain = strtolower( ltrim( $domain, '.' ) );
+		$site   = strtolower( (string) $site_host );
+
+		if ( $domain === $site ) {
+			return true;
+		}
+
+		return substr( $site, - strlen( $domain ) - 1 ) === '.' . $domain
+			|| substr( $domain, - strlen( $site ) - 1 ) === '.' . $site;
 	}
 
 	public function maybe_inject_cookie_audit() {

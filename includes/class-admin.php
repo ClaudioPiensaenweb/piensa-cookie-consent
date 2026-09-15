@@ -105,6 +105,22 @@ class Piensa_Cookie_Consent_Admin {
 		);
 
 		add_settings_field(
+			'piensa_cookie_consent_block_unknown',
+			esc_html__( 'Unrecognised third parties', 'piensa-cookie-consent' ),
+			[ $this, 'render_block_unknown_field' ],
+			'piensa-cookie-consent',
+			'piensa_cookie_consent_main'
+		);
+
+		add_settings_field(
+			'piensa_cookie_consent_allowed_domains',
+			esc_html__( 'Technical exceptions', 'piensa-cookie-consent' ),
+			[ $this, 'render_allowed_domains_field' ],
+			'piensa-cookie-consent',
+			'piensa_cookie_consent_main'
+		);
+
+		add_settings_field(
 			'piensa_cookie_consent_log',
 			esc_html__( 'Consent log', 'piensa-cookie-consent' ),
 			[ $this, 'render_consent_log_field' ],
@@ -602,6 +618,20 @@ class Piensa_Cookie_Consent_Admin {
 		$settings = self::get_settings();
 		$checked  = $settings['enable_blocker'] ? 'checked' : '';
 		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[enable_blocker]" value="1" ' . esc_attr( $checked ) . '> ' . esc_html__( 'Block external iframes', 'piensa-cookie-consent' ) . '</label>';
+	}
+
+	public function render_block_unknown_field() {
+		$settings = self::get_settings();
+		$checked  = ! empty( $settings['block_unknown_third_party'] ) ? 'checked' : '';
+		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[block_unknown_third_party]" value="1" ' . esc_attr( $checked ) . '> ' . esc_html__( 'Block third-party resources the plugin does not recognise', 'piensa-cookie-consent' ) . '</label>';
+		echo '<p class="description">' . esc_html__( 'Required to comply: without it, a third party the plugin has never seen loads before the visitor chooses. Unrecognised third parties are treated as marketing and load once that category is accepted.', 'piensa-cookie-consent' ) . '</p>';
+	}
+
+	public function render_allowed_domains_field() {
+		$settings = self::get_settings();
+		$value    = isset( $settings['allowed_domains'] ) ? $settings['allowed_domains'] : '';
+		echo '<textarea class="large-text code" rows="6" name="' . esc_attr( $this->option_name ) . '[allowed_domains]">' . esc_textarea( $value ) . '</textarea>';
+		echo '<p class="description">' . esc_html__( 'Third-party hosts that serve no cookies and are never blocked, one per line. Intended for asset CDNs and font providers, not for analytics or advertising.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
 	public function render_consent_log_field() {
@@ -1610,7 +1640,9 @@ class Piensa_Cookie_Consent_Admin {
 		$defaults = self::get_default_settings();
 		$value    = is_array( $value ) ? $value : [];
 
-		$enable_blocker = ! empty( $value['enable_blocker'] ) ? true : false;
+		$enable_blocker            = ! empty( $value['enable_blocker'] ) ? true : false;
+		$block_unknown_third_party = ! empty( $value['block_unknown_third_party'] ) ? true : false;
+		$allowed_domains           = isset( $value['allowed_domains'] ) ? (string) $value['allowed_domains'] : '';
 
 		$blocked_domains = isset( $value['blocked_domains'] ) ? (string) $value['blocked_domains'] : '';
 		$lines           = preg_split( '/\\r\\n|\\r|\\n/', $blocked_domains );
@@ -1731,6 +1763,8 @@ class Piensa_Cookie_Consent_Admin {
 
 		return [
 			'enable_blocker'              => $enable_blocker,
+			'block_unknown_third_party'   => $block_unknown_third_party,
+			'allowed_domains'             => $allowed_domains !== '' ? $allowed_domains : $defaults['allowed_domains'],
 			'blocked_domains'             => $blocked_domains !== '' ? $blocked_domains : $defaults['blocked_domains'],
 			'placeholder_title'           => $placeholder_title !== '' ? $placeholder_title : $defaults['placeholder_title'],
 			'placeholder_button'          => $placeholder_button !== '' ? $placeholder_button : $defaults['placeholder_button'],
@@ -1844,6 +1878,28 @@ class Piensa_Cookie_Consent_Admin {
 	private static function get_default_settings() {
 		return [
 			'enable_blocker'              => true,
+			'block_unknown_third_party'   => true,
+			// Asset and font hosts that carry no tracking cookies. Blocking
+			// these would break layout without protecting anyone.
+			'allowed_domains'             => implode(
+				"
+",
+				[
+					'ajax.googleapis.com',
+					'cdnjs.cloudflare.com',
+					'cdn.jsdelivr.net',
+					'unpkg.com',
+					'code.jquery.com',
+					'fonts.googleapis.com',
+					'fonts.gstatic.com',
+					'use.fontawesome.com',
+					'cdn.bootstrapcdn.com',
+					'stackpath.bootstrapcdn.com',
+					's.w.org',
+					'ps.w.org',
+					'secure.gravatar.com',
+				]
+			),
 			'blocked_domains'             => implode(
 				"\n",
 				[

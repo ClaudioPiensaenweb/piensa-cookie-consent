@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ Everything runs on your own server. The plugin makes no calls to third-party ser
 
 = What it does =
 
-* **Blocks before consent.** Third-party scripts and iframes are neutralised until the visitor opts in, which is what the law actually requires. Images and external stylesheets can be blocked too.
+* **Blocks before consent, including third parties it has never seen.** Scripts, iframes, images and external stylesheets are neutralised until the visitor opts in. An unrecognised third party is blocked rather than let through, which is what the law actually requires; a list of technical exceptions covers asset CDNs and font providers.
 * **Google Consent Mode v2.** Sets the default denied state and updates it the moment the visitor chooses, so Analytics and Ads receive the signals they expect.
 * **Finds your cookies.** Crawls your sitemap to discover external domains, reads `Set-Cookie` headers and can run an in-browser audit to catch the cookies scripts set at runtime. Detected services are categorised automatically, with manual override.
 * **Consent log.** Every choice is recorded with a hashed IP, never the address itself, and can be exported to CSV as evidence of compliance.
@@ -28,7 +28,7 @@ Everything runs on your own server. The plugin makes no calls to third-party ser
 
 = Shortcodes =
 
-* `[piensa_cookie_consent_policy]` renders a cookie policy table from the cookies the scanner found.
+* `[piensa_cookie_consent_policy]` renders the cookie policy: one table per category listing each cookie, whether it is first- or third-party, its domain, its purpose and how long it is kept, followed by how to accept, refuse or withdraw consent.
 * `[piensa_cookie_consent_review]` renders a button that reopens the preferences dialog.
 
 = Privacy =
@@ -68,6 +68,10 @@ Yes, through Google Consent Mode v2. The plugin sets the denied default before t
 
 No. TCF requires a registered CMP ID and is aimed at programmatic advertising. This plugin targets the GDPR and ePrivacy consent requirements directly.
 
+= Does it block third parties it does not know about? =
+
+Yes, and this is the setting that matters most for compliance. A third-party script the plugin has no entry for is blocked until the visitor consents, rather than being allowed through. Asset CDNs and font providers are exempt through the technical exceptions list, which you can edit. If something on your site stops working after the update, add its host to that list rather than turning the setting off.
+
 = Can I translate it? =
 
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
@@ -81,6 +85,13 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.1.0 =
+* Third-party resources the plugin does not recognise are now blocked until consent is given, instead of being allowed through. This is what the ePrivacy consent requirement asks for. A technical exceptions list, pre-filled with asset CDNs and font providers, keeps layout and scripts working.
+* The banner now links to your cookie policy and privacy policy. The setting existed but the link was never rendered.
+* The cookie policy now states whether each cookie is first- or third-party, gives real retention periods instead of "variable", and explains how to accept, refuse and withdraw consent.
+* The plugin now declares its own consent cookie in the policy, which it previously omitted.
+* The policy table headings are translatable; they were fixed in Spanish.
+
 = 1.0.0 =
 * First release in the WordPress.org plugin directory, renamed from PW Cookie Monster.
 * Added WP Consent API integration, so other plugins can query consent state.
@@ -91,6 +102,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Unrecognised third-party scripts are now blocked until consent is given. Review the technical exceptions list under Settings if anything on your site depends on an external host.
 
 = 1.0.0 =
 Renamed release with WP Consent API support and no external asset loading. Settings and consent records migrate automatically.
