@@ -17,6 +17,7 @@ class Piensa_Cookie_Consent_Admin {
 		if ( is_admin() ) {
 			add_action( 'admin_menu', [ $this, 'register_menu' ] );
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
+			add_action( 'update_option_piensa_cookie_consent_settings', [ __CLASS__, 'flush_settings_cache' ] );
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 			add_action( 'admin_post_piensa_cookie_consent_scan', [ $this, 'handle_scan_request' ] );
 			add_action( 'admin_post_piensa_cookie_consent_export_logs', [ $this, 'handle_export_logs' ] );
@@ -100,6 +101,14 @@ class Piensa_Cookie_Consent_Admin {
 			'piensa_cookie_consent_blocker',
 			esc_html__( 'Content blocking', 'piensa-cookie-consent' ),
 			[ $this, 'render_blocker_field' ],
+			'piensa-cookie-consent',
+			'piensa_cookie_consent_main'
+		);
+
+		add_settings_field(
+			'piensa_cookie_consent_log_retention',
+			esc_html__( 'Consent log retention', 'piensa-cookie-consent' ),
+			[ $this, 'render_log_retention_field' ],
 			'piensa-cookie-consent',
 			'piensa_cookie_consent_main'
 		);
@@ -618,6 +627,14 @@ class Piensa_Cookie_Consent_Admin {
 		$settings = self::get_settings();
 		$checked  = $settings['enable_blocker'] ? 'checked' : '';
 		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[enable_blocker]" value="1" ' . esc_attr( $checked ) . '> ' . esc_html__( 'Block external iframes', 'piensa-cookie-consent' ) . '</label>';
+	}
+
+	public function render_log_retention_field() {
+		$settings = self::get_settings();
+		$value    = isset( $settings['log_retention_days'] ) ? (int) $settings['log_retention_days'] : 0;
+		echo '<input class="small-text" type="number" min="0" max="3650" name="' . esc_attr( $this->option_name ) . '[log_retention_days]" value="' . esc_attr( (string) $value ) . '" /> ';
+		echo esc_html__( 'days', 'piensa-cookie-consent' );
+		echo '<p class="description">' . esc_html__( 'Records older than this are deleted daily. Keeping consent records indefinitely is itself a compliance problem: the GDPR asks for a defined retention period. Set to 0 to keep everything, which you should only do if something else purges the table.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
 	public function render_block_unknown_field() {
@@ -1642,6 +1659,7 @@ class Piensa_Cookie_Consent_Admin {
 
 		$enable_blocker            = ! empty( $value['enable_blocker'] ) ? true : false;
 		$block_unknown_third_party = ! empty( $value['block_unknown_third_party'] ) ? true : false;
+		$log_retention_days        = isset( $value['log_retention_days'] ) ? max( 0, min( 3650, (int) $value['log_retention_days'] ) ) : 0;
 		$allowed_domains           = isset( $value['allowed_domains'] ) ? (string) $value['allowed_domains'] : '';
 
 		$blocked_domains = isset( $value['blocked_domains'] ) ? (string) $value['blocked_domains'] : '';
@@ -1764,6 +1782,7 @@ class Piensa_Cookie_Consent_Admin {
 		return [
 			'enable_blocker'              => $enable_blocker,
 			'block_unknown_third_party'   => $block_unknown_third_party,
+			'log_retention_days'          => $log_retention_days,
 			'allowed_domains'             => $allowed_domains !== '' ? $allowed_domains : $defaults['allowed_domains'],
 			'blocked_domains'             => $blocked_domains !== '' ? $blocked_domains : $defaults['blocked_domains'],
 			'placeholder_title'           => $placeholder_title !== '' ? $placeholder_title : $defaults['placeholder_title'],
@@ -1864,7 +1883,27 @@ class Piensa_Cookie_Consent_Admin {
 		return implode( "\n", $clean );
 	}
 
+	/**
+	 * Settings resolved for this request.
+	 *
+	 * @var array|null
+	 */
+	private static $settings_cache = null;
+
+	/**
+	 * Return the settings, merged over the defaults.
+	 *
+	 * Cached for the request: this is called from the blocker, Consent Mode,
+	 * the enqueue pass and every field renderer, and building the defaults
+	 * reads a file from disk.
+	 *
+	 * @return array
+	 */
 	public static function get_settings() {
+		if ( null !== self::$settings_cache ) {
+			return self::$settings_cache;
+		}
+
 		$defaults = self::get_default_settings();
 		$settings = get_option( 'piensa_cookie_consent_settings', [] );
 
@@ -1872,7 +1911,18 @@ class Piensa_Cookie_Consent_Admin {
 			$settings = [];
 		}
 
-		return array_merge( $defaults, $settings );
+		self::$settings_cache = array_merge( $defaults, $settings );
+
+		return self::$settings_cache;
+	}
+
+	/**
+	 * Drop the cached settings after a write.
+	 *
+	 * @return void
+	 */
+	public static function flush_settings_cache() {
+		self::$settings_cache = null;
 	}
 
 	/**
@@ -1908,6 +1958,9 @@ class Piensa_Cookie_Consent_Admin {
 		return [
 			'enable_blocker'              => true,
 			'block_unknown_third_party'   => true,
+			// Two years: long enough to answer a challenge about a consent
+			// given, short enough not to be a store of records nobody needs.
+			'log_retention_days'          => 730,
 			'allowed_domains'             => self::get_default_allowed_domains(),
 			'blocked_domains'             => implode(
 				"\n",
@@ -2154,6 +2207,7 @@ class Piensa_Cookie_Consent_Admin {
 
 		$sanitized = $this->sanitize_settings( $decoded );
 		update_option( 'piensa_cookie_consent_settings', $sanitized, false );
+		self::flush_settings_cache();
 
 		wp_safe_redirect( $redirect );
 		exit;

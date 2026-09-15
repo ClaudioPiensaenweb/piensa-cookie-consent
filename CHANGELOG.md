@@ -4,6 +4,36 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-09-15
+
+Findings from a security and scalability review.
+
+### Fixed
+- **Page caching could release blocked scripts to visitors who never
+  consented.** `get_allowed_categories()` read the consent cookie, so the
+  generated HTML differed per visitor. Any page cache — and most production
+  sites run one — stores what the first visitor generated and serves it to
+  everyone. The server now blocks unconditionally and the front-end script
+  releases what the visitor accepted, which is how the bundled library is meant
+  to work. Consent Mode always declares the denied default for the same reason,
+  and because that is what Google documents.
+- **An UPDATE against `wp_options` on every front-end request.** Third-party
+  discovery rewrote `last_seen` each time. It now writes only for an unseen
+  host or once an hour, and caps the stored list at 500 entries.
+- The sitemap crawler followed any URL a `<loc>` element named, including
+  addresses that are not the site's. An entry pointing at an internal address
+  would have been fetched and its cookies stored.
+- The public consent endpoint had no rate limit and no size cap on its JSON
+  fields. It is public by necessity and its nonce is shared by every anonymous
+  visitor, so it was a way to fill the database.
+- The CSV export stopped at 1000 records without saying so.
+- `get_settings()` re-read the option and a file from disk on every call, of
+  which there are many per request.
+
+### Added
+- A retention period for consent records, two years by default, purged daily
+  and cleared on deactivation.
+
 ## [1.1.0] - 2026-09-15
 
 Closes the gaps between what the plugin did and what an ePrivacy consent

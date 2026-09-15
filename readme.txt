@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,15 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.2.0 =
+* **Works with page caching.** The blocker varied the HTML by the visitor's consent cookie, so any page cache would store one visitor's version and serve it to everyone — releasing scripts to people who never accepted. The server now blocks unconditionally and the front-end script releases what the visitor accepted, so every visitor gets the same cacheable markup. Consent Mode likewise always declares the denied default, which is what Google documents.
+* **No longer writes to the database on every page view.** Third-party discovery refreshed a timestamp in wp_options on each request. It now writes only for a host it has not seen, or once an hour, and the stored list is capped.
+* The sitemap crawler only follows URLs belonging to the site. A sitemap entry naming another address would previously have been fetched.
+* The public consent-logging endpoint is rate limited and caps the size of its JSON fields. It has to be public, and its nonce is shared by every anonymous visitor, so without a ceiling it was a way to fill the database.
+* Consent records are purged daily past a retention period, two years by default and configurable. Keeping them indefinitely is its own compliance problem.
+* The CSV export covers every record. It silently stopped at the first thousand, which made it poor evidence of anything.
+* Settings are read once per request rather than on every call.
+
 = 1.1.0 =
 * Third-party resources the plugin does not recognise are now blocked until consent is given, instead of being allowed through. This is what the ePrivacy consent requirement asks for. A technical exceptions list, pre-filled with asset CDNs and font providers, keeps layout and scripts working.
 * The banner now links to your cookie policy and privacy policy. The setting existed but the link was never rendered.
@@ -102,6 +111,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Fixes a serious interaction with page caching that could serve blocked scripts to visitors who never consented, and stops the plugin writing to the database on every page view. Recommended for every site.
 
 = 1.1.0 =
 Unrecognised third-party scripts are now blocked until consent is given. Review the technical exceptions list under Settings if anything on your site depends on an external host.

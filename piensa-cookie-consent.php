@@ -3,7 +3,7 @@
  * Plugin Name:       Piensa Cookie Consent
  * Plugin URI:        https://github.com/ClaudioPiensaenweb/piensa-cookie-consent
  * Description:       GDPR and ePrivacy cookie consent banner with Google Consent Mode v2, automatic script blocking, cookie scanning, geo-targeting and a consent log.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Piensaenweb
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'PIENSA_COOKIE_CONSENT_VERSION', '1.1.0' );
+define( 'PIENSA_COOKIE_CONSENT_VERSION', '1.2.0' );
 define( 'PIENSA_COOKIE_CONSENT_FILE', __FILE__ );
 define( 'PIENSA_COOKIE_CONSENT_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PIENSA_COOKIE_CONSENT_URL', plugin_dir_url( __FILE__ ) );
@@ -87,3 +87,19 @@ function piensa_cookie_consent_activate() {
 	Piensa_Cookie_Consent_Migrator::maybe_run();
 }
 register_activation_hook( __FILE__, 'piensa_cookie_consent_activate' );
+
+/**
+ * Clear the scheduled log purge when the plugin is switched off.
+ *
+ * A schedule left behind fires against code that is no longer loaded.
+ *
+ * @return void
+ */
+function piensa_cookie_consent_deactivate() {
+	$timestamp = wp_next_scheduled( Piensa_Cookie_Consent_Consent_Log::PURGE_HOOK );
+
+	if ( $timestamp ) {
+		wp_unschedule_event( $timestamp, Piensa_Cookie_Consent_Consent_Log::PURGE_HOOK );
+	}
+}
+register_deactivation_hook( __FILE__, 'piensa_cookie_consent_deactivate' );

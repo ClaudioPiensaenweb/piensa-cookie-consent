@@ -28,6 +28,8 @@ function piensa_cookie_consent_uninstall_site() {
 	}
 
 	delete_transient( 'piensa_cookie_consent_scan_notice' );
+	delete_transient( 'piensa_cookie_consent_discovery_throttle' );
+	wp_clear_scheduled_hook( Piensa_Cookie_Consent_Consent_Log::PURGE_HOOK );
 
 	// The consent log is user data; deleting the plugin removes it.
 	$table = $wpdb->prefix . Piensa_Cookie_Consent_Consent_Log::TABLE;

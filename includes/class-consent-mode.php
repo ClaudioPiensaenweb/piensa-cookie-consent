@@ -19,22 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Piensa_Cookie_Consent_Consent_Mode {
 
 	/**
-	 * Scanner, used to find out which categories are active.
-	 *
-	 * @var Piensa_Cookie_Consent_Scanner
-	 */
-	private $scanner;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param Piensa_Cookie_Consent_Scanner $scanner Scanner instance.
-	 */
-	public function __construct( $scanner ) {
-		$this->scanner = $scanner;
-	}
-
-	/**
 	 * Register the hooks.
 	 *
 	 * @return void
@@ -49,31 +33,25 @@ class Piensa_Cookie_Consent_Consent_Mode {
 	 * @return void
 	 */
 	public function inject_consent_mode() {
-		$categories    = $this->scanner->get_active_categories();
-		$has_analytics = ! empty( $categories['analytics'] );
-		$has_marketing = ! empty( $categories['marketing'] );
-
 		$settings = Piensa_Cookie_Consent_Admin::get_settings();
 
+		// No banner in this region means no consent is being managed, so there
+		// is no default state to declare.
 		if ( ! Piensa_Cookie_Consent_Geo::should_show_cmp( $settings ) ) {
-			// Outside the targeted region no banner is shown, so consent cannot
-			// be asked for: whatever the site has enabled is what applies.
-			$analytics_granted = $has_analytics;
-			$marketing_granted = $has_marketing;
-		} else {
-			$consent           = $this->get_current_consent();
-			$analytics_granted = $has_analytics && $consent['analytics'];
-			$marketing_granted = $has_marketing && $consent['marketing'];
+			return;
 		}
 
-		$analytics_value = $analytics_granted ? 'granted' : 'denied';
-		$marketing_value = $marketing_granted ? 'granted' : 'denied';
-
+		// Always denied, which is both what Google documents for the default
+		// call and what keeps the markup identical for every visitor. Reading
+		// the consent cookie here would vary the page and make it unsafe to
+		// cache: a page cache would serve one visitor's granted state to
+		// everyone. The front-end script issues the 'update' call from the
+		// visitor's own cookie as soon as it runs.
 		$defaults = [
-			'analytics_storage'  => $analytics_value,
-			'ad_storage'         => $marketing_value,
-			'ad_user_data'       => $marketing_value,
-			'ad_personalization' => $marketing_value,
+			'analytics_storage'  => 'denied',
+			'ad_storage'         => 'denied',
+			'ad_user_data'       => 'denied',
+			'ad_personalization' => 'denied',
 		];
 
 		$script  = 'window.dataLayer = window.dataLayer || [];';
@@ -87,15 +65,4 @@ class Piensa_Cookie_Consent_Consent_Mode {
 		wp_print_inline_script_tag( $script );
 	}
 
-	/**
-	 * Read the visitor's consent for the categories Consent Mode cares about.
-	 *
-	 * @return array{analytics: bool, marketing: bool}
-	 */
-	private function get_current_consent() {
-		return [
-			'analytics' => Piensa_Cookie_Consent_Consent::has_consent( 'analytics' ),
-			'marketing' => Piensa_Cookie_Consent_Consent::has_consent( 'marketing' ),
-		];
-	}
 }

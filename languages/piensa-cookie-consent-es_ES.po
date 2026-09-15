@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Piensa Cookie Consent 1.0.0\n"
-"PO-Revision-Date: 2026-09-15 12:22+0000\n"
+"PO-Revision-Date: 2026-09-15 12:52+0000\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13,781 +13,793 @@ msgstr ""
 "X-Domain: piensa-cookie-consent\n"
 
 
-#: includes/class-admin.php:35 includes/class-admin.php:36 includes/class-admin.php:1214 includes/class-admin.php:2187 includes/class-admin.php:2190 includes/class-updater.php:100
+#: includes/class-admin.php:36 includes/class-admin.php:37 includes/class-admin.php:1231 includes/class-admin.php:2255 includes/class-admin.php:2258 includes/class-updater.php:100
 msgid "Piensa Cookie Consent"
 msgstr "Piensa Cookie Consent"
 
-#: includes/class-admin.php:55 includes/class-admin.php:56 includes/class-admin.php:1257
+#: includes/class-admin.php:56 includes/class-admin.php:57 includes/class-admin.php:1274
 msgid "Appearance"
 msgstr "Apariencia"
 
-#: includes/class-admin.php:92 includes/class-admin.php:1275
+#: includes/class-admin.php:93 includes/class-admin.php:1292
 msgid "General settings"
 msgstr "Configuración general"
 
-#: includes/class-admin.php:94
+#: includes/class-admin.php:95
 msgid "Configure how the CMP behaves."
 msgstr "Configura el funcionamiento general del CMP."
 
-#: includes/class-admin.php:101 includes/class-admin.php:1357
+#: includes/class-admin.php:102 includes/class-admin.php:1374
 msgid "Content blocking"
 msgstr "Bloqueo de contenido"
 
-#: includes/class-admin.php:109
+#: includes/class-admin.php:110
+msgid "Consent log retention"
+msgstr "Conservación del registro de consentimientos"
+
+#: includes/class-admin.php:118
 msgid "Unrecognised third parties"
 msgstr "Terceros no reconocidos"
 
-#: includes/class-admin.php:117
+#: includes/class-admin.php:126
 msgid "Technical exceptions"
 msgstr "Excepciones técnicas"
 
-#: includes/class-admin.php:125
+#: includes/class-admin.php:134
 msgid "Consent log"
 msgstr "Registro de consentimiento"
 
-#: includes/class-admin.php:133
+#: includes/class-admin.php:142
 msgid "Consent review"
 msgstr "Revisión de consentimiento"
 
-#: includes/class-admin.php:141 includes/class-admin.php:1345
+#: includes/class-admin.php:150 includes/class-admin.php:1362
 msgid "Banner text"
 msgstr "Textos del banner"
 
-#: includes/class-admin.php:143 includes/class-admin.php:1346
+#: includes/class-admin.php:152 includes/class-admin.php:1363
 msgid "Customize the banner and the preferences dialog."
 msgstr "Personaliza el banner y el modal de preferencias."
 
-#: includes/class-admin.php:150
+#: includes/class-admin.php:159
 msgid "Banner icon"
 msgstr "Icono del banner"
 
-#: includes/class-admin.php:158
+#: includes/class-admin.php:167
 msgid "Banner title"
 msgstr "Título del banner"
 
-#: includes/class-admin.php:166
+#: includes/class-admin.php:175
 msgid "Banner description"
 msgstr "Descripción del banner"
 
-#: includes/class-admin.php:174
+#: includes/class-admin.php:183
 msgid "Accept all label"
 msgstr "Texto aceptar todas"
 
-#: includes/class-admin.php:182
+#: includes/class-admin.php:191
 msgid "Reject non-essential label"
 msgstr "Texto rechazar no necesarias"
 
-#: includes/class-admin.php:190
+#: includes/class-admin.php:199
 msgid "Manage preferences label"
 msgstr "Texto gestionar preferencias"
 
-#: includes/class-admin.php:198
+#: includes/class-admin.php:207
 msgid "Save preferences label"
 msgstr "Texto guardar preferencias"
 
-#: includes/class-admin.php:206
+#: includes/class-admin.php:215
 msgid "Modal title"
 msgstr "Título del modal"
 
-#: includes/class-admin.php:214 includes/class-admin.php:1321
+#: includes/class-admin.php:223 includes/class-admin.php:1338
 msgid "Categories and behavior"
 msgstr "Categorías y comportamiento"
 
-#: includes/class-admin.php:216
+#: includes/class-admin.php:225
 msgid "Set the labels and the behavior of each category."
 msgstr "Define etiquetas y comportamiento de categorías."
 
-#: includes/class-admin.php:223 includes/class-admin.php:1241
+#: includes/class-admin.php:232 includes/class-admin.php:1258
 msgid "Category mode"
 msgstr "Modo de categorías"
 
-#: includes/class-admin.php:231 includes/class-admin.php:1946
+#: includes/class-admin.php:240 includes/class-admin.php:2008
 msgid "Necessary cookies"
 msgstr "Cookies necesarias"
 
-#: includes/class-admin.php:239
+#: includes/class-admin.php:248
 msgid "Active categories"
 msgstr "Categorías activas"
 
-#: includes/class-admin.php:247
+#: includes/class-admin.php:256
 msgid "Labels and text"
 msgstr "Etiquetas y textos"
 
-#: includes/class-admin.php:255 includes/class-admin.php:1333
+#: includes/class-admin.php:264 includes/class-admin.php:1350
 msgid "Appearance and position"
 msgstr "Apariencia y posición"
 
-#: includes/class-admin.php:257
+#: includes/class-admin.php:266
 msgid "Controls the banner position and the main styles."
 msgstr "Controla la posición del banner y los estilos principales."
 
-#: includes/class-admin.php:264
+#: includes/class-admin.php:273
 msgid "Position and layout"
 msgstr "Posición y layout"
 
-#: includes/class-admin.php:272
+#: includes/class-admin.php:281
 msgid "Colors and corner radii"
 msgstr "Colores y radios"
 
-#: includes/class-admin.php:280
+#: includes/class-admin.php:289
 msgid "Quick templates"
 msgstr "Plantillas rápidas"
 
-#: includes/class-admin.php:296 includes/class-admin.php:1297
+#: includes/class-admin.php:305 includes/class-admin.php:1314
 msgid "Compliance and privacy"
 msgstr "Cumplimiento y privacidad"
 
-#: includes/class-admin.php:298
+#: includes/class-admin.php:307
 msgid "Set geo-targeting, language and legal requirements."
 msgstr "Define geolocalización, idioma y requisitos legales."
 
-#: includes/class-admin.php:313
+#: includes/class-admin.php:322
 msgid "Language and detection"
 msgstr "Idioma y detección"
 
-#: includes/class-admin.php:321
+#: includes/class-admin.php:330
 msgid "Compliance report"
 msgstr "Informe de cumplimiento"
 
-#: includes/class-admin.php:329 includes/class-admin.php:1309
+#: includes/class-admin.php:338 includes/class-admin.php:1326
 msgid "Multilingual text"
 msgstr "Textos multilenguaje"
 
-#: includes/class-admin.php:331
+#: includes/class-admin.php:340
 msgid "Set the Spanish and English text."
 msgstr "Define textos en ES y EN."
 
-#: includes/class-admin.php:338
+#: includes/class-admin.php:347
 msgid "English text"
 msgstr "Textos EN"
 
-#: includes/class-admin.php:346 includes/class-admin.php:1394
+#: includes/class-admin.php:355 includes/class-admin.php:1411
 msgid "Branding and white-label"
 msgstr "Branding y white-label"
 
-#: includes/class-admin.php:348
+#: includes/class-admin.php:357
 msgid "Customize the name and hide branding."
 msgstr "Personaliza el nombre y oculta marcas."
 
-#: includes/class-admin.php:365
+#: includes/class-admin.php:374
 msgid "Export or import the full configuration."
 msgstr "Exporta o importa la configuración completa."
 
-#: includes/class-admin.php:390
+#: includes/class-admin.php:399
 msgid "Review possible compliance risks."
 msgstr "Revisa posibles riesgos de cumplimiento."
 
-#: includes/class-admin.php:405
+#: includes/class-admin.php:414
 msgid "Blocked content"
 msgstr "Contenido bloqueado"
 
-#: includes/class-admin.php:407
+#: includes/class-admin.php:416
 msgid "Domains to neutralize until consent is given."
 msgstr "Dominios que deben neutralizarse hasta que haya consentimiento."
 
-#: includes/class-admin.php:414
+#: includes/class-admin.php:423
 msgid "Blocked domains"
 msgstr "Dominios bloqueados"
 
-#: includes/class-admin.php:422
+#: includes/class-admin.php:431
 msgid "Placeholder text"
 msgstr "Textos del placeholder"
 
-#: includes/class-admin.php:424
+#: includes/class-admin.php:433
 msgid "Customize the message shown over blocked content."
 msgstr "Personaliza el mensaje mostrado sobre el contenido bloqueado."
 
-#: includes/class-admin.php:431
+#: includes/class-admin.php:440
 msgid "Main message"
 msgstr "Mensaje principal"
 
-#: includes/class-admin.php:439 includes/class-admin.php:464
+#: includes/class-admin.php:448 includes/class-admin.php:473
 msgid "Button label"
 msgstr "Texto del botón"
 
-#: includes/class-admin.php:447
+#: includes/class-admin.php:456
 msgid "Consent interface"
 msgstr "Interfaz de consentimiento"
 
-#: includes/class-admin.php:449
+#: includes/class-admin.php:458
 msgid "Controls the floating button that reopens the consent dialog."
 msgstr "Controla el botón flotante para revisar el consentimiento."
 
-#: includes/class-admin.php:456
+#: includes/class-admin.php:465
 msgid "Floating button"
 msgstr "Botón flotante"
 
-#: includes/class-admin.php:472
+#: includes/class-admin.php:481
 msgid "Button style"
 msgstr "Estilo del botón"
 
-#: includes/class-admin.php:480 includes/class-admin.php:1370
+#: includes/class-admin.php:489 includes/class-admin.php:1387
 msgid "Automatic discovery"
 msgstr "Descubrimiento automatico"
 
-#: includes/class-admin.php:482
+#: includes/class-admin.php:491
 msgid "External resources such as scripts, iframes and images are detected to suggest categories."
 msgstr "Se detectan recursos externos (scripts, iframes, imágenes) para sugerir categorías."
 
-#: includes/class-admin.php:489 includes/class-admin.php:1237 includes/class-admin.php:2200
+#: includes/class-admin.php:498 includes/class-admin.php:1254 includes/class-admin.php:2268
 msgid "Detected domains"
 msgstr "Dominios detectados"
 
-#: includes/class-admin.php:497
+#: includes/class-admin.php:506
 msgid "In-browser audit"
 msgstr "Auditoría en navegador"
 
-#: includes/class-admin.php:505 includes/class-admin.php:2194 includes/class-admin.php:2206
+#: includes/class-admin.php:514 includes/class-admin.php:2262 includes/class-admin.php:2274
 msgid "Detected cookies"
 msgstr "Cookies detectadas"
 
-#: includes/class-admin.php:513 includes/class-admin.php:1382
+#: includes/class-admin.php:522 includes/class-admin.php:1399
 msgid "Cookie policy"
 msgstr "Política de cookies"
 
-#: includes/class-admin.php:515 includes/class-admin.php:1383
+#: includes/class-admin.php:524 includes/class-admin.php:1400
 msgid "Link your policy and declare custom cookies."
 msgstr "Enlaza la política y define cookies personalizadas."
 
-#: includes/class-admin.php:522
+#: includes/class-admin.php:531
 msgid "Cookie policy URL"
 msgstr "URL política de cookies"
 
-#: includes/class-admin.php:530
+#: includes/class-admin.php:539
 msgid "Privacy policy URL"
 msgstr "URL política de privacidad"
 
-#: includes/class-admin.php:538
+#: includes/class-admin.php:547
 msgid "Custom cookies"
 msgstr "Cookies personalizadas"
 
-#: includes/class-admin.php:546 includes/class-admin.php:1433
+#: includes/class-admin.php:555 includes/class-admin.php:1450
 msgid "Consent records"
 msgstr "Registro de consentimientos"
 
-#: includes/class-admin.php:569
+#: includes/class-admin.php:578
 msgid "Secure updates"
 msgstr "Actualizaciones seguras"
 
-#: includes/class-admin.php:571
+#: includes/class-admin.php:580
 msgid "Configure the central update server and its signature."
 msgstr "Configura el servidor central de actualizaciones y la firma."
 
-#: includes/class-admin.php:578
+#: includes/class-admin.php:587
 msgid "Update server"
 msgstr "Servidor de actualizaciones"
 
-#: includes/class-admin.php:586
+#: includes/class-admin.php:595
 msgid "Channel"
 msgstr "Canal"
 
-#: includes/class-admin.php:594
+#: includes/class-admin.php:603
 msgid "Access token"
 msgstr "Token de acceso"
 
-#: includes/class-admin.php:602
+#: includes/class-admin.php:611
 msgid "Public key"
 msgstr "Clave pública"
 
-#: includes/class-admin.php:610
+#: includes/class-admin.php:619
 msgid "Signature verification"
 msgstr "Verificacion de firma"
 
-#: includes/class-admin.php:620
+#: includes/class-admin.php:629
 msgid "Block external iframes"
 msgstr "Activar bloqueo de iframes externos"
 
-#: includes/class-admin.php:626
+#: includes/class-admin.php:636
+msgid "days"
+msgstr "días"
+
+#: includes/class-admin.php:637
+msgid "Records older than this are deleted daily. Keeping consent records indefinitely is itself a compliance problem: the GDPR asks for a defined retention period. Set to 0 to keep everything, which you should only do if something else purges the table."
+msgstr "Los registros más antiguos se eliminan a diario. Conservar los consentimientos de forma indefinida es en sí mismo un problema de cumplimiento: el RGPD exige un plazo de conservación definido. Pon 0 para conservarlo todo, y hazlo solo si otro sistema se encarga de purgar la tabla."
+
+#: includes/class-admin.php:643
 msgid "Block third-party resources the plugin does not recognise"
 msgstr "Bloquear los recursos de terceros que el plugin no reconoce"
 
-#: includes/class-admin.php:627
+#: includes/class-admin.php:644
 msgid "Required to comply: without it, a third party the plugin has never seen loads before the visitor chooses. Unrecognised third parties are treated as marketing and load once that category is accepted."
 msgstr "Necesario para cumplir: sin esta opción, un tercero que el plugin no haya visto nunca se carga antes de que la persona elija. Los terceros no reconocidos se tratan como marketing y se cargan cuando se acepta esa categoría."
 
-#: includes/class-admin.php:634
+#: includes/class-admin.php:651
 msgid "Third-party hosts that serve no cookies and are never blocked, one per line. Intended for asset CDNs and font providers, not for analytics or advertising."
 msgstr "Dominios de terceros que no instalan cookies y nunca se bloquean, uno por línea. Pensado para CDN de recursos y proveedores de tipografías, no para analítica ni publicidad."
 
-#: includes/class-admin.php:640
+#: includes/class-admin.php:657
 msgid "Keep a consent log"
 msgstr "Guardar registro de consentimiento"
 
-#: includes/class-admin.php:647
+#: includes/class-admin.php:664
 msgid "Increase this value when you change the text or the policy, to ask visitors for consent again."
 msgstr "Incrementa este valor cuando cambies el texto o la política para solicitar nuevo consentimiento."
 
-#: includes/class-admin.php:656
+#: includes/class-admin.php:673
 msgid "Show an icon in the banner"
 msgstr "Mostrar icono en el banner"
 
-#: includes/class-admin.php:675
+#: includes/class-admin.php:692
 msgid "Appears next to the banner title."
 msgstr "Aparece junto al título del banner."
 
-#: includes/class-admin.php:725
+#: includes/class-admin.php:742
 msgid "Auto (detect plugins)"
 msgstr "Auto (detectar plugins)"
 
-#: includes/class-admin.php:728
+#: includes/class-admin.php:745
 msgid "In manual mode you decide which categories are shown."
 msgstr "En manual puedes forzar si se muestran categorías."
 
-#: includes/class-admin.php:734
+#: includes/class-admin.php:751
 msgid "Let visitors disable necessary cookies"
 msgstr "Permitir desactivar cookies necesarias"
 
-#: includes/class-admin.php:735
+#: includes/class-admin.php:752
 msgid "Not recommended: it can break parts of the site."
 msgstr "No recomendado: puede afectar el funcionamiento del sitio."
 
-#: includes/class-admin.php:749 includes/class-admin.php:2047
+#: includes/class-admin.php:766 includes/class-admin.php:2109
 msgid "Necessary"
 msgstr "Necesarias"
 
-#: includes/class-admin.php:752
+#: includes/class-admin.php:769
 msgid "Legal note (optional)"
 msgstr "Nota legal (opcional)"
 
-#: includes/class-admin.php:755 includes/class-admin.php:2048
+#: includes/class-admin.php:772 includes/class-admin.php:2110
 msgid "Analytics"
 msgstr "Analítica"
 
-#: includes/class-admin.php:774 includes/class-admin.php:951 includes/class-admin.php:1258
+#: includes/class-admin.php:791 includes/class-admin.php:968 includes/class-admin.php:1275
 msgid "Banner"
 msgstr "Banner"
 
-#: includes/class-admin.php:781
+#: includes/class-admin.php:798
 msgid "Bottom right"
 msgstr "Abajo derecha"
 
-#: includes/class-admin.php:782
+#: includes/class-admin.php:799
 msgid "Bottom left"
 msgstr "Abajo izquierda"
 
-#: includes/class-admin.php:783
+#: includes/class-admin.php:800
 msgid "Bottom center"
 msgstr "Abajo centro"
 
-#: includes/class-admin.php:784
+#: includes/class-admin.php:801
 msgid "Top right"
 msgstr "Arriba derecha"
 
-#: includes/class-admin.php:785
+#: includes/class-admin.php:802
 msgid "Top left"
 msgstr "Arriba izquierda"
 
-#: includes/class-admin.php:786
+#: includes/class-admin.php:803
 msgid "Top center"
 msgstr "Arriba centro"
 
-#: includes/class-admin.php:791
+#: includes/class-admin.php:808
 msgid "Preferences"
 msgstr "Preferencias"
 
-#: includes/class-admin.php:809
+#: includes/class-admin.php:826
 msgid "Modal background"
 msgstr "Fondo modal"
 
-#: includes/class-admin.php:814
+#: includes/class-admin.php:831
 msgid "Main text"
 msgstr "Texto principal"
 
-#: includes/class-admin.php:819
+#: includes/class-admin.php:836
 msgid "Secondary text"
 msgstr "Texto secundario"
 
-#: includes/class-admin.php:824
+#: includes/class-admin.php:841
 msgid "Primary button"
 msgstr "Botón primario"
 
-#: includes/class-admin.php:829
+#: includes/class-admin.php:846
 msgid "Primary button label"
 msgstr "Texto botón primario"
 
-#: includes/class-admin.php:834
+#: includes/class-admin.php:851
 msgid "Secondary button"
 msgstr "Botón secundario"
 
-#: includes/class-admin.php:839
+#: includes/class-admin.php:856
 msgid "Secondary button label"
 msgstr "Texto botón secundario"
 
-#: includes/class-admin.php:885
+#: includes/class-admin.php:902
 msgid "A live preview of the banner. It updates as you change the fields."
 msgstr "Vista previa real del banner. Se actualiza al cambiar los campos."
 
-#: includes/class-admin.php:896
+#: includes/class-admin.php:913
 msgid "Always show"
 msgstr "Mostrar siempre"
 
-#: includes/class-admin.php:897
+#: includes/class-admin.php:914
 msgid "EEA, UK and Switzerland only"
 msgstr "Solo EEE + UK/CH"
 
-#: includes/class-admin.php:898
+#: includes/class-admin.php:915
 msgid "Selected countries only"
 msgstr "Solo países definidos"
 
-#: includes/class-admin.php:899
+#: includes/class-admin.php:916
 msgid "Never show (disable the CMP)"
 msgstr "No mostrar (desactivar CMP)"
 
-#: includes/class-admin.php:901
+#: includes/class-admin.php:918
 msgid "With no geo header available, the banner is always shown."
 msgstr "Si no hay cabecera de geo, se mostrará siempre."
 
-#: includes/class-admin.php:905
+#: includes/class-admin.php:922
 msgid "Comma-separated ISO2 codes, for example ES,FR,DE. Only used in custom mode."
 msgstr "Códigos ISO2 separados por coma (ej: ES,FR,DE). Solo aplica en modo custom."
 
-#: includes/class-admin.php:909
+#: includes/class-admin.php:926
 msgid "Auto-detect (CF/IP/Geo)"
 msgstr "Auto detectar (CF/IP/Geo)"
 
-#: includes/class-admin.php:915
+#: includes/class-admin.php:932
 msgid "Select the header your host or CDN exposes."
 msgstr "Selecciona la cabecera que tu hosting/CDN expone."
 
-#: includes/class-admin.php:926
+#: includes/class-admin.php:943
 msgid "Auto (document or browser)"
 msgstr "Auto (documento o navegador)"
 
-#: includes/class-admin.php:927
+#: includes/class-admin.php:944
 msgid "Site language (WP)"
 msgstr "Idioma del sitio (WP)"
 
-#: includes/class-admin.php:928
+#: includes/class-admin.php:945
 msgid "Browser language"
 msgstr "Idioma del navegador"
 
-#: includes/class-admin.php:929
+#: includes/class-admin.php:946
 msgid "Force a language"
 msgstr "Forzar idioma"
 
-#: includes/class-admin.php:937
+#: includes/class-admin.php:954
 msgid "Used when detection fails."
 msgstr "Se usa si no se puede detectar."
 
-#: includes/class-admin.php:944
+#: includes/class-admin.php:961
 msgid "Download the HTML report"
 msgstr "Descargar informe HTML"
 
-#: includes/class-admin.php:945
+#: includes/class-admin.php:962
 msgid "Download the JSON report"
 msgstr "Descargar informe JSON"
 
-#: includes/class-admin.php:978
+#: includes/class-admin.php:995
 msgid "Brand name (optional)"
 msgstr "Nombre de marca (opcional)"
 
-#: includes/class-admin.php:979
+#: includes/class-admin.php:996
 msgid "Logo URL (optional)"
 msgstr "URL del logo (opcional)"
 
-#: includes/class-admin.php:980
+#: includes/class-admin.php:997
 msgid "Hide branding in the banner"
 msgstr "Ocultar branding en el banner"
 
-#: includes/class-admin.php:986
+#: includes/class-admin.php:1003
 msgid "Download settings (JSON)"
 msgstr "Descargar configuración (JSON)"
 
-#: includes/class-admin.php:992
+#: includes/class-admin.php:1009
 msgid "Import settings"
 msgstr "Importar configuración"
 
-#: includes/class-admin.php:998
+#: includes/class-admin.php:1015
 msgid "All good. No risks detected."
 msgstr "Todo correcto. No se detectaron riesgos."
 
-#: includes/class-admin.php:1012
+#: includes/class-admin.php:1029
 msgid "One per line. For example: youtube.com"
 msgstr "Uno por línea. Ejemplo: youtube.com"
 
-#: includes/class-admin.php:1030
+#: includes/class-admin.php:1047
 msgid "Show a floating review button"
 msgstr "Mostrar botón flotante de revisión"
 
-#: includes/class-admin.php:1046
+#: includes/class-admin.php:1063
 msgid "Recommended: an icon, so the page stays uncluttered."
 msgstr "Recomendado: icono para no molestar al usuario."
 
-#: includes/class-admin.php:1055 includes/class-admin.php:1219
+#: includes/class-admin.php:1072 includes/class-admin.php:1236
 msgid "Scan now"
 msgstr "Escanear ahora"
 
-#: includes/class-admin.php:1058
+#: includes/class-admin.php:1075
 msgid "No external domains have been detected yet."
 msgstr "Aún no se han detectado dominios externos."
 
-#: includes/class-admin.php:1092
+#: includes/class-admin.php:1109
 msgid "Scan cookies in the browser"
 msgstr "Escanear cookies en el navegador"
 
-#: includes/class-admin.php:1093
+#: includes/class-admin.php:1110
 msgid "Opens your site in audit mode to detect the cookies scripts actually set. Administrators only. Names are stored, never values."
 msgstr "Abre tu sitio en modo auditoría para detectar cookies reales (JS). Solo admins. Se guardan nombres, no valores."
 
-#: includes/class-admin.php:1099
+#: includes/class-admin.php:1116
 msgid "No cookies have been detected in a scan yet."
 msgstr "Aún no se han detectado cookies durante el escaneo."
 
-#: includes/class-admin.php:1124
+#: includes/class-admin.php:1141
 msgid "Use the [piensa_cookie_consent_policy] shortcode on a page if you do not have a URL of your own."
 msgstr "Usa el shortcode [piensa_cookie_consent_policy] en una página si no tienes URL propia."
 
-#: includes/class-admin.php:1137
+#: includes/class-admin.php:1154
 msgid "Format: name|category|purpose|duration|domain. For example:"
 msgstr "Formato: nombre|categoría|finalidad|duración|dominio. Ejemplo:"
 
-#: includes/class-admin.php:1143
+#: includes/class-admin.php:1160
 msgid "No records yet."
 msgstr "Aún no hay registros."
 
-#: includes/class-admin.php:1149 includes/class-admin.php:1220
+#: includes/class-admin.php:1166 includes/class-admin.php:1237
 msgid "Export CSV"
 msgstr "Exportar CSV"
 
-#: includes/class-admin.php:1151 includes/class-admin.php:2191 includes/class-consent-log.php:118
+#: includes/class-admin.php:1168 includes/class-admin.php:2259 includes/class-consent-log.php:151
 msgid "Date"
 msgstr "Fecha"
 
-#: includes/class-admin.php:1151 includes/class-consent-log.php:120
+#: includes/class-admin.php:1168 includes/class-consent-log.php:153
 msgid "Action"
 msgstr "Acción"
 
-#: includes/class-admin.php:1151 includes/class-admin.php:1256 includes/class-admin.php:2193 includes/class-consent-log.php:121
+#: includes/class-admin.php:1168 includes/class-admin.php:1273 includes/class-admin.php:2261 includes/class-consent-log.php:154
 msgid "Categories"
 msgstr "Categorías"
 
-#: includes/class-admin.php:1151 includes/class-admin.php:1229 includes/class-admin.php:1422 includes/class-consent-log.php:122
+#: includes/class-admin.php:1168 includes/class-admin.php:1246 includes/class-admin.php:1439 includes/class-consent-log.php:155
 msgid "Revision"
 msgstr "Revisión"
 
-#: includes/class-admin.php:1151 includes/class-consent-log.php:123
+#: includes/class-admin.php:1168 includes/class-consent-log.php:156
 msgid "Language"
 msgstr "Idioma"
 
-#: includes/class-admin.php:1170
+#: includes/class-admin.php:1187
 msgid "Supports the {slug}, {channel} and {site} variables. Left out, they are appended as query arguments."
 msgstr "Soporta variables: {slug}, {channel}, {site}. Si no las usas se agregan vía query."
 
-#: includes/class-admin.php:1185
+#: includes/class-admin.php:1202
 msgid "Bearer token (optional)"
 msgstr "Bearer token (opcional)"
 
-#: includes/class-admin.php:1186
+#: includes/class-admin.php:1203
 msgid "Sent in the Authorization header."
 msgstr "Se envia en la cabecera Authorization."
 
-#: includes/class-admin.php:1193
+#: includes/class-admin.php:1210
 msgid "Public key used to verify signatures from the central server."
 msgstr "Clave pública para verificar las firmas del servidor central."
 
-#: includes/class-admin.php:1199
+#: includes/class-admin.php:1216
 msgid "Require a valid signature"
 msgstr "Requerir firma válida"
 
-#: includes/class-admin.php:1200
+#: includes/class-admin.php:1217
 msgid "When enabled, an update without a valid signature is blocked."
 msgstr "Si está activo, el update se bloquea sin firma válida."
 
-#: includes/class-admin.php:1215
+#: includes/class-admin.php:1232
 msgid "Consent control panel"
 msgstr "Panel central de consentimiento"
 
-#: includes/class-admin.php:1216
+#: includes/class-admin.php:1233
 msgid "Consent management for agencies: compliance, control and clean data."
 msgstr "Gestión profesional con un guiño al monstruo de las cookies: cumplimiento, control y datos limpios."
 
-#: includes/class-admin.php:1222
+#: includes/class-admin.php:1239
 msgid "View the policy"
 msgstr "Ver política"
 
-#: includes/class-admin.php:1253
+#: includes/class-admin.php:1270
 msgid "General"
 msgstr "General"
 
-#: includes/class-admin.php:1255
+#: includes/class-admin.php:1272
 msgid "Languages"
 msgstr "Idiomas"
 
-#: includes/class-admin.php:1259
+#: includes/class-admin.php:1276
 msgid "Blocking"
 msgstr "Bloqueo"
 
-#: includes/class-admin.php:1261
+#: includes/class-admin.php:1278
 msgid "Policy"
 msgstr "Política"
 
-#: includes/class-admin.php:1285
+#: includes/class-admin.php:1302
 msgid "Quick actions"
 msgstr "Accesos rápidos"
 
-#: includes/class-admin.php:1286
+#: includes/class-admin.php:1303
 msgid "Floating button and consent review."
 msgstr "Botón flotante y revisión del consentimiento."
 
-#: includes/class-admin.php:1298
+#: includes/class-admin.php:1315
 msgid "Set geo-targeting and language."
 msgstr "Define geolocalización e idioma."
 
-#: includes/class-admin.php:1310
+#: includes/class-admin.php:1327
 msgid "Configure the English text. Spanish is managed under Banner and Categories."
 msgstr "Configura EN (ES se gestiona en Banner/Categorías)."
 
-#: includes/class-admin.php:1322
+#: includes/class-admin.php:1339
 msgid "Set the labels, and turn categories on or off."
 msgstr "Define etiquetas y activa o desactiva categorías."
 
-#: includes/class-admin.php:1334
+#: includes/class-admin.php:1351
 msgid "Adjust the layout, position and colors."
 msgstr "Ajusta el layout, posición y colores."
 
-#: includes/class-admin.php:1358
+#: includes/class-admin.php:1375
 msgid "Controls the blocked domains and the placeholder text."
 msgstr "Controla los dominios bloqueados y el texto de placeholders."
 
-#: includes/class-admin.php:1371
+#: includes/class-admin.php:1388
 msgid "Scan your site and classify its external domains."
 msgstr "Escanea tu sitio y clasifica dominios externos."
 
-#: includes/class-admin.php:1395
+#: includes/class-admin.php:1412
 msgid "Customize the visible branding."
 msgstr "Personaliza la marca visible."
 
-#: includes/class-admin.php:1406
+#: includes/class-admin.php:1423
 msgid "Tools"
 msgstr "Herramientas"
 
-#: includes/class-admin.php:1407
+#: includes/class-admin.php:1424
 msgid "Import and export settings."
 msgstr "Importa o exporta configuraciones."
 
-#: includes/class-admin.php:1434
+#: includes/class-admin.php:1451
 msgid "Review and export the consent history."
 msgstr "Consulta y exporta el historial de consentimientos."
 
-#: includes/class-admin.php:1442
+#: includes/class-admin.php:1459
 msgid "Save changes"
 msgstr "Guardar cambios"
 
-#: includes/class-admin.php:1453 includes/class-admin.php:2065 includes/class-admin.php:2083 includes/class-admin.php:2092 includes/class-admin.php:2106 includes/class-admin.php:2177
+#: includes/class-admin.php:1470 includes/class-admin.php:2127 includes/class-admin.php:2145 includes/class-admin.php:2154 includes/class-admin.php:2168 includes/class-admin.php:2245
 msgid "Not authorized."
 msgstr "No autorizado."
 
-#: includes/class-admin.php:1917
+#: includes/class-admin.php:1979
 msgid "External content blocked (privacy)"
 msgstr "Contenido externo bloqueado (Privacidad)"
 
-#: includes/class-admin.php:1918
+#: includes/class-admin.php:1980
 msgid "Accept cookies to view"
 msgstr "Aceptar Cookies para ver"
 
-#: includes/class-admin.php:1920
+#: includes/class-admin.php:1982
 msgid "Review consent"
 msgstr "Revisar consentimiento"
 
-#: includes/class-admin.php:1931 includes/class-admin.php:1937
+#: includes/class-admin.php:1993 includes/class-admin.php:1999
 msgid "Cookie preferences"
 msgstr "Preferencias de cookies"
 
-#: includes/class-admin.php:1932
+#: includes/class-admin.php:1994
 msgid "We use cookies to improve the experience and measure performance."
 msgstr "Usamos cookies para mejorar la experiencia y medir el rendimiento."
 
-#: includes/class-admin.php:1933
+#: includes/class-admin.php:1995
 msgid "Accept all"
 msgstr "Aceptar todas"
 
-#: includes/class-admin.php:1934
+#: includes/class-admin.php:1996
 msgid "Reject non-essential"
 msgstr "Rechazar no necesarias"
 
-#: includes/class-admin.php:1935
+#: includes/class-admin.php:1997
 msgid "Manage preferences"
 msgstr "Gestionar preferencias"
 
-#: includes/class-admin.php:1936
+#: includes/class-admin.php:1998
 msgid "Save preferences"
 msgstr "Guardar preferencias"
 
-#: includes/class-admin.php:1947
+#: includes/class-admin.php:2009
 msgid "Required for the basic functioning of the site."
 msgstr "Requeridas para el funcionamiento básico del sitio."
 
-#: includes/class-admin.php:1948
+#: includes/class-admin.php:2010
 msgid "You can disable them, but some essential features may stop working."
 msgstr "Puedes desactivarlas, pero algunas funciones esenciales pueden dejar de estar disponibles."
 
-#: includes/class-admin.php:1949
+#: includes/class-admin.php:2011
 msgid "Analytics cookies"
 msgstr "Cookies de analítica"
 
-#: includes/class-admin.php:1950
+#: includes/class-admin.php:2012
 msgid "Help us improve by measuring site usage."
 msgstr "Nos ayudan a mejorar midiendo el uso del sitio."
 
-#: includes/class-admin.php:1951
+#: includes/class-admin.php:2013
 msgid "Marketing cookies"
 msgstr "Cookies de marketing"
 
-#: includes/class-admin.php:1952
+#: includes/class-admin.php:2014
 msgid "Enable external content and personalized ads."
 msgstr "Permiten contenido externo y publicidad personalizada."
 
-#: includes/class-admin.php:2050
+#: includes/class-admin.php:2112
 msgid "Unknown"
 msgstr "Desconocido"
 
 #. translators: 1: number of URLs crawled, 2: number of external domains found
-#: includes/class-admin.php:2074
+#: includes/class-admin.php:2136
 msgid "Scan complete. URLs: %1$d, domains: %2$d"
 msgstr "Escaneo completado. URLs: %d, dominios: %d"
 
-#: includes/class-admin.php:2190
+#: includes/class-admin.php:2258
 msgid "Report"
 msgstr "Informe"
 
-#: includes/class-admin.php:2235
+#: includes/class-admin.php:2303
 msgid "Not authorized"
 msgstr "No autorizado"
 
-#: includes/class-admin.php:2287
+#: includes/class-admin.php:2355
 msgid "The CMP is switched off by geo-targeting. Check that this meets your obligations."
 msgstr "El CMP está desactivado por geolocalización. Verifica cumplimiento."
 
-#: includes/class-admin.php:2290
+#: includes/class-admin.php:2358
 msgid "Geo-targeting is set to a custom list, but no countries are defined."
 msgstr "Geo-targeting en modo custom sin países definidos."
 
-#: includes/class-admin.php:2294
+#: includes/class-admin.php:2362
 msgid "The consent log is switched off."
 msgstr "Registro de consentimiento desactivado."
 
 #. translators: %d: number of domains without a category
-#: includes/class-admin.php:2307
+#: includes/class-admin.php:2375
 msgid "%d domains are still unclassified."
 msgstr "Hay %d dominios sin clasificar."
 
-#: includes/class-admin.php:2312
+#: includes/class-admin.php:2380
 msgid "No cookie policy URL is set."
 msgstr "No hay URL de política de cookies."
 
-#: includes/class-admin.php:2316
+#: includes/class-admin.php:2384
 msgid "No privacy policy URL is set."
 msgstr "No hay URL de política de privacidad."
 
-#: includes/class-consent-log.php:119
+#: includes/class-consent-log.php:152
 msgid "Consent ID"
 msgstr "ID de consentimiento"
 
-#: includes/class-consent-log.php:124
+#: includes/class-consent-log.php:157
 msgid "GPC"
 msgstr "GPC"
 
-#: includes/class-consent-log.php:125
+#: includes/class-consent-log.php:158
 msgid "URL"
 msgstr "URL"
 

@@ -670,6 +670,33 @@ class Piensa_Cookie_Consent_Scanner {
 		return $result;
 	}
 
+	/**
+	 * Whether a URL belongs to this site.
+	 *
+	 * The scanner only ever fetches the site's own pages. Anything else would
+	 * let a crafted sitemap entry point the scan at an internal address, and
+	 * the cookies that came back would be stored and shown in the admin.
+	 *
+	 * @param string $url URL to test.
+	 *
+	 * @return bool
+	 */
+	private function is_own_url( $url ) {
+		$host = wp_parse_url( $url, PHP_URL_HOST );
+		$site = wp_parse_url( home_url(), PHP_URL_HOST );
+
+		if ( ! $host || ! $site ) {
+			return false;
+		}
+
+		$scheme = wp_parse_url( $url, PHP_URL_SCHEME );
+		if ( $scheme && ! in_array( strtolower( $scheme ), [ 'http', 'https' ], true ) ) {
+			return false;
+		}
+
+		return strtolower( $host ) === strtolower( $site );
+	}
+
 	private function get_scan_urls( $limit ) {
 		$urls     = [];
 		$sitemaps = [
@@ -693,7 +720,16 @@ class Piensa_Cookie_Consent_Scanner {
 			preg_match_all( '/<loc>([^<]+)<\\/loc>/i', $body, $matches );
 			if ( ! empty( $matches[1] ) ) {
 				foreach ( $matches[1] as $loc ) {
-					$urls[] = esc_url_raw( $loc );
+					// A sitemap can name any URL at all. Fetching one that is
+					// not ours would turn an admin-triggered scan into a
+					// request to an arbitrary address, so the host is checked
+					// before the crawler is handed the URL.
+					$url = esc_url_raw( $loc );
+					if ( ! $url || ! $this->is_own_url( $url ) ) {
+						continue;
+					}
+
+					$urls[] = $url;
 					if ( count( $urls ) >= $limit ) {
 						break 2;
 					}

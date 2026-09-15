@@ -30,7 +30,7 @@ class Piensa_Cookie_Consent_Core {
 
 	public function __construct() {
 		$this->scanner      = new Piensa_Cookie_Consent_Scanner();
-		$this->consent_mode = new Piensa_Cookie_Consent_Consent_Mode( $this->scanner );
+		$this->consent_mode = new Piensa_Cookie_Consent_Consent_Mode();
 		$this->blocker      = new Piensa_Cookie_Consent_Blocker();
 		$this->admin        = new Piensa_Cookie_Consent_Admin();
 		$this->consent_log  = new Piensa_Cookie_Consent_Consent_Log();

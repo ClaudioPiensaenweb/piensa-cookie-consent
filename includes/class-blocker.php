@@ -10,6 +10,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Piensa_Cookie_Consent_Blocker {
+
+	/**
+	 * Transient that rate-limits writes from the front-end discovery pass.
+	 */
+	const DISCOVERY_THROTTLE = 'piensa_cookie_consent_discovery_throttle';
+
+	/**
+	 * Most hosts kept in the discovered-domains option.
+	 */
+	const MAX_DISCOVERED = 500;
+
 	private $blocked_domains    = [];
 	private $placeholder_title  = '';
 	private $placeholder_button = '';
@@ -119,8 +130,21 @@ class Piensa_Cookie_Consent_Blocker {
 		return $lines;
 	}
 
+	/**
+	 * Categories the server leaves untouched.
+	 *
+	 * Always just the necessary ones, deliberately. Varying the HTML by the
+	 * visitor's consent cookie makes every page uncacheable in practice: a page
+	 * cache stores whatever the first visitor generated and serves it to
+	 * everyone, so one person accepting would release the scripts to visitors
+	 * who never did. Blocking unconditionally keeps the markup identical for
+	 * all visitors, and the front-end script releases what the visitor has
+	 * accepted once it runs.
+	 *
+	 * @return string[]
+	 */
 	private function get_allowed_categories() {
-		return Piensa_Cookie_Consent_Consent::get_granted_categories();
+		return [ 'necessary' ];
 	}
 
 	private function replace_script_callback( $matches ) {
@@ -334,16 +358,40 @@ class Piensa_Cookie_Consent_Blocker {
 			$discovered = [];
 		}
 
+		$new_hosts = array_diff( array_keys( $found ), array_keys( $discovered ) );
+
+		// Refreshing last_seen on every hit would mean an UPDATE against
+		// wp_options for every page view on the site. The timestamp is only
+		// worth a write once an hour, and a host nobody has seen before is
+		// worth one immediately.
+		if ( empty( $new_hosts ) && get_transient( self::DISCOVERY_THROTTLE ) ) {
+			return;
+		}
+
 		foreach ( array_keys( $found ) as $host ) {
-			$category            = $this->categorize_domain( $host );
 			$discovered[ $host ] = [
-				'category'  => $category,
+				'category'  => $this->categorize_domain( $host ),
 				'service'   => Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host ),
 				'last_seen' => time(),
 			];
 		}
 
+		// A page that pulls in hundreds of third-party hosts must not grow the
+		// option without bound.
+		if ( count( $discovered ) > self::MAX_DISCOVERED ) {
+			uasort(
+				$discovered,
+				static function ( $a, $b ) {
+					$left  = isset( $a['last_seen'] ) ? (int) $a['last_seen'] : 0;
+					$right = isset( $b['last_seen'] ) ? (int) $b['last_seen'] : 0;
+					return $right <=> $left;
+				}
+			);
+			$discovered = array_slice( $discovered, 0, self::MAX_DISCOVERED, true );
+		}
+
 		update_option( 'piensa_cookie_consent_discovered', $discovered, false );
+		set_transient( self::DISCOVERY_THROTTLE, 1, HOUR_IN_SECONDS );
 	}
 
 	private function extract_host( $url ) {

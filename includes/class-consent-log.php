@@ -12,9 +12,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Piensa_Cookie_Consent_Consent_Log {
 	const TABLE = 'piensa_cookie_consent_log';
 
+	/**
+	 * Most consent records accepted from one address per hour.
+	 *
+	 * A visitor records a consent once, or a handful of times if they change
+	 * their mind. Anything beyond this is not a visitor.
+	 */
+	const RATE_LIMIT = 20;
+
+	/**
+	 * Largest accepted size, in bytes, for the JSON fields.
+	 */
+	const MAX_JSON_BYTES = 2048;
+
+	/**
+	 * Hook that purges records past their retention period.
+	 */
+	const PURGE_HOOK = 'piensa_cookie_consent_purge_log';
+
 	public function init() {
 		add_action( 'wp_ajax_piensa_cookie_consent_log_consent', [ $this, 'handle_log_request' ] );
 		add_action( 'wp_ajax_nopriv_piensa_cookie_consent_log_consent', [ $this, 'handle_log_request' ] );
+		add_action( self::PURGE_HOOK, [ __CLASS__, 'purge_expired' ] );
+
+		if ( ! wp_next_scheduled( self::PURGE_HOOK ) ) {
+			wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', self::PURGE_HOOK );
+		}
 	}
 
 	public static function install_table() {
@@ -51,6 +74,14 @@ class Piensa_Cookie_Consent_Consent_Log {
 		$settings = Piensa_Cookie_Consent_Admin::get_settings();
 		if ( empty( $settings['enable_consent_log'] ) ) {
 			wp_send_json_success( [ 'disabled' => true ] );
+		}
+
+		// The endpoint is public by necessity — consent is given before anyone
+		// signs in — and the nonce is the same for every anonymous visitor, so
+		// it is no barrier to a script. Without a ceiling, this is a way to
+		// fill the site's database.
+		if ( ! $this->within_rate_limit() ) {
+			wp_send_json_error( [ 'message' => 'Too many requests' ], 429 );
 		}
 
 		$payload = [
@@ -102,7 +133,9 @@ class Piensa_Cookie_Consent_Consent_Log {
 	}
 
 	public static function export_logs() {
-		$logs = self::get_logs( 1000, 0 );
+		// Streamed in batches rather than loaded at once: the export is
+		// evidence of compliance and silently stopping at the first thousand
+		// records would make it evidence of nothing.
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
@@ -126,24 +159,37 @@ class Piensa_Cookie_Consent_Consent_Log {
 			]
 		);
 
-		foreach ( $logs as $log ) {
-			fputcsv(
-				$output,
-				[
-					$log['created_at'],
-					$log['consent_id'],
-					$log['action'],
-					$log['categories'],
-					$log['revision'],
-					$log['language'],
-					$log['gpc'],
-					$log['url'],
-				]
-			);
-		}
+		$offset = 0;
+		$batch  = 500;
+
+		do {
+			$logs = self::get_logs( $batch, $offset );
+
+			foreach ( $logs as $log ) {
+				fputcsv(
+					$output,
+					[
+						$log['created_at'],
+						$log['consent_id'],
+						$log['action'],
+						$log['categories'],
+						$log['revision'],
+						$log['language'],
+						$log['gpc'],
+						$log['url'],
+					]
+				);
+			}
+
+			// Flush each batch so a large export streams out instead of
+			// accumulating in the output buffer.
+			flush();
+
+			$offset += $batch;
+		} while ( count( $logs ) === $batch );
 
 		fclose( $output );
-        // phpcs:enable WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+		// phpcs:enable WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 		exit;
 	}
 
@@ -194,13 +240,85 @@ class Piensa_Cookie_Consent_Consent_Log {
 		);
 	}
 
+	/**
+	 * Re-encode a JSON field, discarding anything oversized or malformed.
+	 *
+	 * The size is checked before decoding: parsing a multi-megabyte document
+	 * to find out it is too large has already cost the memory.
+	 *
+	 * @param string $value Raw JSON from the request.
+	 *
+	 * @return string
+	 */
 	private function normalize_json( $value ) {
+		if ( ! is_string( $value ) || strlen( $value ) > self::MAX_JSON_BYTES ) {
+			return wp_json_encode( [] );
+		}
+
 		$decoded = json_decode( $value, true );
-		if ( json_last_error() === JSON_ERROR_NONE ) {
+		if ( json_last_error() === JSON_ERROR_NONE && is_array( $decoded ) ) {
 			return wp_json_encode( $decoded );
 		}
 
 		return wp_json_encode( [] );
+	}
+
+	/**
+	 * Whether this address may record another consent right now.
+	 *
+	 * Keyed by the same hash the log stores, so the limiter holds no address
+	 * either.
+	 *
+	 * @return bool
+	 */
+	private function within_rate_limit() {
+		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+
+		if ( $ip === '' ) {
+			return true;
+		}
+
+		$key   = 'pcc_rl_' . substr( hash( 'sha256', $ip . wp_salt( 'auth' ) ), 0, 32 );
+		$count = (int) get_transient( $key );
+
+		if ( $count >= self::RATE_LIMIT ) {
+			return false;
+		}
+
+		set_transient( $key, $count + 1, HOUR_IN_SECONDS );
+
+		return true;
+	}
+
+	/**
+	 * Delete records past the configured retention period.
+	 *
+	 * Keeping consent records for ever is its own compliance problem: the GDPR
+	 * asks for a defined retention period, not an indefinite one.
+	 *
+	 * @return void
+	 */
+	public static function purge_expired() {
+		global $wpdb;
+
+		$settings = Piensa_Cookie_Consent_Admin::get_settings();
+		$days     = isset( $settings['log_retention_days'] ) ? (int) $settings['log_retention_days'] : 0;
+
+		if ( $days <= 0 ) {
+			return;
+		}
+
+		$table  = $wpdb->prefix . self::TABLE;
+		$cutoff = gmdate( 'Y-m-d H:i:s', time() - ( $days * DAY_IN_SECONDS ) );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table owned by this plugin.
+		$exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+		if ( $exists !== $table ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be parameterised; the name is built from the trusted prefix.
+		$wpdb->query( $wpdb->prepare( "DELETE FROM `{$table}` WHERE created_at < %s", $cutoff ) );
 	}
 
 	private function to_mysql_datetime( $iso ) {
