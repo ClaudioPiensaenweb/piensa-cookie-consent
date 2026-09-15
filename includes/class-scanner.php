@@ -505,11 +505,9 @@ class Piensa_Cookie_Consent_Scanner {
 			return null;
 		}
 
-		$parts = explode( ';', $header );
-		if ( ! $parts ) {
-			return null;
-		}
-
+		// explode() always returns at least one element, so array_shift() here
+		// cannot come back empty.
+		$parts      = explode( ';', $header );
 		$name_value = array_shift( $parts );
 		$name_value = trim( $name_value );
 		if ( $name_value === '' || strpos( $name_value, '=' ) === false ) {
@@ -517,7 +515,7 @@ class Piensa_Cookie_Consent_Scanner {
 		}
 
 		$name_parts = array_map( 'trim', explode( '=', $name_value, 2 ) );
-		$name       = isset( $name_parts[0] ) ? $name_parts[0] : '';
+		$name       = $name_parts[0];
 		$value      = isset( $name_parts[1] ) ? $name_parts[1] : '';
 		if ( $name === '' ) {
 			return null;

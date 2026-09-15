@@ -51,6 +51,8 @@ class Piensa_Cookie_Consent_Migrator {
 			return;
 		}
 
+		// Each step is guarded by the version it upgrades from, so a site
+		// several versions behind runs them all in order.
 		if ( $stored < 2 ) {
 			self::migrate_to_2();
 		}

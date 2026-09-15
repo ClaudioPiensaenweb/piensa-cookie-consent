@@ -10,12 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Piensa_Cookie_Consent_Updater {
-	private $plugin_file;
 	private $plugin_slug;
 	private $cache_key = 'piensa_cookie_consent_update';
 
 	public function __construct( $plugin_file ) {
-		$this->plugin_file = $plugin_file;
 		$this->plugin_slug = plugin_basename( $plugin_file );
 	}
 

@@ -613,7 +613,7 @@ class Piensa_Cookie_Consent_Admin {
 	public function render_policy_revision_field() {
 		$settings = self::get_settings();
 		$value    = (int) $settings['policy_revision'];
-		echo '<input class="small-text" type="number" min="0" name="' . esc_attr( $this->option_name ) . '[policy_revision]" value="' . esc_attr( $value ) . '" />';
+		echo '<input class="small-text" type="number" min="0" name="' . esc_attr( $this->option_name ) . '[policy_revision]" value="' . esc_attr( (string) $value ) . '" />';
 		echo '<p class="description">' . esc_html__( 'Increase this value when you change the text or the policy, to ask visitors for consent again.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
@@ -1205,7 +1205,7 @@ class Piensa_Cookie_Consent_Admin {
 		echo '</div>';
 		echo '<div class="ag-kpi">';
 		echo '<span class="ag-kpi__label">' . esc_html__( 'Detected domains', 'piensa-cookie-consent' ) . '</span>';
-		echo '<span class="ag-kpi__value">' . esc_html( $domains_count ) . '</span>';
+		echo '<span class="ag-kpi__value">' . esc_html( (string) $domains_count ) . '</span>';
 		echo '</div>';
 		echo '<div class="ag-kpi">';
 		echo '<span class="ag-kpi__label">' . esc_html__( 'Category mode', 'piensa-cookie-consent' ) . '</span>';
