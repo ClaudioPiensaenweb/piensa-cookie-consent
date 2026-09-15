@@ -36,7 +36,12 @@ function piensa_cookie_consent_uninstall_site() {
 }
 
 if ( is_multisite() ) {
-	$piensa_cookie_consent_sites = get_sites( [ 'fields' => 'ids', 'number' => 0 ] );
+	$piensa_cookie_consent_sites = get_sites(
+		[
+			'fields' => 'ids',
+			'number' => 0,
+		]
+	);
 
 	foreach ( $piensa_cookie_consent_sites as $piensa_cookie_consent_site_id ) {
 		switch_to_blog( $piensa_cookie_consent_site_id );

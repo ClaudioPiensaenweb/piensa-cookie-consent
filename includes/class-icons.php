@@ -98,11 +98,11 @@ class Piensa_Cookie_Consent_Icons {
 	 */
 	public static function get_allowed_html() {
 		$shared = [
-			'stroke'           => true,
-			'stroke-width'     => true,
-			'stroke-linecap'   => true,
-			'stroke-linejoin'  => true,
-			'fill'             => true,
+			'stroke'          => true,
+			'stroke-width'    => true,
+			'stroke-linecap'  => true,
+			'stroke-linejoin' => true,
+			'fill'            => true,
 		];
 
 		return [
@@ -120,7 +120,17 @@ class Piensa_Cookie_Consent_Icons {
 				]
 			),
 			'path' => array_merge( $shared, [ 'd' => true ] ),
-			'rect' => array_merge( $shared, [ 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true, 'ry' => true ] ),
+			'rect' => array_merge(
+				$shared,
+				[
+					'x'      => true,
+					'y'      => true,
+					'width'  => true,
+					'height' => true,
+					'rx'     => true,
+					'ry'     => true,
+				]
+			),
 		];
 	}
 

@@ -1,99 +1,99 @@
 <?php
 // includes/class-blocker.php
 
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 class Piensa_Cookie_Consent_Blocker {
-    private $blocked_domains = [];
-    private $placeholder_title = '';
-    private $placeholder_button = '';
-    private $enabled = true;
-    private $allowed_categories = [];
-    private $domain_overrides = [];
-    private $site_host = '';
+	private $blocked_domains    = [];
+	private $placeholder_title  = '';
+	private $placeholder_button = '';
+	private $enabled            = true;
+	private $allowed_categories = [];
+	private $domain_overrides   = [];
+	private $site_host          = '';
 
-    public function init() {
-        if (!is_admin()) {
-            add_action('template_redirect', [$this, 'start_buffer'], 0);
-        }
-    }
+	public function init() {
+		if ( ! is_admin() ) {
+			add_action( 'template_redirect', [ $this, 'start_buffer' ], 0 );
+		}
+	}
 
-    public function start_buffer() {
-        $settings = Piensa_Cookie_Consent_Admin::get_settings();
-        $this->enabled = !empty($settings['enable_blocker']);
-        $this->blocked_domains = $this->parse_domains($settings['blocked_domains']);
-        $this->placeholder_title = $settings['placeholder_title'];
-        $this->placeholder_button = $settings['placeholder_button'];
-        $this->domain_overrides = isset($settings['domain_overrides']) && is_array($settings['domain_overrides']) ? $settings['domain_overrides'] : [];
-        $this->site_host = parse_url(home_url(), PHP_URL_HOST);
+	public function start_buffer() {
+		$settings                 = Piensa_Cookie_Consent_Admin::get_settings();
+		$this->enabled            = ! empty( $settings['enable_blocker'] );
+		$this->blocked_domains    = $this->parse_domains( $settings['blocked_domains'] );
+		$this->placeholder_title  = $settings['placeholder_title'];
+		$this->placeholder_button = $settings['placeholder_button'];
+		$this->domain_overrides   = isset( $settings['domain_overrides'] ) && is_array( $settings['domain_overrides'] ) ? $settings['domain_overrides'] : [];
+		$this->site_host          = parse_url( home_url(), PHP_URL_HOST );
 
-        if (!Piensa_Cookie_Consent_Geo::should_show_cmp($settings)) {
-            $this->enabled = false;
-            return;
-        }
+		if ( ! Piensa_Cookie_Consent_Geo::should_show_cmp( $settings ) ) {
+			$this->enabled = false;
+			return;
+		}
 
-        if (!$this->enabled) {
-            return;
-        }
+		if ( ! $this->enabled ) {
+			return;
+		}
 
-        ob_start([$this, 'process_html']);
-    }
+		ob_start( [ $this, 'process_html' ] );
+	}
 
-    public function process_html($html) {
-        $this->discover_third_party_sources($html);
-        $this->allowed_categories = $this->get_allowed_categories();
+	public function process_html( $html ) {
+		$this->discover_third_party_sources( $html );
+		$this->allowed_categories = $this->get_allowed_categories();
 
-        $pattern = '/<iframe\s+(?![^>]*\bclass\s*=\s*["\"][^"\"]*\bexcluded-class\b)[^>]*\bsrc\s*=\s*["\"]([^"\"]+)["\"][^>]*>.*?<\/iframe>/is';
-        $script_pattern = '/<script\s+(?![^>]*\bdata-category\b)[^>]*\bsrc\s*=\s*["\"]([^"\"]+)["\"][^>]*>\s*<\/script>/is';
-        $inline_script_pattern = '/<script\b([^>]*)>(.*?)<\/script>/is';
-        $img_pattern = '/<img\s+(?![^>]*\bdata-cookie-category\b)[^>]*\bsrc\s*=\s*["\"]([^"\"]+)["\"][^>]*>/is';
-        $link_pattern = '/<link\s+(?![^>]*\bdata-cookie-category\b)[^>]*\bhref\s*=\s*["\"]([^"\"]+)["\"][^>]*>/is';
+		$pattern               = '/<iframe\s+(?![^>]*\bclass\s*=\s*["\"][^"\"]*\bexcluded-class\b)[^>]*\bsrc\s*=\s*["\"]([^"\"]+)["\"][^>]*>.*?<\/iframe>/is';
+		$script_pattern        = '/<script\s+(?![^>]*\bdata-category\b)[^>]*\bsrc\s*=\s*["\"]([^"\"]+)["\"][^>]*>\s*<\/script>/is';
+		$inline_script_pattern = '/<script\b([^>]*)>(.*?)<\/script>/is';
+		$img_pattern           = '/<img\s+(?![^>]*\bdata-cookie-category\b)[^>]*\bsrc\s*=\s*["\"]([^"\"]+)["\"][^>]*>/is';
+		$link_pattern          = '/<link\s+(?![^>]*\bdata-cookie-category\b)[^>]*\bhref\s*=\s*["\"]([^"\"]+)["\"][^>]*>/is';
 
-        $html = preg_replace_callback($script_pattern, [$this, 'replace_script_callback'], $html);
-        $html = preg_replace_callback($inline_script_pattern, [$this, 'replace_inline_script_callback'], $html);
-        $html = preg_replace_callback($img_pattern, [$this, 'replace_img_callback'], $html);
-        $html = preg_replace_callback($link_pattern, [$this, 'replace_link_callback'], $html);
-        return preg_replace_callback($pattern, [$this, 'replace_iframe_callback'], $html);
-    }
+		$html = preg_replace_callback( $script_pattern, [ $this, 'replace_script_callback' ], $html );
+		$html = preg_replace_callback( $inline_script_pattern, [ $this, 'replace_inline_script_callback' ], $html );
+		$html = preg_replace_callback( $img_pattern, [ $this, 'replace_img_callback' ], $html );
+		$html = preg_replace_callback( $link_pattern, [ $this, 'replace_link_callback' ], $html );
+		return preg_replace_callback( $pattern, [ $this, 'replace_iframe_callback' ], $html );
+	}
 
-    public function replace_iframe_callback($matches) {
-        $full_tag = $matches[0];
-        $src_url = $matches[1];
+	public function replace_iframe_callback( $matches ) {
+		$full_tag = $matches[0];
+		$src_url  = $matches[1];
 
-        $host = $this->extract_host($src_url);
-        $category = $this->categorize_domain($host);
-        $service = Piensa_Cookie_Consent_Scanner::get_service_for_domain($host);
+		$host     = $this->extract_host( $src_url );
+		$category = $this->categorize_domain( $host );
+		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
 
-        if (!$this->should_block_category($category) && !$this->is_domain_blocked($src_url)) {
-            return $full_tag;
-        }
+		if ( ! $this->should_block_category( $category ) && ! $this->is_domain_blocked( $src_url ) ) {
+			return $full_tag;
+		}
 
-        $title = esc_html($this->placeholder_title);
-        $button = esc_html($this->placeholder_button);
+		$title  = esc_html( $this->placeholder_title );
+		$button = esc_html( $this->placeholder_button );
 
-        $target_category = $category && $category !== 'unknown' ? $category : 'marketing';
-        $neutralized_tag = str_replace('src=', 'data-src=', $full_tag);
-        $extra = ' class="ag-blocked-content" data-cookie-category="' . esc_attr($target_category) . '"';
-        if ($service) {
-            $extra .= ' data-cookie-service="' . esc_attr($service) . '"';
-        }
-        $neutralized_tag = str_replace('<iframe', '<iframe' . $extra, $neutralized_tag);
+		$target_category = $category && $category !== 'unknown' ? $category : 'marketing';
+		$neutralized_tag = str_replace( 'src=', 'data-src=', $full_tag );
+		$extra           = ' class="ag-blocked-content" data-cookie-category="' . esc_attr( $target_category ) . '"';
+		if ( $service ) {
+			$extra .= ' data-cookie-service="' . esc_attr( $service ) . '"';
+		}
+		$neutralized_tag = str_replace( '<iframe', '<iframe' . $extra, $neutralized_tag );
 
-        // Without an explicit type, a placeholder rendered inside a form
-        // submits it instead of granting consent.
-        $button_attrs = 'type="button" class="ag-btn-accept-marketing"';
-        if ($service) {
-            $button_attrs .= ' data-ag-service="' . esc_attr($service) . '" data-ag-category="' . esc_attr($target_category) . '"';
-        }
+		// Without an explicit type, a placeholder rendered inside a form
+		// submits it instead of granting consent.
+		$button_attrs = 'type="button" class="ag-btn-accept-marketing"';
+		if ( $service ) {
+			$button_attrs .= ' data-ag-service="' . esc_attr( $service ) . '" data-ag-category="' . esc_attr( $target_category ) . '"';
+		}
 
-        // The overlay is announced as a named group, so a screen reader
-        // explains why the embed is missing rather than skipping over it.
-        $placeholder = '
+		// The overlay is announced as a named group, so a screen reader
+		// explains why the embed is missing rather than skipping over it.
+		$placeholder = '
         <div class="ag-placeholder-wrapper">
             ' . $neutralized_tag . '
-            <div class="ag-placeholder-overlay" role="group" aria-label="' . esc_attr($title) . '">
+            <div class="ag-placeholder-overlay" role="group" aria-label="' . esc_attr( $title ) . '">
                 <div class="ag-placeholder-content">
                     <p>' . $title . '</p>
                     <button ' . $button_attrs . '>' . $button . '</button>
@@ -101,286 +101,286 @@ class Piensa_Cookie_Consent_Blocker {
             </div>
         </div>';
 
-        return $placeholder;
-    }
+		return $placeholder;
+	}
 
-    private function parse_domains($raw) {
-        $raw = is_string($raw) ? $raw : '';
-        $lines = preg_split('/\\r\\n|\\r|\\n/', $raw);
-        $lines = array_filter(array_map('trim', $lines));
-        return $lines;
-    }
+	private function parse_domains( $raw ) {
+		$raw   = is_string( $raw ) ? $raw : '';
+		$lines = preg_split( '/\\r\\n|\\r|\\n/', $raw );
+		$lines = array_filter( array_map( 'trim', $lines ) );
+		return $lines;
+	}
 
-    private function get_allowed_categories() {
-        return Piensa_Cookie_Consent_Consent::get_granted_categories();
-    }
+	private function get_allowed_categories() {
+		return Piensa_Cookie_Consent_Consent::get_granted_categories();
+	}
 
-    private function replace_script_callback($matches) {
-        $full_tag = $matches[0];
-        $src_url = $matches[1];
-        $host = $this->extract_host($src_url);
-        $category = $this->categorize_domain($host);
-        $service = Piensa_Cookie_Consent_Scanner::get_service_for_domain($host);
+	private function replace_script_callback( $matches ) {
+		$full_tag = $matches[0];
+		$src_url  = $matches[1];
+		$host     = $this->extract_host( $src_url );
+		$category = $this->categorize_domain( $host );
+		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
 
-        if (!$this->should_block_category($category)) {
-            return $full_tag;
-        }
+		if ( ! $this->should_block_category( $category ) ) {
+			return $full_tag;
+		}
 
-        $tag = preg_replace('/\\s+type=([\"\\\']).*?\\1/i', '', $full_tag);
-        $tag = preg_replace('/\\s+data-category=([\"\\\']).*?\\1/i', '', $tag);
-        $service_attr = $service ? ' data-service="' . esc_attr($service) . '"' : '';
-        $tag = str_replace('<script', '<script type="text/plain" data-category="' . esc_attr($category) . '"' . $service_attr, $tag);
+		$tag          = preg_replace( '/\\s+type=([\"\\\']).*?\\1/i', '', $full_tag );
+		$tag          = preg_replace( '/\\s+data-category=([\"\\\']).*?\\1/i', '', $tag );
+		$service_attr = $service ? ' data-service="' . esc_attr( $service ) . '"' : '';
+		$tag          = str_replace( '<script', '<script type="text/plain" data-category="' . esc_attr( $category ) . '"' . $service_attr, $tag );
 
-        return $tag;
-    }
+		return $tag;
+	}
 
-    private function replace_inline_script_callback($matches) {
-        $attrs = isset($matches[1]) ? $matches[1] : '';
-        $content = isset($matches[2]) ? $matches[2] : '';
-        $full_tag = $matches[0];
+	private function replace_inline_script_callback( $matches ) {
+		$attrs    = isset( $matches[1] ) ? $matches[1] : '';
+		$content  = isset( $matches[2] ) ? $matches[2] : '';
+		$full_tag = $matches[0];
 
-        if ($content === '' || trim($content) === '') {
-            return $full_tag;
-        }
+		if ( $content === '' || trim( $content ) === '' ) {
+			return $full_tag;
+		}
 
-        if (stripos($attrs, 'data-category=') !== false) {
-            return $full_tag;
-        }
+		if ( stripos( $attrs, 'data-category=' ) !== false ) {
+			return $full_tag;
+		}
 
-        if (stripos($attrs, 'src=') !== false) {
-            return $full_tag;
-        }
+		if ( stripos( $attrs, 'src=' ) !== false ) {
+			return $full_tag;
+		}
 
-        if (preg_match('/\\btype=([\"\\\'])([^\"\\\']+)\\1/i', $attrs, $type_match)) {
-            $type = strtolower($type_match[2]);
-            if (!in_array($type, ['text/javascript', 'application/javascript', 'module'], true)) {
-                return $full_tag;
-            }
-        }
+		if ( preg_match( '/\\btype=([\"\\\'])([^\"\\\']+)\\1/i', $attrs, $type_match ) ) {
+			$type = strtolower( $type_match[2] );
+			if ( ! in_array( $type, [ 'text/javascript', 'application/javascript', 'module' ], true ) ) {
+				return $full_tag;
+			}
+		}
 
-        $rules = $this->get_inline_script_rules();
-        foreach ($rules as $rule) {
-            if (preg_match($rule['pattern'], $content)) {
-                $category = $rule['category'];
-                $service = $rule['service'];
-                $tag = '<script type="text/plain" data-category="' . esc_attr($category) . '"';
-                if ($service) {
-                    $tag .= ' data-service="' . esc_attr($service) . '"';
-                }
-                $tag .= '>' . $content . '</script>';
-                return $tag;
-            }
-        }
+		$rules = $this->get_inline_script_rules();
+		foreach ( $rules as $rule ) {
+			if ( preg_match( $rule['pattern'], $content ) ) {
+				$category = $rule['category'];
+				$service  = $rule['service'];
+				$tag      = '<script type="text/plain" data-category="' . esc_attr( $category ) . '"';
+				if ( $service ) {
+					$tag .= ' data-service="' . esc_attr( $service ) . '"';
+				}
+				$tag .= '>' . $content . '</script>';
+				return $tag;
+			}
+		}
 
-        return $full_tag;
-    }
+		return $full_tag;
+	}
 
-    private function get_inline_script_rules() {
-        return [
-            [
-                'pattern' => '/hotjar|hj\\s*\\(|_hj/i',
-                'category' => 'analytics',
-                'service' => 'hotjar',
-            ],
-            [
-                'pattern' => '/clarity\\s*\\(|clarity\\.ms/i',
-                'category' => 'analytics',
-                'service' => 'clarity',
-            ],
-            [
-                'pattern' => '/gtag\\s*\\(|google-analytics\\.com|googletagmanager\\.com/i',
-                'category' => 'analytics',
-                'service' => 'google_analytics',
-            ],
-            [
-                'pattern' => '/fbq\\s*\\(|facebook\\.net|connect\\.facebook\\.net/i',
-                'category' => 'marketing',
-                'service' => 'facebook',
-            ],
-            [
-                'pattern' => '/ttq\\s*\\(|tiktok\\.com|analytics\\.tiktok\\.com/i',
-                'category' => 'marketing',
-                'service' => 'tiktok',
-            ],
-            [
-                'pattern' => '/pintrk\\s*\\(|pinterest\\.com/i',
-                'category' => 'marketing',
-                'service' => 'pinterest',
-            ],
-            [
-                'pattern' => '/lintrk\\s*\\(|linkedin\\.com|licdn\\.com/i',
-                'category' => 'marketing',
-                'service' => 'linkedin',
-            ],
-            [
-                'pattern' => '/twq\\s*\\(|twitter\\.com|platform\\.twitter\\.com/i',
-                'category' => 'marketing',
-                'service' => 'twitter',
-            ],
-        ];
-    }
+	private function get_inline_script_rules() {
+		return [
+			[
+				'pattern'  => '/hotjar|hj\\s*\\(|_hj/i',
+				'category' => 'analytics',
+				'service'  => 'hotjar',
+			],
+			[
+				'pattern'  => '/clarity\\s*\\(|clarity\\.ms/i',
+				'category' => 'analytics',
+				'service'  => 'clarity',
+			],
+			[
+				'pattern'  => '/gtag\\s*\\(|google-analytics\\.com|googletagmanager\\.com/i',
+				'category' => 'analytics',
+				'service'  => 'google_analytics',
+			],
+			[
+				'pattern'  => '/fbq\\s*\\(|facebook\\.net|connect\\.facebook\\.net/i',
+				'category' => 'marketing',
+				'service'  => 'facebook',
+			],
+			[
+				'pattern'  => '/ttq\\s*\\(|tiktok\\.com|analytics\\.tiktok\\.com/i',
+				'category' => 'marketing',
+				'service'  => 'tiktok',
+			],
+			[
+				'pattern'  => '/pintrk\\s*\\(|pinterest\\.com/i',
+				'category' => 'marketing',
+				'service'  => 'pinterest',
+			],
+			[
+				'pattern'  => '/lintrk\\s*\\(|linkedin\\.com|licdn\\.com/i',
+				'category' => 'marketing',
+				'service'  => 'linkedin',
+			],
+			[
+				'pattern'  => '/twq\\s*\\(|twitter\\.com|platform\\.twitter\\.com/i',
+				'category' => 'marketing',
+				'service'  => 'twitter',
+			],
+		];
+	}
 
-    private function replace_img_callback($matches) {
-        $full_tag = $matches[0];
-        $src_url = $matches[1];
-        $host = $this->extract_host($src_url);
-        $category = $this->categorize_domain($host);
-        $service = Piensa_Cookie_Consent_Scanner::get_service_for_domain($host);
+	private function replace_img_callback( $matches ) {
+		$full_tag = $matches[0];
+		$src_url  = $matches[1];
+		$host     = $this->extract_host( $src_url );
+		$category = $this->categorize_domain( $host );
+		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
 
-        if (!$this->should_block_category($category) && !$this->is_domain_blocked($src_url)) {
-            return $full_tag;
-        }
+		if ( ! $this->should_block_category( $category ) && ! $this->is_domain_blocked( $src_url ) ) {
+			return $full_tag;
+		}
 
-        $target_category = $category && $category !== 'unknown' ? $category : 'marketing';
-        $tag = str_replace('src=', 'data-src=', $full_tag);
-        $tag = preg_replace('/\\s+srcset=([\"\\\']).*?\\1/i', '', $tag);
-        $tag = preg_replace('/\\s+loading=([\"\\\']).*?\\1/i', '', $tag);
-        $tag = preg_replace('/\\s+decoding=([\"\\\']).*?\\1/i', '', $tag);
-        $tag = preg_replace('/\\s+class=([\"\\\'])([^\"\\\']*)\\1/i', ' class="$2 ag-blocked-content"', $tag, 1, $count);
-        if ($count === 0) {
-            $tag = str_replace('<img', '<img class="ag-blocked-content"', $tag);
-        }
-        $extra = ' data-cookie-category="' . esc_attr($target_category) . '"';
-        if ($service) {
-            $extra .= ' data-cookie-service="' . esc_attr($service) . '"';
-        }
-        $tag = str_replace('<img', '<img' . $extra, $tag);
-        $tag = preg_replace('/\\s+data-src=/i', ' data-src=', $tag);
-        $tag = str_replace('<img', '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="', $tag);
+		$target_category = $category && $category !== 'unknown' ? $category : 'marketing';
+		$tag             = str_replace( 'src=', 'data-src=', $full_tag );
+		$tag             = preg_replace( '/\\s+srcset=([\"\\\']).*?\\1/i', '', $tag );
+		$tag             = preg_replace( '/\\s+loading=([\"\\\']).*?\\1/i', '', $tag );
+		$tag             = preg_replace( '/\\s+decoding=([\"\\\']).*?\\1/i', '', $tag );
+		$tag             = preg_replace( '/\\s+class=([\"\\\'])([^\"\\\']*)\\1/i', ' class="$2 ag-blocked-content"', $tag, 1, $count );
+		if ( $count === 0 ) {
+			$tag = str_replace( '<img', '<img class="ag-blocked-content"', $tag );
+		}
+		$extra = ' data-cookie-category="' . esc_attr( $target_category ) . '"';
+		if ( $service ) {
+			$extra .= ' data-cookie-service="' . esc_attr( $service ) . '"';
+		}
+		$tag = str_replace( '<img', '<img' . $extra, $tag );
+		$tag = preg_replace( '/\\s+data-src=/i', ' data-src=', $tag );
+		$tag = str_replace( '<img', '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="', $tag );
 
-        return $tag;
-    }
+		return $tag;
+	}
 
-    private function replace_link_callback($matches) {
-        $full_tag = $matches[0];
-        $href_url = $matches[1];
-        $host = $this->extract_host($href_url);
-        $category = $this->categorize_domain($host);
-        $service = Piensa_Cookie_Consent_Scanner::get_service_for_domain($host);
+	private function replace_link_callback( $matches ) {
+		$full_tag = $matches[0];
+		$href_url = $matches[1];
+		$host     = $this->extract_host( $href_url );
+		$category = $this->categorize_domain( $host );
+		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
 
-        if (!$this->should_block_category($category) && !$this->is_domain_blocked($href_url)) {
-            return $full_tag;
-        }
+		if ( ! $this->should_block_category( $category ) && ! $this->is_domain_blocked( $href_url ) ) {
+			return $full_tag;
+		}
 
-        $target_category = $category && $category !== 'unknown' ? $category : 'marketing';
-        $tag = str_replace('href=', 'data-href=', $full_tag);
-        if (preg_match('/\\srel=([\"\\\'])([^\"\\\']*)\\1/i', $full_tag, $rel_match)) {
-            $rel_value = $rel_match[2];
-            $tag = str_replace('<link', '<link data-rel="' . esc_attr($rel_value) . '"', $tag);
-        }
-        $tag = preg_replace('/\\s+class=([\"\\\'])([^\"\\\']*)\\1/i', ' class="$2 ag-blocked-content"', $tag, 1, $count);
-        if ($count === 0) {
-            $tag = str_replace('<link', '<link class="ag-blocked-content"', $tag);
-        }
-        $extra = ' data-cookie-category="' . esc_attr($target_category) . '"';
-        if ($service) {
-            $extra .= ' data-cookie-service="' . esc_attr($service) . '"';
-        }
-        $tag = str_replace('<link', '<link' . $extra, $tag);
-        $tag = str_replace('data-href=', 'data-href=', $tag);
-        $tag = preg_replace('/\\s+rel=([\"\\\']).*?\\1/i', ' rel="preload"', $tag);
-        $tag = str_replace('<link', '<link href=""', $tag);
+		$target_category = $category && $category !== 'unknown' ? $category : 'marketing';
+		$tag             = str_replace( 'href=', 'data-href=', $full_tag );
+		if ( preg_match( '/\\srel=([\"\\\'])([^\"\\\']*)\\1/i', $full_tag, $rel_match ) ) {
+			$rel_value = $rel_match[2];
+			$tag       = str_replace( '<link', '<link data-rel="' . esc_attr( $rel_value ) . '"', $tag );
+		}
+		$tag = preg_replace( '/\\s+class=([\"\\\'])([^\"\\\']*)\\1/i', ' class="$2 ag-blocked-content"', $tag, 1, $count );
+		if ( $count === 0 ) {
+			$tag = str_replace( '<link', '<link class="ag-blocked-content"', $tag );
+		}
+		$extra = ' data-cookie-category="' . esc_attr( $target_category ) . '"';
+		if ( $service ) {
+			$extra .= ' data-cookie-service="' . esc_attr( $service ) . '"';
+		}
+		$tag = str_replace( '<link', '<link' . $extra, $tag );
+		$tag = str_replace( 'data-href=', 'data-href=', $tag );
+		$tag = preg_replace( '/\\s+rel=([\"\\\']).*?\\1/i', ' rel="preload"', $tag );
+		$tag = str_replace( '<link', '<link href=""', $tag );
 
-        return $tag;
-    }
+		return $tag;
+	}
 
-    private function is_domain_blocked($src_url) {
-        foreach ($this->blocked_domains as $domain) {
-            if (strpos($src_url, $domain) !== false) {
-                return true;
-            }
-        }
+	private function is_domain_blocked( $src_url ) {
+		foreach ( $this->blocked_domains as $domain ) {
+			if ( strpos( $src_url, $domain ) !== false ) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    private function discover_third_party_sources($html) {
-        if (!$this->enabled) {
-            return;
-        }
+	private function discover_third_party_sources( $html ) {
+		if ( ! $this->enabled ) {
+			return;
+		}
 
-        $found = [];
-        $patterns = [
-            '/<script[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
-            '/<iframe[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
-            '/<img[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
-        ];
+		$found    = [];
+		$patterns = [
+			'/<script[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
+			'/<iframe[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
+			'/<img[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
+		];
 
-        foreach ($patterns as $pattern) {
-            if (preg_match_all($pattern, $html, $matches)) {
-                foreach ($matches[1] as $src) {
-                    $host = $this->extract_host($src);
-                    if ($host && $host !== $this->site_host) {
-                        $found[$host] = true;
-                    }
-                }
-            }
-        }
+		foreach ( $patterns as $pattern ) {
+			if ( preg_match_all( $pattern, $html, $matches ) ) {
+				foreach ( $matches[1] as $src ) {
+					$host = $this->extract_host( $src );
+					if ( $host && $host !== $this->site_host ) {
+						$found[ $host ] = true;
+					}
+				}
+			}
+		}
 
-        if (!$found) {
-            return;
-        }
+		if ( ! $found ) {
+			return;
+		}
 
-        $discovered = get_option('piensa_cookie_consent_discovered', []);
-        if (!is_array($discovered)) {
-            $discovered = [];
-        }
+		$discovered = get_option( 'piensa_cookie_consent_discovered', [] );
+		if ( ! is_array( $discovered ) ) {
+			$discovered = [];
+		}
 
-        foreach (array_keys($found) as $host) {
-            $category = $this->categorize_domain($host);
-            $discovered[$host] = [
-                'category' => $category,
-                'service' => Piensa_Cookie_Consent_Scanner::get_service_for_domain($host),
-                'last_seen' => time(),
-            ];
-        }
+		foreach ( array_keys( $found ) as $host ) {
+			$category            = $this->categorize_domain( $host );
+			$discovered[ $host ] = [
+				'category'  => $category,
+				'service'   => Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host ),
+				'last_seen' => time(),
+			];
+		}
 
-        update_option('piensa_cookie_consent_discovered', $discovered, false);
-    }
+		update_option( 'piensa_cookie_consent_discovered', $discovered, false );
+	}
 
-    private function extract_host($url) {
-        if (!is_string($url) || $url === '') {
-            return '';
-        }
+	private function extract_host( $url ) {
+		if ( ! is_string( $url ) || $url === '' ) {
+			return '';
+		}
 
-        if (strpos($url, '//') === 0) {
-            $url = 'https:' . $url;
-        }
+		if ( strpos( $url, '//' ) === 0 ) {
+			$url = 'https:' . $url;
+		}
 
-        $host = parse_url($url, PHP_URL_HOST);
-        if (!$host) {
-            return '';
-        }
+		$host = parse_url( $url, PHP_URL_HOST );
+		if ( ! $host ) {
+			return '';
+		}
 
-        return strtolower($host);
-    }
+		return strtolower( $host );
+	}
 
-    private function categorize_domain($host) {
-        if (!$host) {
-            return 'unknown';
-        }
+	private function categorize_domain( $host ) {
+		if ( ! $host ) {
+			return 'unknown';
+		}
 
-        if (!empty($this->domain_overrides[$host]) && $this->domain_overrides[$host] !== 'auto') {
-            return $this->domain_overrides[$host];
-        }
+		if ( ! empty( $this->domain_overrides[ $host ] ) && $this->domain_overrides[ $host ] !== 'auto' ) {
+			return $this->domain_overrides[ $host ];
+		}
 
-        $map = Piensa_Cookie_Consent_Scanner::get_domain_category_map();
-        foreach ($map as $category => $domains) {
-            foreach ($domains as $domain) {
-                if ($host === $domain || substr($host, -strlen($domain) - 1) === '.' . $domain) {
-                    return $category;
-                }
-            }
-        }
+		$map = Piensa_Cookie_Consent_Scanner::get_domain_category_map();
+		foreach ( $map as $category => $domains ) {
+			foreach ( $domains as $domain ) {
+				if ( $host === $domain || substr( $host, -strlen( $domain ) - 1 ) === '.' . $domain ) {
+					return $category;
+				}
+			}
+		}
 
-        return 'unknown';
-    }
+		return 'unknown';
+	}
 
-    private function should_block_category($category) {
-        if ($category === 'unknown' || $category === 'necessary') {
-            return false;
-        }
+	private function should_block_category( $category ) {
+		if ( $category === 'unknown' || $category === 'necessary' ) {
+			return false;
+		}
 
-        return !in_array($category, $this->allowed_categories, true);
-    }
+		return ! in_array( $category, $this->allowed_categories, true );
+	}
 }
