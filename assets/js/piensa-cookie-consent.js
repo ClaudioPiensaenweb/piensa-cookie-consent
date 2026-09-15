@@ -80,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const languageConfig = config.language || {};
         const activeLang = resolveLanguage(languageConfig);
         const texts = languageConfig.texts || {};
-        const sections = buildPreferenceSections(definitions, enabledFlags, texts[activeLang] || {});
         const sectionsEs = buildPreferenceSections(definitions, enabledFlags, texts.es || {});
         const sectionsEn = buildPreferenceSections(definitions, enabledFlags, texts.en || {});
         const autoClear = buildAutoClear(definitions, enabledFlags);
@@ -383,7 +382,7 @@ function sanitizeLang(value, fallback) {
     return fallback || 'es';
 }
 
-function buildTranslations(languageConfig, sectionsEs, sectionsEn, policy, brand) {
+function buildTranslations(languageConfig, sectionsEs, sectionsEn, _policy, _brand) {
     const texts = (languageConfig && languageConfig.texts) || {};
     const es = texts.es || {};
     const en = texts.en || {};
@@ -528,10 +527,6 @@ function updateConsentStatus(cookie) {
         const label = ((window.PiensaCookieConsentConfig || {}).i18n || {}).consentStatus || 'Consent:';
         node.textContent = status ? label + ' ' + status : '';
     });
-}
-
-function getReviewIconSvg() {
-    return '<svg class="ag-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l7 3v6c0 5-3.5 9-7 11-3.5-2-7-6-7-11V5l7-3zm0 5a1 1 0 00-1 1v4c0 .6.4 1 1 1h4a1 1 0 100-2h-3V8a1 1 0 00-1-1z"/></svg>';
 }
 
 // Icon names offered by releases before the Lucide switch.

@@ -92,7 +92,9 @@
                         onSuccess(data.data && typeof data.data.count === 'number' ? data.data.count : 0);
                         return;
                     }
-                } catch (e) {}
+                } catch {
+                    // Malformed response: fall through to onFail below.
+                }
             }
             onFail();
         };
