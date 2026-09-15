@@ -1,5 +1,9 @@
 <?php
-// includes/class-consent-log.php
+/**
+ * Stores and exports the record of consents given.
+ *
+ * @package Piensa_Cookie_Consent
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -52,7 +56,10 @@ class Piensa_Cookie_Consent_Consent_Log {
 		$payload = [
 			'consent_id'        => isset( $_POST['consent_id'] ) ? sanitize_text_field( wp_unslash( $_POST['consent_id'] ) ) : '',
 			'action'            => isset( $_POST['consent_action'] ) ? sanitize_text_field( wp_unslash( $_POST['consent_action'] ) ) : '',
+			// JSON documents, normalised by normalize_json() below.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			'categories'        => isset( $_POST['categories'] ) ? wp_unslash( $_POST['categories'] ) : '[]',
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			'services'          => isset( $_POST['services'] ) ? wp_unslash( $_POST['services'] ) : '[]',
 			'revision'          => isset( $_POST['revision'] ) ? (int) $_POST['revision'] : 0,
 			'consent_timestamp' => isset( $_POST['consent_timestamp'] ) ? sanitize_text_field( wp_unslash( $_POST['consent_timestamp'] ) ) : '',

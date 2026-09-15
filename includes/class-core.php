@@ -1,5 +1,9 @@
 <?php
-// includes/class-core.php
+/**
+ * Wires the plugin's pieces together and registers the front-end assets.
+ *
+ * @package Piensa_Cookie_Consent
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -69,6 +73,13 @@ class Piensa_Cookie_Consent_Core {
 	 * @return void
 	 */
 	public function load_textdomain() {
+		// WordPress.org installs get their translations from the language packs
+		// it serves, and calling this there is flagged as redundant. The agency
+		// build is installed by hand and has to load the bundled .mo itself.
+		if ( ! self::has_self_hosted_updater() ) {
+			return;
+		}
+
 		load_plugin_textdomain(
 			'piensa-cookie-consent',
 			false,

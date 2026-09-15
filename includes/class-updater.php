@@ -1,5 +1,9 @@
 <?php
-// includes/class-updater.php
+/**
+ * Self-hosted update channel for the build distributed outside wp.org.
+ *
+ * @package Piensa_Cookie_Consent
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

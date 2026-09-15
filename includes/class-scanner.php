@@ -1,5 +1,9 @@
 <?php
-// includes/class-scanner.php
+/**
+ * Crawls the site to discover external domains and the cookies they set.
+ *
+ * @package Piensa_Cookie_Consent
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -338,12 +342,17 @@ class Piensa_Cookie_Consent_Scanner {
 			$detected_cookies = [];
 		}
 
-		while ( $queue && count( $visited ) < $limit ) {
+		// Tracked alongside the array rather than recounted every iteration,
+		// which on a large site is a count() per page crawled.
+		$visited_count = count( $visited );
+
+		while ( $queue && $visited_count < $limit ) {
 			$url = array_shift( $queue );
 			if ( ! $url || isset( $visited[ $url ] ) ) {
 				continue;
 			}
 			$visited[ $url ] = true;
+			++$visited_count;
 
 			$response = wp_remote_get(
 				$url,
@@ -369,13 +378,16 @@ class Piensa_Cookie_Consent_Scanner {
 				$detected_cookies = self::merge_detected_cookies( $detected_cookies, $cookies_found );
 			}
 
-			$internal = $this->extract_internal_links( $html, $site_host );
+			$internal    = $this->extract_internal_links( $html, $site_host );
+			$queue_count = count( $queue );
+
 			foreach ( $internal as $link ) {
-				if ( count( $visited ) + count( $queue ) >= $limit ) {
+				if ( $visited_count + $queue_count >= $limit ) {
 					break;
 				}
 				if ( ! isset( $visited[ $link ] ) ) {
 					$queue[] = $link;
+					++$queue_count;
 				}
 			}
 		}
@@ -408,7 +420,9 @@ class Piensa_Cookie_Consent_Scanner {
 	}
 
 	private function get_cookie_domain() {
-		$host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : wp_parse_url( home_url(), PHP_URL_HOST );
+		$host = isset( $_SERVER['HTTP_HOST'] )
+			? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) )
+			: wp_parse_url( home_url(), PHP_URL_HOST );
 		if ( is_string( $host ) && strpos( $host, ':' ) !== false ) {
 			$host = preg_replace( '/:\\d+$/', '', $host );
 		}
@@ -621,7 +635,7 @@ class Piensa_Cookie_Consent_Scanner {
 		return $map;
 	}
 
-	public static function merge_detected_cookies( $existing, $new ) {
+	public static function merge_detected_cookies( $existing, $incoming ) {
 		$indexed = [];
 		foreach ( $existing as $cookie ) {
 			if ( ! is_array( $cookie ) ) {
@@ -634,7 +648,7 @@ class Piensa_Cookie_Consent_Scanner {
 			$indexed[ $key ] = $cookie;
 		}
 
-		foreach ( $new as $cookie ) {
+		foreach ( $incoming as $cookie ) {
 			$key = ( isset( $cookie['name'] ) ? $cookie['name'] : '' ) . '|' . ( isset( $cookie['domain'] ) ? $cookie['domain'] : '' );
 			if ( $key === '|' ) {
 				continue;

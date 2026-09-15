@@ -1,5 +1,9 @@
 <?php
-// includes/class-admin.php
+/**
+ * Admin screens, settings registration and the tools they expose.
+ *
+ * @package Piensa_Cookie_Consent
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,7 +30,7 @@ class Piensa_Cookie_Consent_Admin {
 	}
 
 	public function register_menu() {
-		// Menu principal independiente con icono
+		// Top-level menu, so the CMP is not buried under Settings.
 		$this->menu_hook = add_menu_page(
 			esc_html__( 'Piensa Cookie Consent', 'piensa-cookie-consent' ),
 			esc_html__( 'Piensa Cookie Consent', 'piensa-cookie-consent' ),
@@ -37,7 +41,7 @@ class Piensa_Cookie_Consent_Admin {
 			80
 		);
 
-		// Submenus
+		// Sub-pages under the top-level entry.
 		add_submenu_page(
 			'piensa-cookie-consent',
 			'Dashboard',
@@ -1037,6 +1041,7 @@ class Piensa_Cookie_Consent_Admin {
 			echo '<td>' . esc_html( $domain ) . '</td>';
 			echo '<td>' . esc_attr( $service ) . '</td>';
 			echo '<td>' . esc_attr( $category ) . '</td>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_domain_select() escapes every value it interpolates.
 			echo '<td>' . $this->render_domain_select( $domain, $selected ) . '</td>';
 			echo '<td>' . esc_html( $last_seen ) . '</td>';
 			echo '</tr>';
@@ -1421,7 +1426,9 @@ class Piensa_Cookie_Consent_Admin {
 		check_ajax_referer( 'piensa_cookie_consent_preview', 'nonce' );
 
 		$settings = [];
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised field by field by sanitize_settings() on the next line.
 		if ( ! empty( $_POST['piensa_cookie_consent_settings'] ) && is_array( $_POST['piensa_cookie_consent_settings'] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised by sanitize_settings() below.
 			$raw      = wp_unslash( $_POST['piensa_cookie_consent_settings'] );
 			$settings = $this->sanitize_settings( $raw );
 		} else {
@@ -1580,7 +1587,6 @@ class Piensa_Cookie_Consent_Admin {
 			return;
 		}
 
-		// Font Awesome para iconos
 
 		wp_enqueue_style( 'piensa-cookie-consent-admin', PIENSA_COOKIE_CONSENT_URL . 'assets/css/piensa-cookie-consent-admin.css', [], PIENSA_COOKIE_CONSENT_VERSION );
 		wp_enqueue_script( 'piensa-cookie-consent-admin', PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent-admin.js', [], PIENSA_COOKIE_CONSENT_VERSION, true );
@@ -2176,6 +2182,8 @@ class Piensa_Cookie_Consent_Admin {
 
 		check_ajax_referer( 'piensa_cookie_consent_collect_cookies', 'nonce' );
 
+		// A JSON document; it is decoded and its fields sanitised individually below.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$raw     = isset( $_POST['cookies'] ) ? wp_unslash( $_POST['cookies'] ) : '';
 		$cookies = json_decode( $raw, true );
 		if ( ! is_array( $cookies ) ) {

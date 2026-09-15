@@ -1,5 +1,9 @@
 <?php
-// includes/class-blocker.php
+/**
+ * Neutralises third-party scripts and embeds until consent is given.
+ *
+ * @package Piensa_Cookie_Consent
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

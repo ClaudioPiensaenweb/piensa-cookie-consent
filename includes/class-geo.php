@@ -1,5 +1,9 @@
 <?php
-// includes/class-geo.php
+/**
+ * Decides whether the banner applies to the visitor's region.
+ *
+ * @package Piensa_Cookie_Consent
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

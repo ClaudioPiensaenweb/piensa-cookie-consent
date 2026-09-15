@@ -108,7 +108,7 @@ class Piensa_Cookie_Consent_Migrator {
 		$new_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $new_table ) );
 
 		if ( $old_exists && ! $new_exists ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be parameterised; both are built from the trusted table prefix.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names cannot be parameterised; both are built from the trusted table prefix.
 			$wpdb->query( "RENAME TABLE `{$old_table}` TO `{$new_table}`" );
 		}
 		// phpcs:enable

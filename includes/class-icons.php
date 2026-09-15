@@ -74,13 +74,13 @@ class Piensa_Cookie_Consent_Icons {
 	 *
 	 * @param string $name  Icon name.
 	 * @param int    $size  Width and height in pixels.
-	 * @param string $class Extra CSS classes.
+	 * @param string $extra_class Extra CSS classes.
 	 *
 	 * @return string SVG markup, safe to echo.
 	 */
-	public static function get( $name, $size = 24, $class = '' ) {
+	public static function get( $name, $size = 24, $extra_class = '' ) {
 		$name    = self::resolve( $name );
-		$classes = trim( 'pcc-icon ' . $class );
+		$classes = trim( 'pcc-icon ' . $extra_class );
 
 		return sprintf(
 			'<svg class="%s" width="%d" height="%d" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">%s</svg>',
