@@ -81,15 +81,19 @@ class Piensa_Cookie_Consent_Blocker {
         }
         $neutralized_tag = str_replace('<iframe', '<iframe' . $extra, $neutralized_tag);
 
-        $button_attrs = 'class="ag-btn-accept-marketing"';
+        // Without an explicit type, a placeholder rendered inside a form
+        // submits it instead of granting consent.
+        $button_attrs = 'type="button" class="ag-btn-accept-marketing"';
         if ($service) {
             $button_attrs .= ' data-ag-service="' . esc_attr($service) . '" data-ag-category="' . esc_attr($target_category) . '"';
         }
 
+        // The overlay is announced as a named group, so a screen reader
+        // explains why the embed is missing rather than skipping over it.
         $placeholder = '
         <div class="ag-placeholder-wrapper">
             ' . $neutralized_tag . '
-            <div class="ag-placeholder-overlay">
+            <div class="ag-placeholder-overlay" role="group" aria-label="' . esc_attr($title) . '">
                 <div class="ag-placeholder-content">
                     <p>' . $title . '</p>
                     <button ' . $button_attrs . '>' . $button . '</button>

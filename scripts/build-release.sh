@@ -2,9 +2,9 @@
 #
 # Build the distributable ZIP for the WordPress.org plugin directory.
 #
-# The wp.org package must be production-ready: no dev tooling, no VCS
-# metadata, and no self-hosted updater (guideline #8). Exclusions live in
-# .distignore and are applied here.
+# The wp.org package must be production-ready: no dev tooling, no VCS metadata,
+# and no self-hosted updater (guideline #8). Exclusions live in .distignore and
+# are applied here, so the list has a single source of truth.
 #
 # Usage:
 #   scripts/build-release.sh [--version=X.Y.Z] [--output-dir=DIR] [--keep-updater]
@@ -26,7 +26,7 @@ for arg in "$@"; do
     esac
 done
 
-# Fall back to the readme stable tag so CI and local builds agree.
+# Fall back to the readme stable tag, so CI and local builds agree.
 if [ -z "$VERSION" ]; then
     VERSION="$(awk '/^Stable tag:/ {print $3; exit}' "${ROOT}/readme.txt")"
 fi
@@ -42,24 +42,30 @@ trap 'rm -rf "$STAGING"' EXIT
 DEST="${STAGING}/${SLUG}"
 mkdir -p "$DEST"
 
-# rsync honours .distignore so the exclude list has a single source of truth.
-EXCLUDE_FILE="${ROOT}/.distignore"
-RSYNC_ARGS=(-a --delete)
-while IFS= read -r line; do
-    # Skip blank lines and comments.
-    [ -z "$line" ] && continue
-    case "$line" in \#*) continue ;; esac
-    RSYNC_ARGS+=(--exclude="$line")
-done < "$EXCLUDE_FILE"
+# Copy everything, then remove the excluded paths. rsync would be tidier but is
+# absent from Git Bash, and the release has to build on the developer's machine
+# as well as in CI.
+cp -R "${ROOT}/." "${DEST}/"
+rm -rf "${DEST}/.git"
 
-# The agency build keeps the updater; the wp.org build never does.
-if [ "$KEEP_UPDATER" -eq 1 ]; then
-    RSYNC_ARGS=("${RSYNC_ARGS[@]/--exclude=includes\/class-updater.php/}")
-fi
+while IFS= read -r pattern || [ -n "$pattern" ]; do
+    pattern="$(printf '%s' "$pattern" | tr -d '\r')"
+    [ -z "$pattern" ] && continue
+    case "$pattern" in \#*) continue ;; esac
 
-rsync "${RSYNC_ARGS[@]}" "${ROOT}/" "${DEST}/"
+    # The agency build keeps the updater; the wp.org build never does.
+    if [ "$KEEP_UPDATER" -eq 1 ] && [ "$pattern" = "includes/class-updater.php" ]; then
+        continue
+    fi
 
-# Compile translations if the toolchain is available; the .mo files are build
+    # Leading slashes anchor to the package root; the glob is relative either way.
+    pattern="${pattern#/}"
+
+    # shellcheck disable=SC2086 # The pattern is a glob and must stay unquoted.
+    rm -rf ${DEST}/${pattern}
+done < "${ROOT}/.distignore"
+
+# Compile translations if the toolchain is available. The .mo files are build
 # artefacts and are deliberately absent from version control.
 if command -v msgfmt >/dev/null 2>&1; then
     for po in "${DEST}"/languages/*.po; do
@@ -72,14 +78,34 @@ mkdir -p "$OUTPUT_DIR"
 ZIP="${OUTPUT_DIR}/${SLUG}-${VERSION}.zip"
 rm -f "$ZIP"
 
-( cd "$STAGING" && zip -rq "$ZIP" "$SLUG" -x '*.DS_Store' )
+# zip(1) is absent from Git Bash, so fall back to Python's zipfile, which is
+# available wherever the rest of the toolchain is.
+if command -v zip >/dev/null 2>&1; then
+    ( cd "$STAGING" && zip -rq "$ZIP" "$SLUG" -x '*.DS_Store' )
+else
+    python - "$STAGING" "$SLUG" "$ZIP" <<'PYTHON'
+import os
+import sys
+import zipfile
+
+staging, slug, target = sys.argv[1:4]
+
+with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as archive:
+    for root, dirs, files in os.walk(os.path.join(staging, slug)):
+        dirs.sort()
+        for name in sorted(files):
+            if name == ".DS_Store":
+                continue
+            path = os.path.join(root, name)
+            archive.write(path, os.path.relpath(path, staging).replace(os.sep, "/"))
+PYTHON
+fi
 
 SIZE_BYTES=$(wc -c < "$ZIP")
-SIZE_MB=$(( SIZE_BYTES / 1048576 ))
 
 # wp.org rejects submissions over 10 MB.
 if [ "$SIZE_BYTES" -gt 10485760 ]; then
-    echo "ERROR: the package is ${SIZE_MB} MB, over the 10 MB wp.org limit." >&2
+    echo "ERROR: the package is $(( SIZE_BYTES / 1048576 )) MB, over the 10 MB wp.org limit." >&2
     exit 1
 fi
 

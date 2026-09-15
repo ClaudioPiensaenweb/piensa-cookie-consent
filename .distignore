@@ -18,6 +18,8 @@ package.json
 package-lock.json
 phpcs.xml
 phpstan.neon
+phpstan-bootstrap.php
+.eslintrc.json
 .phpcs-cache
 .wp-env.json
 

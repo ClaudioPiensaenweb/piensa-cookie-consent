@@ -563,7 +563,7 @@ msgstr "Panel central de consentimiento"
 
 #: includes/class-admin.php:1149
 msgid "Consent management for agencies: compliance, control and clean data."
-msgstr "Gestión profesional con un guiño al monstruo de las cookies: cumplimiento, control y datos limpios."
+msgstr "Gestión del consentimiento para agencias: cumplimiento, control y datos limpios."
 
 #: includes/class-admin.php:1155
 msgid "View the policy"

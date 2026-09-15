@@ -471,6 +471,8 @@ function maybeAddFloatingConsentButton() {
     button.type = 'button';
     button.className = 'ag-btn-consent-review';
     button.setAttribute('data-ag-consent-review', '1');
+    // It reopens the preferences dialog, which assistive technology should announce.
+    button.setAttribute('aria-haspopup', 'dialog');
 
     const icon = createCookieIcon('cookie');
 
@@ -488,6 +490,8 @@ function maybeAddFloatingConsentButton() {
         button.append(icon);
         button.append(document.createTextNode(' ' + text));
     }
+
+    button.title = text;
 
     container.appendChild(button);
     document.body.appendChild(container);

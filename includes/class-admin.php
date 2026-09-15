@@ -1537,7 +1537,7 @@ class Piensa_Cookie_Consent_Admin {
     }
 
     public function enqueue_assets($hook) {
-        // Cargar en todas las paginas de PW Cookie Monster
+        // Load on every screen belonging to this plugin.
         if (strpos($hook, 'piensa-cookie-consent') === false && $hook !== $this->menu_hook) {
             return;
         }

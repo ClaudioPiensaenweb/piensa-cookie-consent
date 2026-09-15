@@ -35,6 +35,13 @@ Everything runs on your own server. The plugin makes no calls to third-party ser
 
 The plugin stores the visitor's choice in a first-party cookie and writes one row per consent to a table in your own database. That row holds a SHA-256 hash of the IP address, the user agent, the language, the categories accepted and the page URL. No data leaves your server.
 
+= Third-party libraries =
+
+Both are bundled with the plugin and served from your own site. Neither makes any external request.
+
+* **CookieConsent 3.1.0** by Orest Bida, MIT licence. Renders the banner and the preferences dialog. Source: https://github.com/orestbida/cookieconsent
+* **Lucide** icons, ISC licence. Four icons, embedded as inline SVG. Source: https://github.com/lucide-icons/lucide
+
 == Installation ==
 
 1. Install the plugin through **Plugins → Add New**, or upload the ZIP.

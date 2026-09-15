@@ -10,8 +10,13 @@ MAIN="${ROOT}/piensa-cookie-consent.php"
 README="${ROOT}/readme.txt"
 
 header_version="$(awk '/^ \* Version:/ {print $3; exit}' "$MAIN")"
-constant_version="$(grep -oP "PIENSA_COOKIE_CONSENT_VERSION',\s*'\K[^']+" "$MAIN")"
 stable_tag="$(awk '/^Stable tag:/ {print $3; exit}' "$README")"
+
+# awk rather than sed, so the field split does the quoting work and the script
+# stays free of backslash escapes that differ between shells.
+constant_version="$(
+    awk -F"'" '/define\( .PIENSA_COOKIE_CONSENT_VERSION./ {print $4; exit}' "$MAIN"
+)"
 
 echo "Plugin header:  ${header_version}"
 echo "PHP constant:   ${constant_version}"
@@ -45,5 +50,8 @@ if ! grep -q "^= ${header_version} =" "$README"; then
     status=1
 fi
 
-[ "$status" -eq 0 ] && echo "Versions are consistent."
+if [ "$status" -eq 0 ]; then
+    echo "Versions are consistent."
+fi
+
 exit "$status"
