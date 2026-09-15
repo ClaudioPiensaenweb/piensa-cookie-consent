@@ -1,0 +1,89 @@
+<?php
+/**
+ * Plugin Name:       Piensa Cookie Consent
+ * Plugin URI:        https://github.com/piensaenweb/piensa-cookie-consent
+ * Description:       GDPR and ePrivacy cookie consent banner with Google Consent Mode v2, automatic script blocking, cookie scanning, geo-targeting and a consent log.
+ * Version:           1.0.0
+ * Requires at least: 6.0
+ * Requires PHP:      7.4
+ * Author:            Piensaenweb
+ * Author URI:        https://piensaenweb.com
+ * License:           GPL-2.0-or-later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       piensa-cookie-consent
+ * Domain Path:       /languages
+ *
+ * @package Piensa_Cookie_Consent
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+define( 'PIENSA_COOKIE_CONSENT_VERSION', '1.0.0' );
+define( 'PIENSA_COOKIE_CONSENT_FILE', __FILE__ );
+define( 'PIENSA_COOKIE_CONSENT_PATH', plugin_dir_path( __FILE__ ) );
+define( 'PIENSA_COOKIE_CONSENT_URL', plugin_dir_url( __FILE__ ) );
+define( 'PIENSA_COOKIE_CONSENT_BASENAME', plugin_basename( __FILE__ ) );
+
+/**
+ * Minimum PHP version the plugin runs on.
+ *
+ * WordPress checks the `Requires PHP` header before activating, but a site
+ * that copies the directory in by hand bypasses that check, so guard here too.
+ */
+if ( version_compare( PHP_VERSION, '7.4', '<' ) ) {
+	add_action(
+		'admin_notices',
+		static function () {
+			printf(
+				'<div class="notice notice-error"><p>%s</p></div>',
+				esc_html(
+					sprintf(
+						/* translators: 1: required PHP version, 2: current PHP version */
+						__( 'Piensa Cookie Consent requires PHP %1$s or higher. This site runs PHP %2$s.', 'piensa-cookie-consent' ),
+						'7.4',
+						PHP_VERSION
+					)
+				)
+			);
+		}
+	);
+	return;
+}
+
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-core.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-log.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-migrator.php';
+
+/**
+ * Boot the plugin.
+ *
+ * @return void
+ */
+function piensa_cookie_consent_bootstrap() {
+	$core = new Piensa_Cookie_Consent_Core();
+	$core->init();
+}
+add_action( 'plugins_loaded', 'piensa_cookie_consent_bootstrap' );
+
+/**
+ * Run data migrations after the plugin is updated.
+ *
+ * @return void
+ */
+function piensa_cookie_consent_maybe_migrate() {
+	Piensa_Cookie_Consent_Migrator::maybe_run();
+}
+add_action( 'plugins_loaded', 'piensa_cookie_consent_maybe_migrate', 5 );
+
+/**
+ * Create the consent log table and seed options on activation.
+ *
+ * @return void
+ */
+function piensa_cookie_consent_activate() {
+	Piensa_Cookie_Consent_Consent_Log::install_table();
+	Piensa_Cookie_Consent_Migrator::maybe_run();
+}
+register_activation_hook( __FILE__, 'piensa_cookie_consent_activate' );

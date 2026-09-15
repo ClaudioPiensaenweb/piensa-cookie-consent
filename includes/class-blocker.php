@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Agency_Shield_Blocker {
+class Piensa_Cookie_Consent_Blocker {
     private $blocked_domains = [];
     private $placeholder_title = '';
     private $placeholder_button = '';
@@ -21,7 +21,7 @@ class Agency_Shield_Blocker {
     }
 
     public function start_buffer() {
-        $settings = Agency_Shield_Admin::get_settings();
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
         $this->enabled = !empty($settings['enable_blocker']);
         $this->blocked_domains = $this->parse_domains($settings['blocked_domains']);
         $this->placeholder_title = $settings['placeholder_title'];
@@ -29,7 +29,7 @@ class Agency_Shield_Blocker {
         $this->domain_overrides = isset($settings['domain_overrides']) && is_array($settings['domain_overrides']) ? $settings['domain_overrides'] : [];
         $this->site_host = parse_url(home_url(), PHP_URL_HOST);
 
-        if (!Agency_Shield_Geo::should_show_cmp($settings)) {
+        if (!Piensa_Cookie_Consent_Geo::should_show_cmp($settings)) {
             $this->enabled = false;
             return;
         }
@@ -64,7 +64,7 @@ class Agency_Shield_Blocker {
 
         $host = $this->extract_host($src_url);
         $category = $this->categorize_domain($host);
-        $service = Agency_Shield_Scanner::get_service_for_domain($host);
+        $service = Piensa_Cookie_Consent_Scanner::get_service_for_domain($host);
 
         if (!$this->should_block_category($category) && !$this->is_domain_blocked($src_url)) {
             return $full_tag;
@@ -108,15 +108,7 @@ class Agency_Shield_Blocker {
     }
 
     private function get_allowed_categories() {
-        $allowed = ['necessary'];
-        if (!empty($_COOKIE['cc_cookie'])) {
-            $decoded = json_decode(stripslashes($_COOKIE['cc_cookie']), true);
-            if (is_array($decoded) && !empty($decoded['categories'])) {
-                $allowed = array_merge($allowed, $decoded['categories']);
-            }
-        }
-
-        return array_unique($allowed);
+        return Piensa_Cookie_Consent_Consent::get_granted_categories();
     }
 
     private function replace_script_callback($matches) {
@@ -124,7 +116,7 @@ class Agency_Shield_Blocker {
         $src_url = $matches[1];
         $host = $this->extract_host($src_url);
         $category = $this->categorize_domain($host);
-        $service = Agency_Shield_Scanner::get_service_for_domain($host);
+        $service = Piensa_Cookie_Consent_Scanner::get_service_for_domain($host);
 
         if (!$this->should_block_category($category)) {
             return $full_tag;
@@ -229,7 +221,7 @@ class Agency_Shield_Blocker {
         $src_url = $matches[1];
         $host = $this->extract_host($src_url);
         $category = $this->categorize_domain($host);
-        $service = Agency_Shield_Scanner::get_service_for_domain($host);
+        $service = Piensa_Cookie_Consent_Scanner::get_service_for_domain($host);
 
         if (!$this->should_block_category($category) && !$this->is_domain_blocked($src_url)) {
             return $full_tag;
@@ -260,7 +252,7 @@ class Agency_Shield_Blocker {
         $href_url = $matches[1];
         $host = $this->extract_host($href_url);
         $category = $this->categorize_domain($host);
-        $service = Agency_Shield_Scanner::get_service_for_domain($host);
+        $service = Piensa_Cookie_Consent_Scanner::get_service_for_domain($host);
 
         if (!$this->should_block_category($category) && !$this->is_domain_blocked($href_url)) {
             return $full_tag;
@@ -325,7 +317,7 @@ class Agency_Shield_Blocker {
             return;
         }
 
-        $discovered = get_option('agency_shield_cmp_discovered', []);
+        $discovered = get_option('piensa_cookie_consent_discovered', []);
         if (!is_array($discovered)) {
             $discovered = [];
         }
@@ -334,12 +326,12 @@ class Agency_Shield_Blocker {
             $category = $this->categorize_domain($host);
             $discovered[$host] = [
                 'category' => $category,
-                'service' => Agency_Shield_Scanner::get_service_for_domain($host),
+                'service' => Piensa_Cookie_Consent_Scanner::get_service_for_domain($host),
                 'last_seen' => time(),
             ];
         }
 
-        update_option('agency_shield_cmp_discovered', $discovered, false);
+        update_option('piensa_cookie_consent_discovered', $discovered, false);
     }
 
     private function extract_host($url) {
@@ -368,7 +360,7 @@ class Agency_Shield_Blocker {
             return $this->domain_overrides[$host];
         }
 
-        $map = Agency_Shield_Scanner::get_domain_category_map();
+        $map = Piensa_Cookie_Consent_Scanner::get_domain_category_map();
         foreach ($map as $category => $domains) {
             foreach ($domains as $domain) {
                 if ($host === $domain || substr($host, -strlen($domain) - 1) === '.' . $domain) {

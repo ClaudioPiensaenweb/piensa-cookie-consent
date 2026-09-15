@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Agency_Shield_Consent_Mode {
+class Piensa_Cookie_Consent_Consent_Mode {
     private $scanner;
 
     public function __construct($scanner) {
@@ -21,8 +21,8 @@ class Agency_Shield_Consent_Mode {
         $has_analytics = !empty($categories['analytics']);
         $has_marketing = !empty($categories['marketing']);
 
-        $settings = Agency_Shield_Admin::get_settings();
-        if (!Agency_Shield_Geo::should_show_cmp($settings)) {
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
+        if (!Piensa_Cookie_Consent_Geo::should_show_cmp($settings)) {
             $analytics_granted = $has_analytics;
             $marketing_granted = $has_marketing;
         } else {
@@ -54,13 +54,8 @@ class Agency_Shield_Consent_Mode {
             'marketing' => false,
         ];
 
-        if (!empty($_COOKIE['cc_cookie'])) {
-            $decoded = json_decode(stripslashes($_COOKIE['cc_cookie']), true);
-            if (is_array($decoded) && !empty($decoded['categories'])) {
-                $consent['analytics'] = in_array('analytics', $decoded['categories'], true);
-                $consent['marketing'] = in_array('marketing', $decoded['categories'], true);
-            }
-        }
+        $consent['analytics'] = Piensa_Cookie_Consent_Consent::has_consent('analytics');
+        $consent['marketing'] = Piensa_Cookie_Consent_Consent::has_consent('marketing');
 
         return $consent;
     }

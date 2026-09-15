@@ -1,0 +1,23 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/wp-admin/admin.php?page=piensa-cookie-consent",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "latest"
+  },
+  "phpExtensionBundles": [ "kitchen-sink" ],
+  "features": { "networking": true },
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "piensa-cookie-consent"
+      }
+    },
+    {
+      "step": "login",
+      "username": "admin"
+    }
+  ]
+}

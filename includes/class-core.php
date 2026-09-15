@@ -5,29 +5,32 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-require_once AGENCY_SHIELD_CMP_PATH . 'includes/class-scanner.php';
-require_once AGENCY_SHIELD_CMP_PATH . 'includes/class-consent-mode.php';
-require_once AGENCY_SHIELD_CMP_PATH . 'includes/class-admin.php';
-require_once AGENCY_SHIELD_CMP_PATH . 'includes/class-blocker.php';
-require_once AGENCY_SHIELD_CMP_PATH . 'includes/class-consent-log.php';
-require_once AGENCY_SHIELD_CMP_PATH . 'includes/class-geo.php';
-require_once AGENCY_SHIELD_CMP_PATH . 'includes/class-updater.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-scanner.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-mode.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-admin.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-blocker.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-log.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-geo.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-icons.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-api.php';
 
-class Agency_Shield_Core {
+class Piensa_Cookie_Consent_Core {
     private $scanner;
     private $consent_mode;
     private $blocker;
     private $admin;
     private $consent_log;
     private $updater;
+    private $consent_api;
 
     public function __construct() {
-        $this->scanner = new Agency_Shield_Scanner();
-        $this->consent_mode = new Agency_Shield_Consent_Mode($this->scanner);
-        $this->blocker = new Agency_Shield_Blocker();
-        $this->admin = new Agency_Shield_Admin();
-        $this->consent_log = new Agency_Shield_Consent_Log();
-        $this->updater = new Agency_Shield_Updater(AGENCY_SHIELD_CMP_FILE);
+        $this->scanner = new Piensa_Cookie_Consent_Scanner();
+        $this->consent_mode = new Piensa_Cookie_Consent_Consent_Mode($this->scanner);
+        $this->blocker = new Piensa_Cookie_Consent_Blocker();
+        $this->admin = new Piensa_Cookie_Consent_Admin();
+        $this->consent_log = new Piensa_Cookie_Consent_Consent_Log();
+        $this->consent_api = new Piensa_Cookie_Consent_Consent_API();
     }
 
     public function init() {
@@ -35,36 +38,72 @@ class Agency_Shield_Core {
         $this->blocker->init();
         $this->admin->init();
         $this->consent_log->init();
-        $this->updater->init();
+        $this->consent_api->init();
+        $this->maybe_init_updater();
 
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
-        add_shortcode('agency_shield_consent_review', [$this, 'render_consent_review_shortcode']);
-        add_shortcode('agency_shield_cookie_policy', [$this, 'render_cookie_policy_shortcode']);
+        add_shortcode('piensa_cookie_consent_review', [$this, 'render_consent_review_shortcode']);
+        add_shortcode('piensa_cookie_consent_policy', [$this, 'render_cookie_policy_shortcode']);
         add_action('wp_footer', [$this, 'maybe_inject_cookie_audit'], 99);
     }
 
-    public function enqueue_assets() {
-        $settings = Agency_Shield_Admin::get_settings();
-        if (!Agency_Shield_Geo::should_show_cmp($settings)) {
+    /**
+     * Load the self-hosted updater, when this build ships one.
+     *
+     * WordPress.org guideline #8 forbids a plugin in the directory from
+     * serving its own updates, so `includes/class-updater.php` is stripped
+     * from the wp.org package. The agency build keeps it, and a site can still
+     * opt out by defining PIENSA_COOKIE_CONSENT_DISABLE_UPDATER.
+     *
+     * @return void
+     */
+
+    /**
+     * Whether this build ships the self-hosted updater.
+     *
+     * The wp.org package strips it, so anything that configures it must be
+     * hidden there rather than shown and left broken.
+     *
+     * @return bool
+     */
+    public static function has_self_hosted_updater() {
+        if (defined('PIENSA_COOKIE_CONSENT_DISABLE_UPDATER') && PIENSA_COOKIE_CONSENT_DISABLE_UPDATER) {
+            return false;
+        }
+
+        return file_exists(PIENSA_COOKIE_CONSENT_PATH . 'includes/class-updater.php');
+    }
+
+    private function maybe_init_updater() {
+        if (!self::has_self_hosted_updater()) {
             return;
         }
 
-        // Font Awesome para iconos
-        wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css', [], '6.5.1');
+        require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-updater.php';
 
-        wp_enqueue_style('agency-shield-cookieconsent', AGENCY_SHIELD_CMP_URL . 'assets/css/cookieconsent.css', [], AGENCY_SHIELD_CMP_VERSION);
-        wp_enqueue_style('agency-shield-main', AGENCY_SHIELD_CMP_URL . 'assets/css/agency-shield.css', ['font-awesome'], AGENCY_SHIELD_CMP_VERSION);
+        $this->updater = new Piensa_Cookie_Consent_Updater(PIENSA_COOKIE_CONSENT_FILE);
+        $this->updater->init();
+    }
 
-        wp_enqueue_script('agency-shield-cookieconsent', AGENCY_SHIELD_CMP_URL . 'assets/js/cookieconsent.js', [], AGENCY_SHIELD_CMP_VERSION, true);
-        wp_enqueue_script('agency-shield-main', AGENCY_SHIELD_CMP_URL . 'assets/js/agency-shield.js', ['agency-shield-cookieconsent'], AGENCY_SHIELD_CMP_VERSION, true);
+    public function enqueue_assets() {
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
+        if (!Piensa_Cookie_Consent_Geo::should_show_cmp($settings)) {
+            return;
+        }
+
+        wp_enqueue_style('piensa-cookie-consent-cookieconsent', PIENSA_COOKIE_CONSENT_URL . 'assets/css/cookieconsent.css', [], PIENSA_COOKIE_CONSENT_VERSION);
+        wp_enqueue_style('piensa-cookie-consent-main', PIENSA_COOKIE_CONSENT_URL . 'assets/css/piensa-cookie-consent.css', [], PIENSA_COOKIE_CONSENT_VERSION);
+
+        wp_enqueue_script('piensa-cookie-consent-cookieconsent', PIENSA_COOKIE_CONSENT_URL . 'assets/js/cookieconsent.js', [], PIENSA_COOKIE_CONSENT_VERSION, true);
+        wp_enqueue_script('piensa-cookie-consent-main', PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent.js', ['piensa-cookie-consent-cookieconsent'], PIENSA_COOKIE_CONSENT_VERSION, true);
 
         if (is_user_logged_in() && current_user_can('manage_options') && !empty($_GET['ag_cookie_audit']) && !empty($_GET['ag_nonce'])) {
             $nonce = sanitize_text_field(wp_unslash($_GET['ag_nonce']));
-            if (wp_verify_nonce($nonce, 'agency_shield_cmp_audit')) {
-                wp_enqueue_script('agency-shield-audit', AGENCY_SHIELD_CMP_URL . 'assets/js/agency-shield-audit.js', [], AGENCY_SHIELD_CMP_VERSION, true);
-                wp_localize_script('agency-shield-audit', 'PWCookieAuditCfg', [
+            if (wp_verify_nonce($nonce, 'piensa_cookie_consent_audit')) {
+                wp_enqueue_script('piensa-cookie-consent-audit', PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent-audit.js', [], PIENSA_COOKIE_CONSENT_VERSION, true);
+                wp_localize_script('piensa-cookie-consent-audit', 'PiensaCookieConsentAudit', [
                     'ajaxUrl' => admin_url('admin-ajax.php'),
-                    'nonce' => wp_create_nonce('agency_shield_cmp_collect_cookies'),
+                    'nonce' => wp_create_nonce('piensa_cookie_consent_collect_cookies'),
                     'domain' => parse_url(home_url(), PHP_URL_HOST),
                 ]);
             }
@@ -72,8 +111,8 @@ class Agency_Shield_Core {
 
         $categories = $this->scanner->get_active_categories();
         $cookie_definitions = $this->scanner->get_cookie_definitions();
-        $services = Agency_Shield_Scanner::get_services();
-        $discovered = get_option('agency_shield_cmp_discovered', []);
+        $services = Piensa_Cookie_Consent_Scanner::get_services();
+        $discovered = get_option('piensa_cookie_consent_discovered', []);
         $detected_services = [];
         if (is_array($discovered)) {
             foreach ($discovered as $data) {
@@ -83,7 +122,8 @@ class Agency_Shield_Core {
             }
         }
         $site_lang = substr(get_locale(), 0, 2);
-        wp_localize_script('agency-shield-main', 'AgencyShieldConfig', [
+        wp_localize_script('piensa-cookie-consent-main', 'PiensaCookieConsentConfig', [
+            'icons' => Piensa_Cookie_Consent_Icons::get_all_paths(),
             'categories' => $categories,
             'cookieDefinitions' => $cookie_definitions,
             'ui' => [
@@ -163,7 +203,7 @@ class Agency_Shield_Core {
                 'privacyPolicyUrl' => $settings['privacy_policy_url'],
                 'logConsent' => !empty($settings['enable_consent_log']),
                 'ajaxUrl' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('agency_shield_consent_log'),
+                'nonce' => wp_create_nonce('piensa_cookie_consent_log'),
                 'banner' => [
                     'title' => $settings['banner_title'],
                     'description' => $settings['banner_description'],
@@ -178,7 +218,7 @@ class Agency_Shield_Core {
     }
 
     public function render_consent_review_shortcode() {
-        $settings = Agency_Shield_Admin::get_settings();
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
         $button_text = esc_html($settings['floating_button_text']);
         $button_label = esc_attr($settings['floating_button_text']);
         $style = $settings['floating_button_style'];
@@ -238,7 +278,7 @@ class Agency_Shield_Core {
         }
 
         $nonce = sanitize_text_field(wp_unslash($_GET['ag_nonce']));
-        if (!wp_verify_nonce($nonce, 'agency_shield_cmp_audit')) {
+        if (!wp_verify_nonce($nonce, 'piensa_cookie_consent_audit')) {
             return;
         }
 

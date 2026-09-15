@@ -1,10 +1,10 @@
-// assets/js/agency-shield-audit.js
+// assets/js/piensa-cookie-consent-audit.js
 (function() {
-    if (!window.PWCookieAuditCfg) {
+    if (!window.PiensaCookieConsentAudit) {
         return;
     }
 
-    const cfg = window.PWCookieAuditCfg;
+    const cfg = window.PiensaCookieConsentAudit;
     const toastId = 'pw-cookie-audit-toast';
 
     function ensureToast(message) {
@@ -41,7 +41,7 @@
 
     function send(names) {
         const body = new URLSearchParams();
-        body.append('action', 'agency_shield_cmp_collect_cookies');
+        body.append('action', 'piensa_cookie_consent_collect_cookies');
         body.append('nonce', cfg.nonce);
         body.append('domain', cfg.domain || '');
         body.append('cookies', JSON.stringify(names));

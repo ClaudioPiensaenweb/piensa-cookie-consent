@@ -5,10 +5,10 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Agency_Shield_Updater {
+class Piensa_Cookie_Consent_Updater {
     private $plugin_file;
     private $plugin_slug;
-    private $cache_key = 'agency_shield_cmp_update';
+    private $cache_key = 'piensa_cookie_consent_update';
 
     public function __construct($plugin_file) {
         $this->plugin_file = $plugin_file;
@@ -26,7 +26,7 @@ class Agency_Shield_Updater {
             $transient = new stdClass();
         }
 
-        $settings = Agency_Shield_Admin::get_settings();
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
         $update_url = $this->get_update_url($settings);
         if (!$update_url) {
             return $transient;
@@ -37,7 +37,7 @@ class Agency_Shield_Updater {
             return $transient;
         }
 
-        $current = defined('AGENCY_SHIELD_CMP_VERSION') ? AGENCY_SHIELD_CMP_VERSION : '0.0.0';
+        $current = defined('PIENSA_COOKIE_CONSENT_VERSION') ? PIENSA_COOKIE_CONSENT_VERSION : '0.0.0';
         if (version_compare($data['version'], $current, '<=')) {
             return $transient;
         }
@@ -53,7 +53,7 @@ class Agency_Shield_Updater {
         }
 
         $update = new stdClass();
-        $update->slug = 'agency-shield-cmp';
+        $update->slug = 'piensa-cookie-consent';
         $update->plugin = $this->plugin_slug;
         $update->new_version = $data['version'];
         $update->url = isset($data['details_url']) ? $data['details_url'] : '';
@@ -79,11 +79,11 @@ class Agency_Shield_Updater {
             return $result;
         }
 
-        if (empty($args->slug) || $args->slug !== 'agency-shield-cmp') {
+        if (empty($args->slug) || $args->slug !== 'piensa-cookie-consent') {
             return $result;
         }
 
-        $settings = Agency_Shield_Admin::get_settings();
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
         $update_url = $this->get_update_url($settings);
         if (!$update_url) {
             return $result;
@@ -96,7 +96,7 @@ class Agency_Shield_Updater {
 
         $info = new stdClass();
         $info->name = 'PW Cookie Monster';
-        $info->slug = 'agency-shield-cmp';
+        $info->slug = 'piensa-cookie-consent';
         $info->version = $data['version'];
         $info->author = 'PW Cookie Monster';
         $info->homepage = isset($data['details_url']) ? $data['details_url'] : '';
@@ -132,7 +132,7 @@ class Agency_Shield_Updater {
         $alg = $update->ag_checksum_alg ?: 'sha256';
         $checksum = hash_file($alg, $package);
         if (!$checksum || !hash_equals($update->ag_checksum, $checksum)) {
-            return new WP_Error('agency_shield_checksum_mismatch', 'Checksum de actualizacion invalido. Actualizacion bloqueada.');
+            return new WP_Error('piensa_cookie_consent_checksum_mismatch', 'Checksum de actualizacion invalido. Actualizacion bloqueada.');
         }
 
         return $reply;
@@ -149,14 +149,14 @@ class Agency_Shield_Updater {
         }
 
         $channel = !empty($settings['update_channel']) ? $settings['update_channel'] : 'stable';
-        $url = str_replace('{slug}', 'agency-shield-cmp', $url);
+        $url = str_replace('{slug}', 'piensa-cookie-consent', $url);
         $url = str_replace('{channel}', rawurlencode($channel), $url);
         if (strpos($url, '{site}') !== false) {
             $url = str_replace('{site}', rawurlencode(home_url()), $url);
         } else {
             $url = add_query_arg(
                 [
-                    'slug' => 'agency-shield-cmp',
+                    'slug' => 'piensa-cookie-consent',
                     'channel' => $channel,
                     'site' => home_url(),
                 ],
@@ -175,7 +175,7 @@ class Agency_Shield_Updater {
 
         $headers = [
             'Accept' => 'application/json',
-            'User-Agent' => 'AgencyShieldCMP/' . (defined('AGENCY_SHIELD_CMP_VERSION') ? AGENCY_SHIELD_CMP_VERSION : '0.0.0'),
+            'User-Agent' => 'PiensaCookieConsent/' . (defined('PIENSA_COOKIE_CONSENT_VERSION') ? PIENSA_COOKIE_CONSENT_VERSION : '0.0.0'),
         ];
 
         if (!empty($settings['update_token'])) {
@@ -242,16 +242,16 @@ class Agency_Shield_Updater {
 
     private function build_signature_payload($data) {
         $payload = (string) $data['version'] . '|' . (string) $data['package'] . '|' . (string) $data['checksum'];
-        return apply_filters('agency_shield_cmp_update_signature_payload', $payload, $data);
+        return apply_filters('piensa_cookie_consent_update_signature_payload', $payload, $data);
     }
 
     private function get_public_key() {
-        $key = apply_filters('agency_shield_cmp_update_public_key', '');
+        $key = apply_filters('piensa_cookie_consent_update_public_key', '');
         if ($key) {
             return $key;
         }
 
-        $settings = Agency_Shield_Admin::get_settings();
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
         if (!empty($settings['update_public_key'])) {
             return $settings['update_public_key'];
         }

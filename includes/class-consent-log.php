@@ -5,12 +5,12 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Agency_Shield_Consent_Log {
-    const TABLE = 'agency_shield_consent';
+class Piensa_Cookie_Consent_Consent_Log {
+    const TABLE = 'piensa_cookie_consent_log';
 
     public function init() {
-        add_action('wp_ajax_agency_shield_log_consent', [$this, 'handle_log_request']);
-        add_action('wp_ajax_nopriv_agency_shield_log_consent', [$this, 'handle_log_request']);
+        add_action('wp_ajax_piensa_cookie_consent_log_consent', [$this, 'handle_log_request']);
+        add_action('wp_ajax_nopriv_piensa_cookie_consent_log_consent', [$this, 'handle_log_request']);
     }
 
     public static function install_table() {
@@ -42,9 +42,9 @@ class Agency_Shield_Consent_Log {
     }
 
     public function handle_log_request() {
-        check_ajax_referer('agency_shield_consent_log', 'nonce');
+        check_ajax_referer('piensa_cookie_consent_log', 'nonce');
 
-        $settings = Agency_Shield_Admin::get_settings();
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
         if (empty($settings['enable_consent_log'])) {
             wp_send_json_success(['disabled' => true]);
         }
@@ -95,7 +95,7 @@ class Agency_Shield_Consent_Log {
         $logs = self::get_logs(1000, 0);
 
         header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename=agency-shield-consent-log.csv');
+        header('Content-Disposition: attachment; filename=piensa-cookie-consent-consent-log.csv');
 
         $output = fopen('php://output', 'w');
         fputcsv($output, ['Date', 'Consent ID', 'Action', 'Categories', 'Revision', 'Language', 'GPC', 'URL']);

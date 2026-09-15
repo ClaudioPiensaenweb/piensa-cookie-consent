@@ -1,4 +1,4 @@
-// assets/js/agency-shield-admin.js
+// assets/js/piensa-cookie-consent-admin.js
 
 (function() {
     function initTabs() {
@@ -50,7 +50,7 @@
 
     function initPreview() {
         const frame = document.querySelector('[data-ag-preview-frame]');
-        if (!frame || !window.AgencyShieldAdminConfig) {
+        if (!frame || !window.PiensaCookieConsentAdminConfig) {
             return;
         }
 
@@ -59,15 +59,15 @@
             return;
         }
 
-        const assets = AgencyShieldAdminConfig.previewAssets || {};
+        const assets = PiensaCookieConsentAdminConfig.previewAssets || {};
         let timer = null;
 
         const getValue = (data, key, fallback = '') => {
-            const value = data.get('agency_shield_cmp_settings[' + key + ']');
+            const value = data.get('piensa_cookie_consent_settings[' + key + ']');
             return value !== null && value !== undefined ? value : fallback;
         };
 
-        const getBool = (data, key) => data.has('agency_shield_cmp_settings[' + key + ']');
+        const getBool = (data, key) => data.has('piensa_cookie_consent_settings[' + key + ']');
         const getInt = (data, key, fallback = 0) => {
             const raw = getValue(data, key, fallback);
             const parsed = parseInt(raw, 10);
@@ -200,7 +200,7 @@
 </head>
 <body>
   <div id="preview-root"></div>
-  <script>window.AgencyShieldConfig=${json};</script>
+  <script>window.PiensaCookieConsentConfig=${json};</script>
   <script src="${assets.jsCc}"></script>
   <script src="${assets.jsMain}"></script>
   <script>setTimeout(function(){if(window.CookieConsent&&CookieConsent.show){CookieConsent.show();}},60);</script>
@@ -265,14 +265,14 @@
     function initPresets() {
         const applyBtn = document.querySelector('[data-ag-apply-preset]');
         const select = document.querySelector('.ag-preset-select');
-        if (!applyBtn || !select || !window.AgencyShieldAdminConfig) {
+        if (!applyBtn || !select || !window.PiensaCookieConsentAdminConfig) {
             return;
         }
 
-        const presets = AgencyShieldAdminConfig.presets || {};
+        const presets = PiensaCookieConsentAdminConfig.presets || {};
 
         function setField(name, value) {
-            const input = document.querySelector('[name="agency_shield_cmp_settings[' + name + ']"]');
+            const input = document.querySelector('[name="piensa_cookie_consent_settings[' + name + ']"]');
             if (!input || value === undefined) {
                 return;
             }

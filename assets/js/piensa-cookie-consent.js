@@ -1,4 +1,4 @@
-// assets/js/agency-shield.js
+// assets/js/piensa-cookie-consent.js
 
 function activate_blocked_content(cookie) {
     if (!cookie || !cookie.categories) {
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     if (window.CookieConsent && CookieConsent.run) {
-        const config = window.AgencyShieldConfig || {};
+        const config = window.PiensaCookieConsentConfig || {};
         const categories = config.categories || {};
         const enabledFlags = {
             analytics: !!categories.analytics,
@@ -451,11 +451,11 @@ function buildServicesConfig(servicesData, enabledFlags) {
 }
 
 function maybeAddFloatingConsentButton() {
-    if (!window.AgencyShieldConfig || !AgencyShieldConfig.ui || !AgencyShieldConfig.ui.floatingButton) {
+    if (!window.PiensaCookieConsentConfig || !PiensaCookieConsentConfig.ui || !PiensaCookieConsentConfig.ui.floatingButton) {
         return;
     }
 
-    const ui = AgencyShieldConfig.ui;
+    const ui = PiensaCookieConsentConfig.ui;
     const text = String(ui.floatingButtonText || 'Revisar consentimiento');
     const style = ui.floatingButtonStyle || 'icon';
     const position = ui.consentPosition || 'bottom right';
@@ -472,9 +472,7 @@ function maybeAddFloatingConsentButton() {
     button.className = 'ag-btn-consent-review';
     button.setAttribute('data-ag-consent-review', '1');
 
-    const icon = document.createElement('i');
-    icon.className = 'fa-solid fa-cookie-bite';
-    icon.setAttribute('aria-hidden', 'true');
+    const icon = createCookieIcon('cookie');
 
     if (style === 'icon') {
         button.classList.add('ag-btn-icon');
@@ -531,26 +529,43 @@ function getReviewIconSvg() {
     return '<svg class="ag-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l7 3v6c0 5-3.5 9-7 11-3.5-2-7-6-7-11V5l7-3zm0 5a1 1 0 00-1 1v4c0 .6.4 1 1 1h4a1 1 0 100-2h-3V8a1 1 0 00-1-1z"/></svg>';
 }
 
-function getCookieIconClass(style) {
-    const icons = {
-        'cookie': 'fa-cookie',
-        'cookie-bite': 'fa-cookie-bite',
-        'shield': 'fa-shield-halved',
-        'lock': 'fa-lock',
-        'fingerprint': 'fa-fingerprint'
-    };
-    return icons[style] || icons['cookie'];
+// Icon names offered by releases before the Lucide switch.
+const ICON_ALIASES = {
+    'cookie-bite': 'cookie',
+    'fingerprint': 'shield-check'
+};
+
+function resolveIconName(style) {
+    const icons = (window.PiensaCookieConsentConfig || {}).icons || {};
+    const name = ICON_ALIASES[style] || style;
+    return icons[name] ? name : 'cookie';
 }
 
 function createCookieIcon(style) {
-    const icon = document.createElement('i');
-    icon.className = 'fa-solid ' + getCookieIconClass(style) + ' cc-cookie-icon';
-    icon.setAttribute('aria-hidden', 'true');
-    return icon;
+    const icons = (window.PiensaCookieConsentConfig || {}).icons || {};
+    const name = resolveIconName(style);
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'pcc-icon cc-cookie-icon');
+    svg.setAttribute('width', '24');
+    svg.setAttribute('height', '24');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+    // Decorative: the surrounding control carries the accessible name.
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    // The icon bodies come from a fixed server-side table, never from user input.
+    svg.innerHTML = icons[name] || '';
+
+    return svg;
 }
 
 function injectBannerIcon() {
-    const config = window.AgencyShieldConfig || {};
+    const config = window.PiensaCookieConsentConfig || {};
     const ui = config.ui || {};
 
     if (ui.bannerShowIcon === false) {
@@ -625,14 +640,14 @@ function applyThemeVars(theme) {
 }
 
 function logConsent(cookie, actionType) {
-    const config = window.AgencyShieldConfig || {};
+    const config = window.PiensaCookieConsentConfig || {};
     const policy = config.policy || {};
     if (!policy.logConsent || !policy.ajaxUrl || !policy.nonce || !cookie) {
         return;
     }
 
     const payload = new URLSearchParams();
-    payload.append('action', 'agency_shield_log_consent');
+    payload.append('action', 'piensa_cookie_consent_log_consent');
     payload.append('nonce', policy.nonce);
     payload.append('consent_action', actionType || 'consent');
     payload.append('consent_id', cookie.consentId || '');

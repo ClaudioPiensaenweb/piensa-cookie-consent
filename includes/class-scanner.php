@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Agency_Shield_Scanner {
+class Piensa_Cookie_Consent_Scanner {
     public function get_active_categories() {
         $categories = [
             'necessary' => true,
@@ -13,7 +13,7 @@ class Agency_Shield_Scanner {
             'marketing' => false,
         ];
 
-        $settings = Agency_Shield_Admin::get_settings();
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
 
         if ($settings['category_mode'] === 'manual') {
             $categories['analytics'] = !empty($settings['analytics_enabled']);
@@ -42,7 +42,7 @@ class Agency_Shield_Scanner {
             }
         }
 
-        $discovered = get_option('agency_shield_cmp_discovered', []);
+        $discovered = get_option('piensa_cookie_consent_discovered', []);
         if (is_array($discovered)) {
             foreach ($discovered as $data) {
                 if (!empty($data['category']) && $data['category'] === 'analytics') {
@@ -221,7 +221,7 @@ class Agency_Shield_Scanner {
     }
 
     public function get_cookie_definitions() {
-        $settings = Agency_Shield_Admin::get_settings();
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
         $definitions = [
             'necessary' => [
                 'label' => $settings['necessary_label'],
@@ -333,7 +333,7 @@ class Agency_Shield_Scanner {
         $visited = [];
         $queue = $urls;
         $site_host = parse_url(home_url(), PHP_URL_HOST);
-        $detected_cookies = get_option('agency_shield_cmp_detected_cookies', []);
+        $detected_cookies = get_option('piensa_cookie_consent_detected_cookies', []);
         if (!is_array($detected_cookies)) {
             $detected_cookies = [];
         }
@@ -348,7 +348,7 @@ class Agency_Shield_Scanner {
             $response = wp_remote_get($url, [
                 'timeout' => 10,
                 'redirection' => 3,
-                'user-agent' => 'AgencyShieldCMP/1.0',
+                'user-agent' => 'PiensaCookieConsent/1.0',
             ]);
 
             if (is_wp_error($response)) {
@@ -378,7 +378,7 @@ class Agency_Shield_Scanner {
         }
 
         $map = self::get_domain_category_map();
-        $discovered = get_option('agency_shield_cmp_discovered', []);
+        $discovered = get_option('piensa_cookie_consent_discovered', []);
         if (!is_array($discovered)) {
             $discovered = [];
         }
@@ -393,9 +393,9 @@ class Agency_Shield_Scanner {
             ];
         }
 
-        update_option('agency_shield_cmp_discovered', $discovered, false);
+        update_option('piensa_cookie_consent_discovered', $discovered, false);
         if ($detected_cookies) {
-            update_option('agency_shield_cmp_detected_cookies', $detected_cookies, false);
+            update_option('piensa_cookie_consent_detected_cookies', $detected_cookies, false);
         }
 
         return [
@@ -752,7 +752,7 @@ class Agency_Shield_Scanner {
     }
 
     private function categorize_domain($host, $map) {
-        $settings = Agency_Shield_Admin::get_settings();
+        $settings = Piensa_Cookie_Consent_Admin::get_settings();
         if (!empty($settings['domain_overrides'][$host]) && $settings['domain_overrides'][$host] !== 'auto') {
             return $settings['domain_overrides'][$host];
         }
@@ -781,7 +781,7 @@ class Agency_Shield_Scanner {
         }
 
         $domains = [];
-        $discovered = get_option('agency_shield_cmp_discovered', []);
+        $discovered = get_option('piensa_cookie_consent_discovered', []);
         if (is_array($discovered)) {
             foreach ($discovered as $domain => $data) {
                 $domains[] = [
@@ -800,7 +800,7 @@ class Agency_Shield_Scanner {
             'marketing' => 0,
             'unknown' => 0,
         ];
-        $detected = get_option('agency_shield_cmp_detected_cookies', []);
+        $detected = get_option('piensa_cookie_consent_detected_cookies', []);
         if (is_array($detected)) {
             foreach ($detected as $cookie) {
                 $cookies[] = [

@@ -37,3 +37,6 @@ includes/class-updater.php
 *.log
 *.zip
 *.dist
+
+# Local tooling
+.planning

@@ -27,3 +27,6 @@ Thumbs.db
 
 # Generated translations (kept out of VCS, built on release)
 /languages/*.mo
+
+# Session logs written by local tooling, not part of the plugin.
+.planning/

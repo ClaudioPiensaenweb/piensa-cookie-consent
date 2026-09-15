@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Agency_Shield_Geo {
+class Piensa_Cookie_Consent_Geo {
     public static function should_show_cmp($settings) {
         $mode = $settings['geo_mode'] ?? 'all';
         if ($mode === 'none') {

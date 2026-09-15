@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Agency_Shield_Admin {
-    private $option_name = 'agency_shield_cmp_settings';
+class Piensa_Cookie_Consent_Admin {
+    private $option_name = 'piensa_cookie_consent_settings';
     private $menu_hook = '';
 
     public function init() {
@@ -14,14 +14,14 @@ class Agency_Shield_Admin {
             add_action('admin_menu', [$this, 'register_menu']);
             add_action('admin_init', [$this, 'register_settings']);
             add_action('admin_enqueue_scripts', [$this, 'enqueue_assets']);
-            add_action('admin_post_agency_shield_cmp_scan', [$this, 'handle_scan_request']);
-            add_action('admin_post_agency_shield_cmp_export_logs', [$this, 'handle_export_logs']);
-            add_action('admin_post_agency_shield_cmp_export_settings', [$this, 'handle_export_settings']);
-            add_action('admin_post_agency_shield_cmp_import_settings', [$this, 'handle_import_settings']);
-            add_action('admin_post_agency_shield_cmp_report_html', [$this, 'handle_report_html']);
-            add_action('admin_post_agency_shield_cmp_report_json', [$this, 'handle_report_json']);
-            add_action('wp_ajax_agency_shield_cmp_preview', [$this, 'render_preview']);
-            add_action('wp_ajax_agency_shield_cmp_collect_cookies', [$this, 'handle_collect_cookies']);
+            add_action('admin_post_piensa_cookie_consent_scan', [$this, 'handle_scan_request']);
+            add_action('admin_post_piensa_cookie_consent_export_logs', [$this, 'handle_export_logs']);
+            add_action('admin_post_piensa_cookie_consent_export_settings', [$this, 'handle_export_settings']);
+            add_action('admin_post_piensa_cookie_consent_import_settings', [$this, 'handle_import_settings']);
+            add_action('admin_post_piensa_cookie_consent_report_html', [$this, 'handle_report_html']);
+            add_action('admin_post_piensa_cookie_consent_report_json', [$this, 'handle_report_json']);
+            add_action('wp_ajax_piensa_cookie_consent_preview', [$this, 'render_preview']);
+            add_action('wp_ajax_piensa_cookie_consent_collect_cookies', [$this, 'handle_collect_cookies']);
         }
     }
 
@@ -31,7 +31,7 @@ class Agency_Shield_Admin {
             'PW Cookie Monster',
             'PW Cookie Monster',
             'manage_options',
-            'agency-shield-cmp',
+            'piensa-cookie-consent',
             [$this, 'render_settings_page'],
             'dashicons-admin-generic',
             80
@@ -39,548 +39,554 @@ class Agency_Shield_Admin {
 
         // Submenus
         add_submenu_page(
-            'agency-shield-cmp',
+            'piensa-cookie-consent',
             'Dashboard',
             'Dashboard',
             'manage_options',
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_submenu_page(
-            'agency-shield-cmp',
+            'piensa-cookie-consent',
             'Apariencia',
             'Apariencia',
             'manage_options',
-            'agency-shield-cmp&tab=apariencia',
+            'piensa-cookie-consent&tab=apariencia',
             [$this, 'render_settings_page']
         );
 
         add_submenu_page(
-            'agency-shield-cmp',
+            'piensa-cookie-consent',
             'Scanner',
             'Scanner',
             'manage_options',
-            'agency-shield-cmp&tab=scanner',
+            'piensa-cookie-consent&tab=scanner',
             [$this, 'render_settings_page']
         );
 
         add_submenu_page(
-            'agency-shield-cmp',
+            'piensa-cookie-consent',
             'Logs',
             'Logs',
             'manage_options',
-            'agency-shield-cmp&tab=logs',
+            'piensa-cookie-consent&tab=logs',
             [$this, 'render_settings_page']
         );
     }
 
     public function register_settings() {
-        register_setting('agency_shield_cmp_settings', $this->option_name, [
+        register_setting('piensa_cookie_consent_settings', $this->option_name, [
             'sanitize_callback' => [$this, 'sanitize_settings'],
         ]);
 
         add_settings_section(
-            'agency_shield_cmp_main',
+            'piensa_cookie_consent_main',
             'Configuracion general',
             function () {
                 echo '<p>Configura el funcionamiento general del CMP.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_blocker',
+            'piensa_cookie_consent_blocker',
             'Bloqueo de contenido',
             [$this, 'render_blocker_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_main'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_main'
         );
 
         add_settings_field(
-            'agency_shield_cmp_consent_log',
+            'piensa_cookie_consent_log',
             'Registro de consentimiento',
             [$this, 'render_consent_log_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_main'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_main'
         );
 
         add_settings_field(
-            'agency_shield_cmp_policy_revision',
+            'piensa_cookie_consent_policy_revision',
             'Revision de consentimiento',
             [$this, 'render_policy_revision_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_main'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_main'
         );
 
         add_settings_section(
-            'agency_shield_cmp_banner',
+            'piensa_cookie_consent_banner',
             'Textos del banner',
             function () {
                 echo '<p>Personaliza el banner y el modal de preferencias.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_banner_icon',
+            'piensa_cookie_consent_banner_icon',
             'Icono del banner',
             [$this, 'render_banner_icon_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_banner'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_banner'
         );
 
         add_settings_field(
-            'agency_shield_cmp_banner_title',
+            'piensa_cookie_consent_banner_title',
             'Titulo del banner',
             [$this, 'render_banner_title_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_banner'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_banner'
         );
 
         add_settings_field(
-            'agency_shield_cmp_banner_description',
+            'piensa_cookie_consent_banner_description',
             'Descripcion del banner',
             [$this, 'render_banner_description_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_banner'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_banner'
         );
 
         add_settings_field(
-            'agency_shield_cmp_banner_accept_all',
+            'piensa_cookie_consent_banner_accept_all',
             'Texto aceptar todas',
             [$this, 'render_banner_accept_all_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_banner'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_banner'
         );
 
         add_settings_field(
-            'agency_shield_cmp_banner_reject_all',
+            'piensa_cookie_consent_banner_reject_all',
             'Texto rechazar no necesarias',
             [$this, 'render_banner_reject_all_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_banner'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_banner'
         );
 
         add_settings_field(
-            'agency_shield_cmp_banner_manage',
+            'piensa_cookie_consent_banner_manage',
             'Texto gestionar preferencias',
             [$this, 'render_banner_manage_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_banner'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_banner'
         );
 
         add_settings_field(
-            'agency_shield_cmp_banner_save',
+            'piensa_cookie_consent_banner_save',
             'Texto guardar preferencias',
             [$this, 'render_banner_save_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_banner'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_banner'
         );
 
         add_settings_field(
-            'agency_shield_cmp_banner_preferences_title',
+            'piensa_cookie_consent_banner_preferences_title',
             'Titulo del modal',
             [$this, 'render_banner_preferences_title_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_banner'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_banner'
         );
 
         add_settings_section(
-            'agency_shield_cmp_categories',
+            'piensa_cookie_consent_categories',
             'Categorias y comportamiento',
             function () {
                 echo '<p>Define etiquetas y comportamiento de categorias.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_category_mode',
+            'piensa_cookie_consent_category_mode',
             'Modo de categorias',
             [$this, 'render_category_mode_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_categories'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_categories'
         );
 
         add_settings_field(
-            'agency_shield_cmp_necessary_toggle',
+            'piensa_cookie_consent_necessary_toggle',
             'Cookies necesarias',
             [$this, 'render_necessary_toggle_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_categories'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_categories'
         );
 
         add_settings_field(
-            'agency_shield_cmp_category_toggles',
+            'piensa_cookie_consent_category_toggles',
             'Categorias activas',
             [$this, 'render_category_toggles_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_categories'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_categories'
         );
 
         add_settings_field(
-            'agency_shield_cmp_category_labels',
+            'piensa_cookie_consent_category_labels',
             'Etiquetas y textos',
             [$this, 'render_category_labels_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_categories'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_categories'
         );
 
         add_settings_section(
-            'agency_shield_cmp_appearance',
+            'piensa_cookie_consent_appearance',
             'Apariencia y posicion',
             function () {
                 echo '<p>Controla la posicion del banner y los estilos principales.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_layout_position',
+            'piensa_cookie_consent_layout_position',
             'Posicion y layout',
             [$this, 'render_layout_position_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_appearance'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_appearance'
         );
 
         add_settings_field(
-            'agency_shield_cmp_theme_colors',
+            'piensa_cookie_consent_theme_colors',
             'Colores y radios',
             [$this, 'render_theme_colors_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_appearance'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_appearance'
         );
 
         add_settings_field(
-            'agency_shield_cmp_theme_presets',
+            'piensa_cookie_consent_theme_presets',
             'Plantillas rapidas',
             [$this, 'render_theme_presets_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_appearance'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_appearance'
         );
 
         add_settings_field(
-            'agency_shield_cmp_theme_preview',
+            'piensa_cookie_consent_theme_preview',
             'Preview',
             [$this, 'render_theme_preview_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_appearance'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_appearance'
         );
 
         add_settings_section(
-            'agency_shield_cmp_compliance',
+            'piensa_cookie_consent_compliance',
             'Cumplimiento y privacidad',
             function () {
                 echo '<p>Define geolocalizacion, idioma y requisitos legales.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_geo_targeting',
+            'piensa_cookie_consent_geo_targeting',
             'Geo-targeting',
             [$this, 'render_geo_targeting_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_compliance'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_compliance'
         );
 
         add_settings_field(
-            'agency_shield_cmp_language',
+            'piensa_cookie_consent_language',
             'Idioma y deteccion',
             [$this, 'render_language_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_compliance'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_compliance'
         );
 
         add_settings_field(
-            'agency_shield_cmp_report',
+            'piensa_cookie_consent_report',
             'Informe de cumplimiento',
             [$this, 'render_report_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_compliance'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_compliance'
         );
 
         add_settings_section(
-            'agency_shield_cmp_languages',
+            'piensa_cookie_consent_languages',
             'Textos multilenguaje',
             function () {
                 echo '<p>Define textos en ES y EN.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_texts_en',
+            'piensa_cookie_consent_texts_en',
             'Textos EN',
             [$this, 'render_texts_en_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_languages'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_languages'
         );
 
         add_settings_section(
-            'agency_shield_cmp_branding',
+            'piensa_cookie_consent_branding',
             'Branding y white-label',
             function () {
                 echo '<p>Personaliza el nombre y oculta marcas.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_branding_fields',
+            'piensa_cookie_consent_branding_fields',
             'Branding',
             [$this, 'render_branding_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_branding'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_branding'
         );
 
         add_settings_section(
-            'agency_shield_cmp_tools',
+            'piensa_cookie_consent_tools',
             'Importar / Exportar',
             function () {
                 echo '<p>Exporta o importa la configuracion completa.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_export',
+            'piensa_cookie_consent_export',
             'Exportar',
             [$this, 'render_export_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_tools'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_tools'
         );
 
         add_settings_field(
-            'agency_shield_cmp_import',
+            'piensa_cookie_consent_import',
             'Importar',
             [$this, 'render_import_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_tools'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_tools'
         );
 
         add_settings_section(
-            'agency_shield_cmp_health',
+            'piensa_cookie_consent_health',
             'Health check',
             function () {
                 echo '<p>Revisa posibles riesgos de cumplimiento.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_health_view',
+            'piensa_cookie_consent_health_view',
             'Estado',
             [$this, 'render_health_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_health'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_health'
         );
 
         add_settings_section(
-            'agency_shield_cmp_content',
+            'piensa_cookie_consent_content',
             'Contenido bloqueado',
             function () {
                 echo '<p>Dominios que deben neutralizarse hasta que haya consentimiento.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_domains',
+            'piensa_cookie_consent_domains',
             'Dominios bloqueados',
             [$this, 'render_domains_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_content'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_content'
         );
 
         add_settings_section(
-            'agency_shield_cmp_texts',
+            'piensa_cookie_consent_texts',
             'Textos del placeholder',
             function () {
                 echo '<p>Personaliza el mensaje mostrado sobre el contenido bloqueado.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_placeholder_title',
+            'piensa_cookie_consent_placeholder_title',
             'Mensaje principal',
             [$this, 'render_placeholder_title_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_texts'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_texts'
         );
 
         add_settings_field(
-            'agency_shield_cmp_placeholder_button',
+            'piensa_cookie_consent_placeholder_button',
             'Texto del boton',
             [$this, 'render_placeholder_button_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_texts'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_texts'
         );
 
         add_settings_section(
-            'agency_shield_cmp_ui',
+            'piensa_cookie_consent_ui',
             'Interfaz de consentimiento',
             function () {
                 echo '<p>Controla el boton flotante para revisar el consentimiento.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_floating_button',
+            'piensa_cookie_consent_floating_button',
             'Boton flotante',
             [$this, 'render_floating_button_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_ui'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_ui'
         );
 
         add_settings_field(
-            'agency_shield_cmp_floating_button_text',
+            'piensa_cookie_consent_floating_button_text',
             'Texto del boton',
             [$this, 'render_floating_button_text_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_ui'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_ui'
         );
 
         add_settings_field(
-            'agency_shield_cmp_floating_button_style',
+            'piensa_cookie_consent_floating_button_style',
             'Estilo del boton',
             [$this, 'render_floating_button_style_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_ui'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_ui'
         );
 
         add_settings_section(
-            'agency_shield_cmp_discovery',
+            'piensa_cookie_consent_discovery',
             'Descubrimiento automatico',
             function () {
                 echo '<p>Se detectan recursos externos (scripts, iframes, imagenes) para sugerir categorias.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_discovered',
+            'piensa_cookie_consent_discovered',
             'Dominios detectados',
             [$this, 'render_discovered_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_discovery'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_discovery'
         );
 
         add_settings_field(
-            'agency_shield_cmp_cookie_audit',
+            'piensa_cookie_consent_cookie_audit',
             'Auditoria en navegador',
             [$this, 'render_cookie_audit_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_discovery'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_discovery'
         );
 
         add_settings_field(
-            'agency_shield_cmp_detected_cookies',
+            'piensa_cookie_consent_detected_cookies',
             'Cookies detectadas',
             [$this, 'render_detected_cookies_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_discovery'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_discovery'
         );
 
         add_settings_section(
-            'agency_shield_cmp_policy',
+            'piensa_cookie_consent_policy',
             'Politica de cookies',
             function () {
                 echo '<p>Enlaza tu politica y define cookies personalizadas.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_cookie_policy_url',
+            'piensa_cookie_consent_cookie_policy_url',
             'URL politica de cookies',
             [$this, 'render_cookie_policy_url_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_policy'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_policy'
         );
 
         add_settings_field(
-            'agency_shield_cmp_privacy_policy_url',
+            'piensa_cookie_consent_privacy_policy_url',
             'URL politica de privacidad',
             [$this, 'render_privacy_policy_url_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_policy'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_policy'
         );
 
         add_settings_field(
-            'agency_shield_cmp_custom_cookies',
+            'piensa_cookie_consent_custom_cookies',
             'Cookies personalizadas',
             [$this, 'render_custom_cookies_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_policy'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_policy'
         );
 
         add_settings_section(
-            'agency_shield_cmp_logs',
+            'piensa_cookie_consent_logs',
             'Registro de consentimientos',
             function () {
                 echo '<p>Ultimos consentimientos registrados.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_logs_table',
+            'piensa_cookie_consent_logs_table',
             'Logs',
             [$this, 'render_logs_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_logs'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_logs'
         );
 
+        // The update server settings only make sense in the build that
+        // ships the updater; the wp.org package has none.
+        if (!Piensa_Cookie_Consent_Core::has_self_hosted_updater()) {
+            return;
+        }
+
         add_settings_section(
-            'agency_shield_cmp_updates',
+            'piensa_cookie_consent_updates',
             'Actualizaciones seguras',
             function () {
                 echo '<p>Configura el servidor central de actualizaciones y la firma.</p>';
             },
-            'agency-shield-cmp'
+            'piensa-cookie-consent'
         );
 
         add_settings_field(
-            'agency_shield_cmp_update_server',
+            'piensa_cookie_consent_update_server',
             'Servidor de actualizaciones',
             [$this, 'render_update_server_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_updates'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_updates'
         );
 
         add_settings_field(
-            'agency_shield_cmp_update_channel',
+            'piensa_cookie_consent_update_channel',
             'Canal',
             [$this, 'render_update_channel_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_updates'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_updates'
         );
 
         add_settings_field(
-            'agency_shield_cmp_update_token',
+            'piensa_cookie_consent_update_token',
             'Token de acceso',
             [$this, 'render_update_token_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_updates'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_updates'
         );
 
         add_settings_field(
-            'agency_shield_cmp_update_public_key',
+            'piensa_cookie_consent_update_public_key',
             'Clave publica',
             [$this, 'render_update_public_key_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_updates'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_updates'
         );
 
         add_settings_field(
-            'agency_shield_cmp_update_signature',
+            'piensa_cookie_consent_update_signature',
             'Verificacion de firma',
             [$this, 'render_update_signature_field'],
-            'agency-shield-cmp',
-            'agency_shield_cmp_updates'
+            'piensa-cookie-consent',
+            'piensa_cookie_consent_updates'
         );
     }
 
@@ -612,27 +618,23 @@ class Agency_Shield_Admin {
         echo '<label style="display:block;margin-bottom:12px;"><input type="checkbox" name="' . esc_attr($this->option_name) . '[banner_show_icon]" value="1" ' . ($show_icon ? 'checked' : '') . '> Mostrar icono en el banner</label>';
         echo '<div class="ag-icon-preview" style="display:flex;gap:12px;align-items:stretch;flex-wrap:wrap;">';
 
-        $icons = [
-            'cookie' => ['label' => 'Cookie', 'class' => 'fa-solid fa-cookie'],
-            'cookie-bite' => ['label' => 'Cookie mordida', 'class' => 'fa-solid fa-cookie-bite'],
-            'shield' => ['label' => 'Escudo', 'class' => 'fa-solid fa-shield-halved'],
-            'lock' => ['label' => 'Candado', 'class' => 'fa-solid fa-lock'],
-            'fingerprint' => ['label' => 'Huella', 'class' => 'fa-solid fa-fingerprint'],
-        ];
+        $icons = Piensa_Cookie_Consent_Icons::get_choices();
+        $icon_style = Piensa_Cookie_Consent_Icons::resolve($icon_style);
 
-        foreach ($icons as $key => $data) {
+        foreach ($icons as $key => $label) {
             $checked = $icon_style === $key ? 'checked' : '';
             $border_color = $icon_style === $key ? '#2271b1' : '#dcdcde';
             $bg_color = $icon_style === $key ? '#f0f6fc' : '#fff';
             echo '<label style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;padding:14px 16px;border:2px solid ' . $border_color . ';border-radius:10px;min-width:90px;background:' . $bg_color . ';transition:all 0.15s ease;">';
             echo '<input type="radio" name="' . esc_attr($this->option_name) . '[banner_icon_style]" value="' . esc_attr($key) . '" ' . $checked . ' style="display:none;">';
-            echo '<i class="' . esc_attr($data['class']) . '" style="font-size:28px;color:#1d2327;"></i>';
-            echo '<span style="font-size:11px;color:#50575e;font-weight:500;">' . esc_html($data['label']) . '</span>';
+            // The icon markup is built from a fixed internal table, not user input.
+            echo wp_kses(Piensa_Cookie_Consent_Icons::get($key, 28), Piensa_Cookie_Consent_Icons::get_allowed_html());
+            echo '<span style="font-size:11px;color:#50575e;font-weight:500;">' . esc_html($label) . '</span>';
             echo '</label>';
         }
 
         echo '</div>';
-        echo '<p class="description" style="margin-top:12px;">Iconos via Font Awesome 6. Aparece junto al titulo del banner.</p>';
+        echo '<p class="description" style="margin-top:12px;">' . esc_html__('Appears next to the banner title.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
     }
 
@@ -798,7 +800,7 @@ class Agency_Shield_Admin {
     public function render_theme_presets_field() {
         $presets = self::get_theme_presets();
         echo '<div class="ag-field-row">';
-        echo '<select class="ag-preset-select" name="agency_shield_cmp_preset_select">';
+        echo '<select class="ag-preset-select" name="piensa_cookie_consent_preset_select">';
         foreach ($presets as $key => $preset) {
             echo '<option value="' . esc_attr($key) . '">' . esc_html($preset['label']) . '</option>';
         }
@@ -809,8 +811,8 @@ class Agency_Shield_Admin {
     }
 
     public function render_theme_preview_field() {
-        $preview_url = admin_url('admin-ajax.php?action=agency_shield_cmp_preview');
-        $nonce = wp_create_nonce('agency_shield_cmp_preview');
+        $preview_url = admin_url('admin-ajax.php?action=piensa_cookie_consent_preview');
+        $nonce = wp_create_nonce('piensa_cookie_consent_preview');
         echo '<div class="ag-preview-frame-wrap">';
         echo '<iframe class="ag-preview-frame" data-ag-preview-frame src="' . esc_url($preview_url . '&nonce=' . $nonce) . '" loading="lazy"></iframe>';
         echo '</div>';
@@ -871,8 +873,8 @@ class Agency_Shield_Admin {
     }
 
     public function render_report_field() {
-        $html_url = wp_nonce_url(admin_url('admin-post.php?action=agency_shield_cmp_report_html'), 'agency_shield_cmp_report_html');
-        $json_url = wp_nonce_url(admin_url('admin-post.php?action=agency_shield_cmp_report_json'), 'agency_shield_cmp_report_json');
+        $html_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_report_html'), 'piensa_cookie_consent_report_html');
+        $json_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_report_json'), 'piensa_cookie_consent_report_json');
         echo '<a class="button" href="' . esc_url($html_url) . '">Descargar informe HTML</a> ';
         echo '<a class="button" href="' . esc_url($json_url) . '">Descargar informe JSON</a>';
     }
@@ -914,12 +916,12 @@ class Agency_Shield_Admin {
     }
 
     public function render_export_field() {
-        $export_url = wp_nonce_url(admin_url('admin-post.php?action=agency_shield_cmp_export_settings'), 'agency_shield_cmp_export_settings');
+        $export_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_export_settings'), 'piensa_cookie_consent_export_settings');
         echo '<a class="button" href="' . esc_url($export_url) . '">Descargar configuracion (JSON)</a>';
     }
 
     public function render_import_field() {
-        echo '<input type="file" name="agency_shield_cmp_settings_file" form="ag-import-form" accept="application/json" />';
+        echo '<input type="file" name="piensa_cookie_consent_settings_file" form="ag-import-form" accept="application/json" />';
         echo ' ';
         echo '<button type="submit" class="button" form="ag-import-form">Importar configuracion</button>';
     }
@@ -979,10 +981,10 @@ class Agency_Shield_Admin {
     }
 
     public function render_discovered_field() {
-        $discovered = get_option('agency_shield_cmp_discovered', []);
+        $discovered = get_option('piensa_cookie_consent_discovered', []);
         $settings = self::get_settings();
         $overrides = isset($settings['domain_overrides']) && is_array($settings['domain_overrides']) ? $settings['domain_overrides'] : [];
-        $scan_url = wp_nonce_url(admin_url('admin-post.php?action=agency_shield_cmp_scan'), 'agency_shield_cmp_scan');
+        $scan_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_scan'), 'piensa_cookie_consent_scan');
 
         echo '<p><a class="button" href="' . esc_url($scan_url) . '">Escanear ahora</a></p>';
 
@@ -1011,7 +1013,7 @@ class Agency_Shield_Admin {
     }
 
     public function render_cookie_audit_field() {
-        $nonce = wp_create_nonce('agency_shield_cmp_audit');
+        $nonce = wp_create_nonce('piensa_cookie_consent_audit');
         $audit_url = add_query_arg(
             [
                 'ag_cookie_audit' => '1',
@@ -1025,7 +1027,7 @@ class Agency_Shield_Admin {
     }
 
     public function render_detected_cookies_field() {
-        $cookies = get_option('agency_shield_cmp_detected_cookies', []);
+        $cookies = get_option('piensa_cookie_consent_detected_cookies', []);
         if (!is_array($cookies) || !$cookies) {
             echo '<p class="description">Aun no se han detectado cookies durante el escaneo.</p>';
             return;
@@ -1052,7 +1054,7 @@ class Agency_Shield_Admin {
         $settings = self::get_settings();
         $value = esc_attr($settings['cookie_policy_url']);
         echo '<input class="regular-text" type="url" name="' . esc_attr($this->option_name) . '[cookie_policy_url]" value="' . $value . '" placeholder="https://tusitio.com/politica-de-cookies" />';
-        echo '<p class="description">Usa el shortcode [agency_shield_cookie_policy] en una pagina si no tienes URL propia.</p>';
+        echo '<p class="description">Usa el shortcode [piensa_cookie_consent_policy] en una pagina si no tienes URL propia.</p>';
     }
 
     public function render_privacy_policy_url_field() {
@@ -1069,13 +1071,13 @@ class Agency_Shield_Admin {
     }
 
     public function render_logs_field() {
-        $logs = Agency_Shield_Consent_Log::get_logs(50, 0);
+        $logs = Piensa_Cookie_Consent_Consent_Log::get_logs(50, 0);
         if (!$logs) {
             echo '<p class="description">Aun no hay registros.</p>';
             return;
         }
 
-        $export_url = wp_nonce_url(admin_url('admin-post.php?action=agency_shield_cmp_export_logs'), 'agency_shield_cmp_export_logs');
+        $export_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_export_logs'), 'piensa_cookie_consent_export_logs');
 
         echo '<p><a class="button" href="' . esc_url($export_url) . '">Exportar CSV</a></p>';
         echo '<table class="widefat striped">';
@@ -1133,10 +1135,10 @@ class Agency_Shield_Admin {
 
     public function render_settings_page() {
         $settings = self::get_settings();
-        $discovered = get_option('agency_shield_cmp_discovered', []);
+        $discovered = get_option('piensa_cookie_consent_discovered', []);
         $domains_count = is_array($discovered) ? count($discovered) : 0;
-        $scan_url = wp_nonce_url(admin_url('admin-post.php?action=agency_shield_cmp_scan'), 'agency_shield_cmp_scan');
-        $export_url = wp_nonce_url(admin_url('admin-post.php?action=agency_shield_cmp_export_logs'), 'agency_shield_cmp_export_logs');
+        $scan_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_scan'), 'piensa_cookie_consent_scan');
+        $export_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_export_logs'), 'piensa_cookie_consent_export_logs');
         $cookie_policy_url = $settings['cookie_policy_url'];
 
         echo '<div class="wrap ag-admin">';
@@ -1174,10 +1176,10 @@ class Agency_Shield_Admin {
         echo '</div>';
         echo '</div>';
 
-        $notice = get_transient('agency_shield_cmp_scan_notice');
+        $notice = get_transient('piensa_cookie_consent_scan_notice');
         if ($notice) {
             echo '<div class="notice notice-success inline"><p>' . esc_html($notice) . '</p></div>';
-            delete_transient('agency_shield_cmp_scan_notice');
+            delete_transient('piensa_cookie_consent_scan_notice');
         }
 
         echo '<nav class="ag-admin-tabs" data-ag-tabs>';
@@ -1196,9 +1198,9 @@ class Agency_Shield_Admin {
         echo '<button type="button" class="ag-tab-btn" data-tab="logs">Logs</button>';
         echo '</nav>';
 
-        echo '<div class="agency-shield-admin-card">';
+        echo '<div class="piensa-cookie-consent-admin-card">';
         echo '<form method="post" action="options.php">';
-        settings_fields('agency_shield_cmp_settings');
+        settings_fields('piensa_cookie_consent_settings');
 
         echo '<div class="ag-tab is-active" data-tab="general">';
         echo '<div class="ag-panel">';
@@ -1207,7 +1209,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Datos principales, revision legal y registro.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_main');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_main');
         echo '</table>';
         echo '</div>';
 
@@ -1217,7 +1219,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Boton flotante y revision de consentimiento.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_ui');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_ui');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1229,7 +1231,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Define geolocalizacion e idioma.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_compliance');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_compliance');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1241,7 +1243,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Configura EN (ES se gestiona en Banner/Categorias).</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_languages');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_languages');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1253,7 +1255,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Define etiquetas y activa o desactiva categorias.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_categories');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_categories');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1265,7 +1267,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Ajusta el layout, posicion y colores.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_appearance');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_appearance');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1277,7 +1279,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Personaliza el banner y el modal de preferencias.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_banner');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_banner');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1289,8 +1291,8 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Controla los dominios bloqueados y el texto de placeholders.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_content');
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_texts');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_content');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_texts');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1302,7 +1304,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Escanea tu sitio y clasifica dominios externos.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_discovery');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_discovery');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1314,7 +1316,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Enlaza la politica y define cookies personalizadas.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_policy');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_policy');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1326,7 +1328,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Personaliza la marca visible.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_branding');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_branding');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1338,8 +1340,10 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Importa o exporta configuraciones.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_tools');
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_updates');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_tools');
+        if (Piensa_Cookie_Consent_Core::has_self_hosted_updater()) {
+            do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_updates');
+        }
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1351,7 +1355,7 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Revision rapida de riesgos.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_health');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_health');
         echo '</table>';
         echo '</div>';
         echo '</div>';
@@ -1363,15 +1367,15 @@ class Agency_Shield_Admin {
         echo '<p class="ag-section-intro">Consulta y exporta el historial de consentimientos.</p>';
         echo '</div>';
         echo '<table class="form-table">';
-        do_settings_fields('agency-shield-cmp', 'agency_shield_cmp_logs');
+        do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_logs');
         echo '</table>';
         echo '</div>';
         echo '</div>';
 
         submit_button('Guardar cambios');
         echo '</form>';
-        echo '<form id="ag-import-form" method="post" action="' . esc_url(admin_url('admin-post.php?action=agency_shield_cmp_import_settings')) . '" enctype="multipart/form-data">';
-        wp_nonce_field('agency_shield_cmp_import_settings');
+        echo '<form id="ag-import-form" method="post" action="' . esc_url(admin_url('admin-post.php?action=piensa_cookie_consent_import_settings')) . '" enctype="multipart/form-data">';
+        wp_nonce_field('piensa_cookie_consent_import_settings');
         echo '</form>';
         echo '</div>';
         echo '</div>';
@@ -1382,11 +1386,11 @@ class Agency_Shield_Admin {
             wp_die('No autorizado.');
         }
 
-        check_ajax_referer('agency_shield_cmp_preview', 'nonce');
+        check_ajax_referer('piensa_cookie_consent_preview', 'nonce');
 
         $settings = [];
-        if (!empty($_POST['agency_shield_cmp_settings']) && is_array($_POST['agency_shield_cmp_settings'])) {
-            $raw = wp_unslash($_POST['agency_shield_cmp_settings']);
+        if (!empty($_POST['piensa_cookie_consent_settings']) && is_array($_POST['piensa_cookie_consent_settings'])) {
+            $raw = wp_unslash($_POST['piensa_cookie_consent_settings']);
             $settings = $this->sanitize_settings($raw);
         } else {
             $settings = self::get_settings();
@@ -1394,10 +1398,10 @@ class Agency_Shield_Admin {
 
         $config = $this->build_preview_config($settings);
 
-        $css_cc = AGENCY_SHIELD_CMP_URL . 'assets/css/cookieconsent.css';
-        $css_main = AGENCY_SHIELD_CMP_URL . 'assets/css/agency-shield.css';
-        $js_cc = AGENCY_SHIELD_CMP_URL . 'assets/js/cookieconsent.js';
-        $js_main = AGENCY_SHIELD_CMP_URL . 'assets/js/agency-shield.js';
+        $css_cc = PIENSA_COOKIE_CONSENT_URL . 'assets/css/cookieconsent.css';
+        $css_main = PIENSA_COOKIE_CONSENT_URL . 'assets/css/piensa-cookie-consent.css';
+        $js_cc = PIENSA_COOKIE_CONSENT_URL . 'assets/js/cookieconsent.js';
+        $js_main = PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent.js';
 
         header('Content-Type: text/html; charset=utf-8');
         echo '<!doctype html><html><head><meta charset="utf-8">';
@@ -1407,7 +1411,7 @@ class Agency_Shield_Admin {
         echo '<style>html,body{margin:0;padding:0;background:#f1f5f9;}#preview-root{min-height:360px;position:relative;padding:20px;}#cc-main{position:absolute !important;}</style>';
         echo '</head><body>';
         echo '<div id="preview-root"></div>';
-        echo '<script>window.AgencyShieldConfig=' . wp_json_encode($config) . ';</script>';
+        echo '<script>window.PiensaCookieConsentConfig=' . wp_json_encode($config) . ';</script>';
         echo '<script src="' . esc_url($js_cc) . '"></script>';
         echo '<script src="' . esc_url($js_main) . '"></script>';
         echo '<script>setTimeout(function(){if(window.CookieConsent&&CookieConsent.show){CookieConsent.show();}},60);</script>';
@@ -1518,7 +1522,7 @@ class Agency_Shield_Admin {
                 'privacyPolicyUrl' => $settings['privacy_policy_url'],
                 'logConsent' => false,
                 'ajaxUrl' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('agency_shield_consent_log'),
+                'nonce' => wp_create_nonce('piensa_cookie_consent_log'),
                 'banner' => [
                     'title' => $settings['banner_title'],
                     'description' => $settings['banner_description'],
@@ -1534,24 +1538,23 @@ class Agency_Shield_Admin {
 
     public function enqueue_assets($hook) {
         // Cargar en todas las paginas de PW Cookie Monster
-        if (strpos($hook, 'agency-shield') === false && $hook !== $this->menu_hook) {
+        if (strpos($hook, 'piensa-cookie-consent') === false && $hook !== $this->menu_hook) {
             return;
         }
 
         // Font Awesome para iconos
-        wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css', [], '6.5.1');
 
-        wp_enqueue_style('agency-shield-admin', AGENCY_SHIELD_CMP_URL . 'assets/css/agency-shield-admin.css', ['font-awesome'], AGENCY_SHIELD_CMP_VERSION);
-        wp_enqueue_script('agency-shield-admin', AGENCY_SHIELD_CMP_URL . 'assets/js/agency-shield-admin.js', [], AGENCY_SHIELD_CMP_VERSION, true);
-        wp_localize_script('agency-shield-admin', 'AgencyShieldAdminConfig', [
+        wp_enqueue_style('piensa-cookie-consent-admin', PIENSA_COOKIE_CONSENT_URL . 'assets/css/piensa-cookie-consent-admin.css', [], PIENSA_COOKIE_CONSENT_VERSION);
+        wp_enqueue_script('piensa-cookie-consent-admin', PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent-admin.js', [], PIENSA_COOKIE_CONSENT_VERSION, true);
+        wp_localize_script('piensa-cookie-consent-admin', 'PiensaCookieConsentAdminConfig', [
             'presets' => self::get_theme_presets(),
-            'previewUrl' => admin_url('admin-ajax.php?action=agency_shield_cmp_preview'),
-            'previewNonce' => wp_create_nonce('agency_shield_cmp_preview'),
+            'previewUrl' => admin_url('admin-ajax.php?action=piensa_cookie_consent_preview'),
+            'previewNonce' => wp_create_nonce('piensa_cookie_consent_preview'),
             'previewAssets' => [
-                'cssCc' => AGENCY_SHIELD_CMP_URL . 'assets/css/cookieconsent.css',
-                'cssMain' => AGENCY_SHIELD_CMP_URL . 'assets/css/agency-shield.css',
-                'jsCc' => AGENCY_SHIELD_CMP_URL . 'assets/js/cookieconsent.js',
-                'jsMain' => AGENCY_SHIELD_CMP_URL . 'assets/js/agency-shield.js',
+                'cssCc' => PIENSA_COOKIE_CONSENT_URL . 'assets/css/cookieconsent.css',
+                'cssMain' => PIENSA_COOKIE_CONSENT_URL . 'assets/css/piensa-cookie-consent.css',
+                'jsCc' => PIENSA_COOKIE_CONSENT_URL . 'assets/js/cookieconsent.js',
+                'jsMain' => PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent.js',
             ],
         ]);
     }
@@ -1782,7 +1785,7 @@ class Agency_Shield_Admin {
 
     public static function get_settings() {
         $defaults = self::get_default_settings();
-        $settings = get_option('agency_shield_cmp_settings', []);
+        $settings = get_option('piensa_cookie_consent_settings', []);
 
         if (!is_array($settings)) {
             $settings = [];
@@ -1956,15 +1959,15 @@ class Agency_Shield_Admin {
             wp_die('No autorizado.');
         }
 
-        check_admin_referer('agency_shield_cmp_scan');
+        check_admin_referer('piensa_cookie_consent_scan');
 
-        $scanner = new Agency_Shield_Scanner();
+        $scanner = new Piensa_Cookie_Consent_Scanner();
         $result = $scanner->scan_site(25);
 
         $message = sprintf('Escaneo completado. URLs: %d, dominios: %d', $result['urls'], $result['domains']);
-        set_transient('agency_shield_cmp_scan_notice', $message, 60);
+        set_transient('piensa_cookie_consent_scan_notice', $message, 60);
 
-        wp_safe_redirect(admin_url('options-general.php?page=agency-shield-cmp'));
+        wp_safe_redirect(admin_url('options-general.php?page=piensa-cookie-consent'));
         exit;
     }
 
@@ -1973,8 +1976,8 @@ class Agency_Shield_Admin {
             wp_die('No autorizado.');
         }
 
-        check_admin_referer('agency_shield_cmp_export_logs');
-        Agency_Shield_Consent_Log::export_logs();
+        check_admin_referer('piensa_cookie_consent_export_logs');
+        Piensa_Cookie_Consent_Consent_Log::export_logs();
     }
 
     public function handle_export_settings() {
@@ -1982,11 +1985,11 @@ class Agency_Shield_Admin {
             wp_die('No autorizado.');
         }
 
-        check_admin_referer('agency_shield_cmp_export_settings');
+        check_admin_referer('piensa_cookie_consent_export_settings');
         $settings = self::get_settings();
 
         header('Content-Type: application/json; charset=utf-8');
-        header('Content-Disposition: attachment; filename=agency-shield-cmp-settings.json');
+        header('Content-Disposition: attachment; filename=piensa-cookie-consent-settings.json');
         echo wp_json_encode($settings);
         exit;
     }
@@ -1996,24 +1999,24 @@ class Agency_Shield_Admin {
             wp_die('No autorizado.');
         }
 
-        check_admin_referer('agency_shield_cmp_import_settings');
+        check_admin_referer('piensa_cookie_consent_import_settings');
 
-        if (empty($_FILES['agency_shield_cmp_settings_file']['tmp_name'])) {
-            wp_safe_redirect(admin_url('options-general.php?page=agency-shield-cmp#ag-tab=tools'));
+        if (empty($_FILES['piensa_cookie_consent_settings_file']['tmp_name'])) {
+            wp_safe_redirect(admin_url('options-general.php?page=piensa-cookie-consent#ag-tab=tools'));
             exit;
         }
 
-        $contents = file_get_contents($_FILES['agency_shield_cmp_settings_file']['tmp_name']);
+        $contents = file_get_contents($_FILES['piensa_cookie_consent_settings_file']['tmp_name']);
         $decoded = json_decode($contents, true);
         if (!is_array($decoded)) {
-            wp_safe_redirect(admin_url('options-general.php?page=agency-shield-cmp#ag-tab=tools'));
+            wp_safe_redirect(admin_url('options-general.php?page=piensa-cookie-consent#ag-tab=tools'));
             exit;
         }
 
         $sanitized = $this->sanitize_settings($decoded);
-        update_option('agency_shield_cmp_settings', $sanitized, false);
+        update_option('piensa_cookie_consent_settings', $sanitized, false);
 
-        wp_safe_redirect(admin_url('options-general.php?page=agency-shield-cmp#ag-tab=tools'));
+        wp_safe_redirect(admin_url('options-general.php?page=piensa-cookie-consent#ag-tab=tools'));
         exit;
     }
 
@@ -2022,12 +2025,12 @@ class Agency_Shield_Admin {
             wp_die('No autorizado.');
         }
 
-        check_admin_referer('agency_shield_cmp_report_html');
-        $scanner = new Agency_Shield_Scanner();
+        check_admin_referer('piensa_cookie_consent_report_html');
+        $scanner = new Piensa_Cookie_Consent_Scanner();
         $report = $scanner->get_report_data();
 
         header('Content-Type: text/html; charset=utf-8');
-        header('Content-Disposition: attachment; filename=agency-shield-report.html');
+        header('Content-Disposition: attachment; filename=piensa-cookie-consent-report.html');
 
         echo '<!doctype html><html><head><meta charset="utf-8"><title>PW Cookie Monster Report</title>';
         echo '<style>body{font-family:Arial,sans-serif;margin:20px;color:#111;}h1{margin-bottom:6px;}table{border-collapse:collapse;width:100%;margin-top:12px;}th,td{border:1px solid #ddd;padding:8px;text-align:left;}th{background:#f3f4f6;}</style>';
@@ -2065,12 +2068,12 @@ class Agency_Shield_Admin {
             wp_die('No autorizado.');
         }
 
-        check_admin_referer('agency_shield_cmp_report_json');
-        $scanner = new Agency_Shield_Scanner();
+        check_admin_referer('piensa_cookie_consent_report_json');
+        $scanner = new Piensa_Cookie_Consent_Scanner();
         $report = $scanner->get_report_data();
 
         header('Content-Type: application/json; charset=utf-8');
-        header('Content-Disposition: attachment; filename=agency-shield-report.json');
+        header('Content-Disposition: attachment; filename=piensa-cookie-consent-report.json');
         echo wp_json_encode($report);
         exit;
     }
@@ -2080,7 +2083,7 @@ class Agency_Shield_Admin {
             wp_send_json_error(['message' => 'No autorizado'], 403);
         }
 
-        check_ajax_referer('agency_shield_cmp_collect_cookies', 'nonce');
+        check_ajax_referer('piensa_cookie_consent_collect_cookies', 'nonce');
 
         $raw = isset($_POST['cookies']) ? wp_unslash($_POST['cookies']) : '';
         $cookies = json_decode($raw, true);
@@ -2103,7 +2106,7 @@ class Agency_Shield_Admin {
             $normalized[] = [
                 'name' => $name,
                 'domain' => $domain,
-                'category' => Agency_Shield_Scanner::categorize_cookie_for_site($name, $domain, $host),
+                'category' => Piensa_Cookie_Consent_Scanner::categorize_cookie_for_site($name, $domain, $host),
                 'last_seen' => time(),
             ];
         }
@@ -2112,12 +2115,12 @@ class Agency_Shield_Admin {
             wp_send_json_success(['count' => 0]);
         }
 
-        $existing = get_option('agency_shield_cmp_detected_cookies', []);
+        $existing = get_option('piensa_cookie_consent_detected_cookies', []);
         if (!is_array($existing)) {
             $existing = [];
         }
-        $merged = Agency_Shield_Scanner::merge_detected_cookies($existing, $normalized);
-        update_option('agency_shield_cmp_detected_cookies', $merged, false);
+        $merged = Piensa_Cookie_Consent_Scanner::merge_detected_cookies($existing, $normalized);
+        update_option('piensa_cookie_consent_detected_cookies', $merged, false);
 
         wp_send_json_success(['count' => count($normalized)]);
     }
@@ -2137,7 +2140,7 @@ class Agency_Shield_Admin {
             $issues[] = 'Registro de consentimiento desactivado.';
         }
 
-        $discovered = get_option('agency_shield_cmp_discovered', []);
+        $discovered = get_option('piensa_cookie_consent_discovered', []);
         if (is_array($discovered)) {
             $unknown = 0;
             foreach ($discovered as $data) {
