@@ -1,5 +1,5 @@
 {
-    "name": "piensaenweb/piensa-cookie-consent",
+    "name": "claudiopiensaenweb/piensa-cookie-consent",
     "description": "GDPR/ePrivacy cookie consent banner with Google Consent Mode v2, script blocking, cookie scanning and consent logging.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
@@ -11,8 +11,8 @@
     ],
     "keywords": ["wordpress", "cookie", "consent", "gdpr", "ccpa", "privacy", "cmp", "consent-mode"],
     "support": {
-        "issues": "https://github.com/piensaenweb/piensa-cookie-consent/issues",
-        "source": "https://github.com/piensaenweb/piensa-cookie-consent"
+        "issues": "https://github.com/ClaudioPiensaenweb/piensa-cookie-consent/issues",
+        "source": "https://github.com/ClaudioPiensaenweb/piensa-cookie-consent"
     },
     "require": {
         "php": ">=7.4"

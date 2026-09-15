@@ -6,7 +6,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/piensaenweb/piensa-cookie-consent.git"
+    "url": "https://github.com/ClaudioPiensaenweb/piensa-cookie-consent.git"
   },
   "scripts": {
     "lint:js": "eslint assets/js",
