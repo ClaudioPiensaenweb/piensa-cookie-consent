@@ -247,7 +247,9 @@ class Piensa_Cookie_Consent_Consent_Log {
 	 * The size is checked before decoding: parsing a multi-megabyte document
 	 * to find out it is too large has already cost the memory.
 	 *
-	 * @param string $value Raw JSON from the request.
+	 * @param mixed $value Raw value from the request. A request can send
+	 *                      `categories[]=x`, in which case this is an array,
+	 *                      so the type check below is not redundant.
 	 *
 	 * @return string
 	 */
