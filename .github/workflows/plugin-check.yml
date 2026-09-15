@@ -57,7 +57,10 @@ jobs:
             }
           }
           JSON
-          npm -g --no-fund i @wordpress/env@10.17.0
+          # Pinned: an unpinned @wordpress/env can introduce a boot regression
+          # with no change to the plugin under test. 11.x is the first line
+          # that accepts "testsEnvironment".
+          npm -g --no-fund i @wordpress/env@11.7.0
           wp-env start --update
           # wp-env can exit 0 without actually starting Docker; this turns that
           # silent failure into a loud one.
