@@ -51,13 +51,26 @@ class Piensa_Cookie_Consent_Migrator {
 			return;
 		}
 
-		// Each step is guarded by the version it upgrades from, so a site
-		// several versions behind runs them all in order.
-		if ( $stored < 2 ) {
-			self::migrate_to_2();
+		// Run every step the site is behind on, oldest first, so an install
+		// several versions old ends up in the same state as a recent one.
+		foreach ( self::get_steps() as $version => $method ) {
+			if ( $stored < $version ) {
+				call_user_func( [ self::class, $method ] );
+			}
 		}
 
 		update_option( self::VERSION_OPTION, self::CURRENT_VERSION, false );
+	}
+
+	/**
+	 * Migration steps, keyed by the schema version they bring the site up to.
+	 *
+	 * @return array<int, string> Version => method name.
+	 */
+	private static function get_steps() {
+		return [
+			2 => 'migrate_to_2',
+		];
 	}
 
 	/**

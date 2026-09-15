@@ -12,6 +12,14 @@ parameters:
             - node_modules (?)
     bootstrapFiles:
         - phpstan-bootstrap.php
+    # The analysis runs on one PHP version; the plugin supports a range, so
+    # guards against older versions are not dead code on the sites that need
+    # them.
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         # WordPress core stubs do not model every dynamic $wpdb property.
         - '#Access to an undefined property wpdb::#'
+        # The PHP version guard in the bootstrap is a runtime check.
+        -
+            message: '#If condition is always false#'
+            path: piensa-cookie-consent.php
