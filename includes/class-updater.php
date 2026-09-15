@@ -235,7 +235,8 @@ class Piensa_Cookie_Consent_Updater {
 			return false;
 		}
 
-		$payload   = $this->build_signature_payload( $data );
+		$payload = $this->build_signature_payload( $data );
+
 		// A detached signature, which travels base64-encoded. Decoding it is
 		// how the update is verified, not a way of hiding code.
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
