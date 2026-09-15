@@ -64,5 +64,4 @@ class Piensa_Cookie_Consent_Consent_Mode {
 		// which a hand-built <script> element would ignore.
 		wp_print_inline_script_tag( $script );
 	}
-
 }

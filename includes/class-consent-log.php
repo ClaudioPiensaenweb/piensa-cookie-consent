@@ -185,8 +185,9 @@ class Piensa_Cookie_Consent_Consent_Log {
 			// accumulating in the output buffer.
 			flush();
 
+			$fetched = count( $logs );
 			$offset += $batch;
-		} while ( count( $logs ) === $batch );
+		} while ( $fetched === $batch );
 
 		fclose( $output );
 		// phpcs:enable WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fclose
