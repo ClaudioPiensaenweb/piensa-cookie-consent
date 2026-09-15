@@ -1587,7 +1587,6 @@ class Piensa_Cookie_Consent_Admin {
 			return;
 		}
 
-
 		wp_enqueue_style( 'piensa-cookie-consent-admin', PIENSA_COOKIE_CONSENT_URL . 'assets/css/piensa-cookie-consent-admin.css', [], PIENSA_COOKIE_CONSENT_VERSION );
 		wp_enqueue_script( 'piensa-cookie-consent-admin', PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent-admin.js', [], PIENSA_COOKIE_CONSENT_VERSION, true );
 		wp_localize_script(
