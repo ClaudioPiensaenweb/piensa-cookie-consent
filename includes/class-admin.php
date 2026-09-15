@@ -2001,23 +2001,68 @@ class Piensa_Cookie_Consent_Admin {
 
         check_admin_referer('piensa_cookie_consent_import_settings');
 
-        if (empty($_FILES['piensa_cookie_consent_settings_file']['tmp_name'])) {
-            wp_safe_redirect(admin_url('options-general.php?page=piensa-cookie-consent#ag-tab=tools'));
+        $redirect = admin_url('options-general.php?page=piensa-cookie-consent#ag-tab=tools');
+
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- A file path from PHP itself, validated by is_uploaded_file() below.
+        $upload = isset($_FILES['piensa_cookie_consent_settings_file']['tmp_name'])
+            ? $_FILES['piensa_cookie_consent_settings_file']['tmp_name']
+            : '';
+
+        // Only a genuine upload for this request may be read, never an
+        // arbitrary path a crafted request might name.
+        if (!is_string($upload) || $upload === '' || !is_uploaded_file($upload)) {
+            wp_safe_redirect($redirect);
             exit;
         }
 
-        $contents = file_get_contents($_FILES['piensa_cookie_consent_settings_file']['tmp_name']);
-        $decoded = json_decode($contents, true);
+        $error = isset($_FILES['piensa_cookie_consent_settings_file']['error'])
+            ? (int) $_FILES['piensa_cookie_consent_settings_file']['error']
+            : UPLOAD_ERR_NO_FILE;
+
+        if (UPLOAD_ERR_OK !== $error) {
+            wp_safe_redirect($redirect);
+            exit;
+        }
+
+        $contents = self::read_uploaded_file($upload);
+        $decoded = is_string($contents) ? json_decode($contents, true) : null;
         if (!is_array($decoded)) {
-            wp_safe_redirect(admin_url('options-general.php?page=piensa-cookie-consent#ag-tab=tools'));
+            wp_safe_redirect($redirect);
             exit;
         }
 
         $sanitized = $this->sanitize_settings($decoded);
         update_option('piensa_cookie_consent_settings', $sanitized, false);
 
-        wp_safe_redirect(admin_url('options-general.php?page=piensa-cookie-consent#ag-tab=tools'));
+        wp_safe_redirect($redirect);
         exit;
+    }
+
+    /**
+     * Read an uploaded file through the WordPress filesystem abstraction.
+     *
+     * Going through WP_Filesystem keeps the plugin working on hosts where
+     * direct file access is not how WordPress writes, and is what the plugin
+     * directory expects instead of a bare file_get_contents().
+     *
+     * @param string $path Path to the uploaded temporary file.
+     *
+     * @return string|false File contents, or false on failure.
+     */
+    private static function read_uploaded_file($path) {
+        global $wp_filesystem;
+
+        if (!function_exists('WP_Filesystem')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+
+        WP_Filesystem();
+
+        if (!$wp_filesystem) {
+            return false;
+        }
+
+        return $wp_filesystem->get_contents($path);
     }
 
     public function handle_report_html() {

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Piensa Cookie Consent 1.0.0\n"
-"PO-Revision-Date: 2026-09-15 10:18+0000\n"
+"PO-Revision-Date: 2026-09-15 10:25+0000\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Domain: piensa-cookie-consent\n"
 
 
-#: includes/class-admin.php:31 includes/class-admin.php:32 includes/class-admin.php:1147 includes/class-admin.php:2035 includes/class-admin.php:2038 includes/class-updater.php:98
+#: includes/class-admin.php:31 includes/class-admin.php:32 includes/class-admin.php:1147 includes/class-admin.php:2080 includes/class-admin.php:2083 includes/class-updater.php:98
 msgid "Piensa Cookie Consent"
 msgstr "Piensa Cookie Consent"
 
@@ -209,7 +209,7 @@ msgstr "Descubrimiento automatico"
 msgid "External resources such as scripts, iframes and images are detected to suggest categories."
 msgstr "Se detectan recursos externos (scripts, iframes, imágenes) para sugerir categorías."
 
-#: includes/class-admin.php:465 includes/class-admin.php:1170 includes/class-admin.php:2048
+#: includes/class-admin.php:465 includes/class-admin.php:1170 includes/class-admin.php:2093
 msgid "Detected domains"
 msgstr "Dominios detectados"
 
@@ -217,7 +217,7 @@ msgstr "Dominios detectados"
 msgid "In-browser audit"
 msgstr "Auditoría en navegador"
 
-#: includes/class-admin.php:481 includes/class-admin.php:2042 includes/class-admin.php:2054
+#: includes/class-admin.php:481 includes/class-admin.php:2087 includes/class-admin.php:2099
 msgid "Detected cookies"
 msgstr "Cookies detectadas"
 
@@ -513,23 +513,23 @@ msgstr "Aún no hay registros."
 msgid "Export CSV"
 msgstr "Exportar CSV"
 
-#: includes/class-admin.php:1084 includes/class-admin.php:2039
+#: includes/class-admin.php:1084 includes/class-admin.php:2084 includes/class-consent-log.php:111
 msgid "Date"
 msgstr "Fecha"
 
-#: includes/class-admin.php:1084
+#: includes/class-admin.php:1084 includes/class-consent-log.php:113
 msgid "Action"
 msgstr "Acción"
 
-#: includes/class-admin.php:1084 includes/class-admin.php:1189 includes/class-admin.php:2041
+#: includes/class-admin.php:1084 includes/class-admin.php:1189 includes/class-admin.php:2086 includes/class-consent-log.php:114
 msgid "Categories"
 msgstr "Categorías"
 
-#: includes/class-admin.php:1084 includes/class-admin.php:1162 includes/class-admin.php:1355 includes/class-consent-log.php:101
+#: includes/class-admin.php:1084 includes/class-admin.php:1162 includes/class-admin.php:1355 includes/class-consent-log.php:115
 msgid "Revision"
 msgstr "Revisión"
 
-#: includes/class-admin.php:1084
+#: includes/class-admin.php:1084 includes/class-consent-log.php:116
 msgid "Language"
 msgstr "Idioma"
 
@@ -563,7 +563,7 @@ msgstr "Panel central de consentimiento"
 
 #: includes/class-admin.php:1149
 msgid "Consent management for agencies: compliance, control and clean data."
-msgstr "Gestión del consentimiento para agencias: cumplimiento, control y datos limpios."
+msgstr "Gestión profesional con un guiño al monstruo de las cookies: cumplimiento, control y datos limpios."
 
 #: includes/class-admin.php:1155
 msgid "View the policy"
@@ -633,7 +633,7 @@ msgstr "Consulta y exporta el historial de consentimientos."
 msgid "Save changes"
 msgstr "Guardar cambios"
 
-#: includes/class-admin.php:1386 includes/class-admin.php:1959 includes/class-admin.php:1976 includes/class-admin.php:1985 includes/class-admin.php:1999 includes/class-admin.php:2025
+#: includes/class-admin.php:1386 includes/class-admin.php:1959 includes/class-admin.php:1976 includes/class-admin.php:1985 includes/class-admin.php:1999 includes/class-admin.php:2070
 msgid "Not authorized."
 msgstr "No autorizado."
 
@@ -705,37 +705,49 @@ msgstr "Desconocido"
 msgid "Scan complete. URLs: %1$d, domains: %2$d"
 msgstr "Escaneo completado. URLs: %d, dominios: %d"
 
-#: includes/class-admin.php:2038
+#: includes/class-admin.php:2083
 msgid "Report"
 msgstr "Informe"
 
-#: includes/class-admin.php:2083
+#: includes/class-admin.php:2128
 msgid "Not authorized"
 msgstr "No autorizado"
 
-#: includes/class-admin.php:2133
+#: includes/class-admin.php:2178
 msgid "The CMP is switched off by geo-targeting. Check that this meets your obligations."
 msgstr "El CMP está desactivado por geolocalización. Verifica cumplimiento."
 
-#: includes/class-admin.php:2136
+#: includes/class-admin.php:2181
 msgid "Geo-targeting is set to a custom list, but no countries are defined."
 msgstr "Geo-targeting en modo custom sin países definidos."
 
-#: includes/class-admin.php:2140
+#: includes/class-admin.php:2185
 msgid "The consent log is switched off."
 msgstr "Registro de consentimiento desactivado."
 
-#: includes/class-admin.php:2152
+#: includes/class-admin.php:2197
 msgid "%d domains are still unclassified."
 msgstr "Hay %d dominios sin clasificar."
 
-#: includes/class-admin.php:2157
+#: includes/class-admin.php:2202
 msgid "No cookie policy URL is set."
 msgstr "No hay URL de política de cookies."
 
-#: includes/class-admin.php:2161
+#: includes/class-admin.php:2206
 msgid "No privacy policy URL is set."
 msgstr "No hay URL de política de privacidad."
+
+#: includes/class-consent-log.php:112
+msgid "Consent ID"
+msgstr "ID de consentimiento"
+
+#: includes/class-consent-log.php:117
+msgid "GPC"
+msgstr "GPC"
+
+#: includes/class-consent-log.php:118
+msgid "URL"
+msgstr "URL"
 
 #: includes/class-core.php:146
 msgid "Consent:"

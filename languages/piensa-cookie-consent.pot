@@ -4,14 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Piensa Cookie Consent 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/piensaenweb/piensa-cookie-consent/issues\n"
-"POT-Creation-Date: 2026-09-15 10:18+0000\n"
+"POT-Creation-Date: 2026-09-15 10:25+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: piensa-cookie-consent\n"
 
 
-#: includes/class-admin.php:31 includes/class-admin.php:32 includes/class-admin.php:1147 includes/class-admin.php:2035 includes/class-admin.php:2038 includes/class-updater.php:98
+#: includes/class-admin.php:31 includes/class-admin.php:32 includes/class-admin.php:1147 includes/class-admin.php:2080 includes/class-admin.php:2083 includes/class-updater.php:98
 msgid "Piensa Cookie Consent"
 msgstr ""
 
@@ -207,7 +207,7 @@ msgstr ""
 msgid "External resources such as scripts, iframes and images are detected to suggest categories."
 msgstr ""
 
-#: includes/class-admin.php:465 includes/class-admin.php:1170 includes/class-admin.php:2048
+#: includes/class-admin.php:465 includes/class-admin.php:1170 includes/class-admin.php:2093
 msgid "Detected domains"
 msgstr ""
 
@@ -215,7 +215,7 @@ msgstr ""
 msgid "In-browser audit"
 msgstr ""
 
-#: includes/class-admin.php:481 includes/class-admin.php:2042 includes/class-admin.php:2054
+#: includes/class-admin.php:481 includes/class-admin.php:2087 includes/class-admin.php:2099
 msgid "Detected cookies"
 msgstr ""
 
@@ -511,23 +511,23 @@ msgstr ""
 msgid "Export CSV"
 msgstr ""
 
-#: includes/class-admin.php:1084 includes/class-admin.php:2039
+#: includes/class-admin.php:1084 includes/class-admin.php:2084 includes/class-consent-log.php:111
 msgid "Date"
 msgstr ""
 
-#: includes/class-admin.php:1084
+#: includes/class-admin.php:1084 includes/class-consent-log.php:113
 msgid "Action"
 msgstr ""
 
-#: includes/class-admin.php:1084 includes/class-admin.php:1189 includes/class-admin.php:2041
+#: includes/class-admin.php:1084 includes/class-admin.php:1189 includes/class-admin.php:2086 includes/class-consent-log.php:114
 msgid "Categories"
 msgstr ""
 
-#: includes/class-admin.php:1084 includes/class-admin.php:1162 includes/class-admin.php:1355 includes/class-consent-log.php:101
+#: includes/class-admin.php:1084 includes/class-admin.php:1162 includes/class-admin.php:1355 includes/class-consent-log.php:115
 msgid "Revision"
 msgstr ""
 
-#: includes/class-admin.php:1084
+#: includes/class-admin.php:1084 includes/class-consent-log.php:116
 msgid "Language"
 msgstr ""
 
@@ -631,7 +631,7 @@ msgstr ""
 msgid "Save changes"
 msgstr ""
 
-#: includes/class-admin.php:1386 includes/class-admin.php:1959 includes/class-admin.php:1976 includes/class-admin.php:1985 includes/class-admin.php:1999 includes/class-admin.php:2025
+#: includes/class-admin.php:1386 includes/class-admin.php:1959 includes/class-admin.php:1976 includes/class-admin.php:1985 includes/class-admin.php:1999 includes/class-admin.php:2070
 msgid "Not authorized."
 msgstr ""
 
@@ -703,36 +703,48 @@ msgstr ""
 msgid "Scan complete. URLs: %1$d, domains: %2$d"
 msgstr ""
 
-#: includes/class-admin.php:2038
+#: includes/class-admin.php:2083
 msgid "Report"
 msgstr ""
 
-#: includes/class-admin.php:2083
+#: includes/class-admin.php:2128
 msgid "Not authorized"
 msgstr ""
 
-#: includes/class-admin.php:2133
+#: includes/class-admin.php:2178
 msgid "The CMP is switched off by geo-targeting. Check that this meets your obligations."
 msgstr ""
 
-#: includes/class-admin.php:2136
+#: includes/class-admin.php:2181
 msgid "Geo-targeting is set to a custom list, but no countries are defined."
 msgstr ""
 
-#: includes/class-admin.php:2140
+#: includes/class-admin.php:2185
 msgid "The consent log is switched off."
 msgstr ""
 
-#: includes/class-admin.php:2152
+#: includes/class-admin.php:2197
 msgid "%d domains are still unclassified."
 msgstr ""
 
-#: includes/class-admin.php:2157
+#: includes/class-admin.php:2202
 msgid "No cookie policy URL is set."
 msgstr ""
 
-#: includes/class-admin.php:2161
+#: includes/class-admin.php:2206
 msgid "No privacy policy URL is set."
+msgstr ""
+
+#: includes/class-consent-log.php:112
+msgid "Consent ID"
+msgstr ""
+
+#: includes/class-consent-log.php:117
+msgid "GPC"
+msgstr ""
+
+#: includes/class-consent-log.php:118
+msgid "URL"
 msgstr ""
 
 #: includes/class-core.php:146

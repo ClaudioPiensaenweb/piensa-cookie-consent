@@ -52,7 +52,7 @@ class Piensa_Cookie_Consent_Geo {
         foreach ($headers as $header) {
             $key = 'HTTP_' . strtoupper(str_replace('-', '_', $header));
             if (!empty($_SERVER[$key])) {
-                $value = strtoupper(trim($_SERVER[$key]));
+                $value = strtoupper(sanitize_text_field(wp_unslash($_SERVER[$key])));
                 if ($value !== '' && $value !== 'XX') {
                     return $value;
                 }

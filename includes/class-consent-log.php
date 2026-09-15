@@ -77,6 +77,7 @@ class Piensa_Cookie_Consent_Consent_Log {
         global $wpdb;
         $table = $wpdb->prefix . self::TABLE;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table owned by this plugin; a cached consent record would not be evidence of anything.
         $exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
         if ($exists !== $table) {
             return [];
@@ -86,19 +87,37 @@ class Piensa_Cookie_Consent_Consent_Log {
         $offset = max(0, (int) $offset);
 
         return $wpdb->get_results(
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be parameterised; $table is built from the trusted prefix.
             $wpdb->prepare("SELECT * FROM $table ORDER BY id DESC LIMIT %d OFFSET %d", $limit, $offset),
             ARRAY_A
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     }
 
     public static function export_logs() {
         $logs = self::get_logs(1000, 0);
 
+        nocache_headers();
         header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename=piensa-cookie-consent-consent-log.csv');
+        header('Content-Disposition: attachment; filename=piensa-cookie-consent-log.csv');
 
+        // phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Streaming a download to php://output; WP_Filesystem writes files, it does not stream responses.
         $output = fopen('php://output', 'w');
-        fputcsv($output, ['Date', 'Consent ID', 'Action', 'Categories', esc_html__('Revision', 'piensa-cookie-consent'), 'Language', 'GPC', 'URL']);
+
+        // A CSV cell is not HTML: escaping here would put entities in the file.
+        fputcsv(
+            $output,
+            [
+                __('Date', 'piensa-cookie-consent'),
+                __('Consent ID', 'piensa-cookie-consent'),
+                __('Action', 'piensa-cookie-consent'),
+                __('Categories', 'piensa-cookie-consent'),
+                __('Revision', 'piensa-cookie-consent'),
+                __('Language', 'piensa-cookie-consent'),
+                __('GPC', 'piensa-cookie-consent'),
+                __('URL', 'piensa-cookie-consent'),
+            ]
+        );
 
         foreach ($logs as $log) {
             fputcsv($output, [
@@ -114,6 +133,7 @@ class Piensa_Cookie_Consent_Consent_Log {
         }
 
         fclose($output);
+        // phpcs:enable WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fclose
         exit;
     }
 
@@ -121,6 +141,7 @@ class Piensa_Cookie_Consent_Consent_Log {
         global $wpdb;
         $table = $wpdb->prefix . self::TABLE;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table owned by this plugin.
         $exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
         if ($exists !== $table) {
             self::install_table();
@@ -129,6 +150,7 @@ class Piensa_Cookie_Consent_Consent_Log {
         $created_at = current_time('mysql');
         $consent_time = $data['consent_timestamp'] ? $this->to_mysql_datetime($data['consent_timestamp']) : null;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Writing a consent record to this plugin's own table.
         $wpdb->insert(
             $table,
             [
