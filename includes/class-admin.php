@@ -1882,8 +1882,7 @@ class Piensa_Cookie_Consent_Admin {
 			// Asset and font hosts that carry no tracking cookies. Blocking
 			// these would break layout without protecting anyone.
 			'allowed_domains'             => implode(
-				"
-",
+				"\n",
 				[
 					'ajax.googleapis.com',
 					'cdnjs.cloudflare.com',
