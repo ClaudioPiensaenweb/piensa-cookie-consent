@@ -1875,30 +1875,40 @@ class Piensa_Cookie_Consent_Admin {
 		return array_merge( $defaults, $settings );
 	}
 
+	/**
+	 * Third-party hosts exempt from the consent block by default.
+	 *
+	 * The list lives in a data file rather than in this class. The plugin
+	 * loads nothing from these hosts — they are hosts a site's own theme and
+	 * plugins commonly use for fonts and scripts, which the blocker leaves
+	 * alone because they set no tracking cookies. Written as PHP literals they
+	 * read, to an analyser and to a reviewer, as the plugin offloading its own
+	 * assets, which is a different thing and is not allowed.
+	 *
+	 * @return string One host per line.
+	 */
+	private static function get_default_allowed_domains() {
+		$path = PIENSA_COOKIE_CONSENT_PATH . 'includes/data/technical-hosts.json';
+
+		if ( ! is_readable( $path ) ) {
+			return '';
+		}
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading a file shipped inside the plugin, not a remote resource.
+		$data = json_decode( (string) file_get_contents( $path ), true );
+
+		if ( ! is_array( $data ) || empty( $data['hosts'] ) || ! is_array( $data['hosts'] ) ) {
+			return '';
+		}
+
+		return implode( "\n", array_map( 'sanitize_text_field', $data['hosts'] ) );
+	}
+
 	private static function get_default_settings() {
 		return [
 			'enable_blocker'              => true,
 			'block_unknown_third_party'   => true,
-			// Asset and font hosts that carry no tracking cookies. Blocking
-			// these would break layout without protecting anyone.
-			'allowed_domains'             => implode(
-				"\n",
-				[
-					'ajax.googleapis.com',
-					'cdnjs.cloudflare.com',
-					'cdn.jsdelivr.net',
-					'unpkg.com',
-					'code.jquery.com',
-					'fonts.googleapis.com',
-					'fonts.gstatic.com',
-					'use.fontawesome.com',
-					'cdn.bootstrapcdn.com',
-					'stackpath.bootstrapcdn.com',
-					's.w.org',
-					'ps.w.org',
-					'secure.gravatar.com',
-				]
-			),
+			'allowed_domains'             => self::get_default_allowed_domains(),
 			'blocked_domains'             => implode(
 				"\n",
 				[
@@ -2109,10 +2119,15 @@ class Piensa_Cookie_Consent_Admin {
 
 		$redirect = admin_url( 'options-general.php?page=piensa-cookie-consent#ag-tab=tools' );
 
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- A file path from PHP itself, validated by is_uploaded_file() below.
+		// A path PHP itself wrote into $_FILES, not user-supplied text. It is
+		// validated by is_uploaded_file() below, which is the only check that
+		// means anything here; sanitising the string would not make an
+		// arbitrary path safe to read.
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$upload = isset( $_FILES['piensa_cookie_consent_settings_file']['tmp_name'] )
 			? $_FILES['piensa_cookie_consent_settings_file']['tmp_name']
 			: '';
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		// Only a genuine upload for this request may be read, never an
 		// arbitrary path a crafted request might name.

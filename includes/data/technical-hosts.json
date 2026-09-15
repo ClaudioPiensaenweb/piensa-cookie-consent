@@ -1,0 +1,27 @@
+{
+  "_comment": [
+    "Third-party hosts exempt from the consent block by default.",
+    "The plugin loads nothing from these hosts. The list is the opposite:",
+    "they are the hosts a site's own theme or plugins commonly load assets",
+    "from, which the blocker leaves alone because they serve fonts and",
+    "scripts rather than tracking cookies. Blocking them would break layout",
+    "without protecting anyone.",
+    "Site owners can edit the list under Settings; analytics and advertising",
+    "hosts must never be added to it."
+  ],
+  "hosts": [
+    "ajax.googleapis.com",
+    "cdnjs.cloudflare.com",
+    "cdn.jsdelivr.net",
+    "unpkg.com",
+    "code.jquery.com",
+    "fonts.googleapis.com",
+    "fonts.gstatic.com",
+    "use.fontawesome.com",
+    "cdn.bootstrapcdn.com",
+    "stackpath.bootstrapcdn.com",
+    "s.w.org",
+    "ps.w.org",
+    "secure.gravatar.com"
+  ]
+}
