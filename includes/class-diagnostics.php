@@ -126,10 +126,10 @@ class Piensa_Cookie_Consent_Diagnostics {
 		}
 
 		$known = [
-			'google-site-kit/google-site-kit.php'                             => 'analytics',
-			'google-analytics-for-wordpress/googleanalytics.php'              => 'analytics',
-			'pixelyoursite/pixelyoursite.php'                                 => 'marketing',
-			'facebook-for-woocommerce/facebook-for-woocommerce.php'           => 'marketing',
+			'google-site-kit/google-site-kit.php' => 'analytics',
+			'google-analytics-for-wordpress/googleanalytics.php' => 'analytics',
+			'pixelyoursite/pixelyoursite.php' => 'marketing',
+			'facebook-for-woocommerce/facebook-for-woocommerce.php' => 'marketing',
 			'duracelltomi-google-tag-manager/duracelltomi-google-tag-manager.php' => 'marketing',
 		];
 
