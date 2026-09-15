@@ -4,6 +4,23 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-09-15
+
+Installing the plugin on a real site turned up behaviour that reading the code
+did not explain. This release makes that state visible rather than guessing at
+it again.
+
+### Added
+- A **Diagnostics** section under Health: which categories the banner is
+  offering and what decided that, whether the consent table exists and how many
+  records it holds, what the scanner has found, the database engine in use and
+  which build is installed. Plus the same report as plain text, to paste into a
+  support thread.
+
+### Fixed
+- The scanner table headings and the in-browser audit messages were still
+  hardcoded in Spanish.
+
 ## [1.3.0] - 2026-09-15
 
 ### Added

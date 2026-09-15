@@ -5,6 +5,7 @@
     }
 
     const cfg = window.PiensaCookieConsentAudit;
+    const i18n = cfg.i18n || {};
     const toastId = 'pw-cookie-audit-toast';
 
     function ensureToast(message) {
@@ -48,14 +49,14 @@
 
         const onSuccess = (count) => {
             const msg = count > 0
-                ? 'Auditoria completada. Cookies detectadas: ' + count + '.'
-                : 'Auditoria completada. No se detectaron cookies JS.';
+                ? (i18n.done || 'Audit complete. Cookies found:') + ' ' + count
+                : (i18n.none || 'Audit complete. No cookies were found.');
             const el = ensureToast(msg);
             setTimeout(() => el.remove(), 3000);
         };
 
         const onFail = () => {
-            const el = ensureToast('Auditoria fallida. Revisa consola/CSP.');
+            const el = ensureToast(i18n.failed || 'Audit failed. Check the browser console.');
             setTimeout(() => el.remove(), 4000);
         };
 
@@ -101,6 +102,6 @@
         xhr.send(body.toString());
     }
 
-    ensureToast('Auditoria de cookies en curso...');
+    ensureToast(i18n.running || 'Cookie audit running...');
     setTimeout(() => send(namesFromCookie()), 800);
 })();

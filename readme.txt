@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,10 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.3.1 =
+* Added a Diagnostics section under Health: which categories the banner is offering and what decided that, whether the consent table exists and how many records it holds, what the scanner has found, and the database engine in use. When the banner offers the wrong categories or the log looks empty, this says which input produced that result instead of leaving you to guess.
+* The scanner table headings and the in-browser audit messages were still fixed in Spanish.
+
 = 1.3.0 =
 * **Use the theme colors.** A button under Appearance reads the palette your theme declares and fills in the banner colours. It picks the background, the text and an accent, and derives the rest, checking WCAG contrast as it goes: the button label stays legible and the button stands out from the panel it sits on, whatever palette the theme happens to have. Themes that declare no palette say so instead of guessing.
 * Added a test suite. It covers the colour logic against real theme palettes and found a bug before release.
@@ -121,6 +125,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+Adds a diagnostics report under Health, for working out why the banner or the log is behaving as it is.
 
 = 1.3.0 =
 Adds a button that fills the banner colours from your theme's palette.

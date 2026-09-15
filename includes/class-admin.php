@@ -1029,15 +1029,27 @@ class Piensa_Cookie_Consent_Admin {
 
 	public function render_health_field() {
 		$issues = $this->get_health_issues();
+
 		if ( ! $issues ) {
 			echo '<p class="description">' . esc_html__( 'All good. No risks detected.', 'piensa-cookie-consent' ) . '</p>';
-			return;
+		} else {
+			echo '<ul class="ag-health">';
+			foreach ( $issues as $issue ) {
+				echo '<li>' . esc_html( $issue ) . '</li>';
+			}
+			echo '</ul>';
 		}
-		echo '<ul class="ag-health">';
-		foreach ( $issues as $issue ) {
-			echo '<li>' . esc_html( $issue ) . '</li>';
-		}
-		echo '</ul>';
+
+		echo '<hr style="margin:20px 0;" />';
+		echo '<h3>' . esc_html__( 'Diagnostics', 'piensa-cookie-consent' ) . '</h3>';
+		echo '<p class="description">' . esc_html__( 'The state the plugin is actually in. When the banner offers the wrong categories or the log looks empty, this says which input produced that result.', 'piensa-cookie-consent' ) . '</p>';
+
+		Piensa_Cookie_Consent_Diagnostics::render();
+
+		echo '<p style="margin-top:12px;"><label for="ag-diagnostics-text"><strong>' . esc_html__( 'Copy for support', 'piensa-cookie-consent' ) . '</strong></label></p>';
+		echo '<textarea id="ag-diagnostics-text" class="large-text code" rows="12" readonly onclick="this.select();">';
+		echo esc_textarea( Piensa_Cookie_Consent_Diagnostics::as_text() );
+		echo '</textarea>';
 	}
 
 	public function render_domains_field() {
@@ -1095,7 +1107,7 @@ class Piensa_Cookie_Consent_Admin {
 		}
 
 		echo '<table class="widefat striped">';
-		echo '<thead><tr><th>Dominio</th><th>Servicio</th><th>Categoria sugerida</th><th>Categoria final</th><th>Ultima deteccion</th></tr></thead>';
+		echo '<thead><tr><th>' . esc_html__( 'Domain', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Service', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Suggested category', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Final category', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Last seen', 'piensa-cookie-consent' ) . '</th></tr></thead>';
 		echo '<tbody>';
 		foreach ( $discovered as $domain => $data ) {
 			$category  = isset( $data['category'] ) ? esc_html( $data['category'] ) : 'unknown';
@@ -1136,7 +1148,7 @@ class Piensa_Cookie_Consent_Admin {
 		}
 
 		echo '<table class="widefat striped">';
-		echo '<thead><tr><th>Cookie</th><th>Dominio</th><th>Categoria</th><th>Ultima deteccion</th></tr></thead><tbody>';
+		echo '<thead><tr><th>Cookie</th><th>' . esc_html__( 'Domain', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Category', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Last seen', 'piensa-cookie-consent' ) . '</th></tr></thead><tbody>';
 		foreach ( $cookies as $cookie ) {
 			$name      = isset( $cookie['name'] ) ? $cookie['name'] : '';
 			$domain    = isset( $cookie['domain'] ) ? $cookie['domain'] : '';
@@ -1299,7 +1311,7 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<button type="button" class="ag-tab-btn" data-tab="politica">' . esc_html__( 'Policy', 'piensa-cookie-consent' ) . '</button>';
 		echo '<button type="button" class="ag-tab-btn" data-tab="branding">Branding</button>';
 		echo '<button type="button" class="ag-tab-btn" data-tab="tools">Tools</button>';
-		echo '<button type="button" class="ag-tab-btn" data-tab="health">Health</button>';
+		echo '<button type="button" class="ag-tab-btn" data-tab="health">' . esc_html__( 'Health', 'piensa-cookie-consent' ) . '</button>';
 		echo '<button type="button" class="ag-tab-btn" data-tab="logs">Logs</button>';
 		echo '</nav>';
 
@@ -2288,13 +2300,13 @@ class Piensa_Cookie_Consent_Admin {
 		}
 		echo '</tbody></table>';
 		echo '<h2>' . esc_html__( 'Detected domains', 'piensa-cookie-consent' ) . '</h2>';
-		echo '<table><thead><tr><th>Dominio</th><th>Categoria</th><th>Servicio</th><th>Ultima deteccion</th></tr></thead><tbody>';
+		echo '<table><thead><tr><th>' . esc_html__( 'Domain', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Category', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Service', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Last seen', 'piensa-cookie-consent' ) . '</th></tr></thead><tbody>';
 		foreach ( $report['domains'] as $domain ) {
 			echo '<tr><td>' . esc_html( $domain['domain'] ) . '</td><td>' . esc_html( $domain['category'] ) . '</td><td>' . esc_html( $domain['service'] ) . '</td><td>' . esc_html( $domain['last_seen'] ) . '</td></tr>';
 		}
 		echo '</tbody></table>';
 		echo '<h2>' . esc_html__( 'Detected cookies', 'piensa-cookie-consent' ) . '</h2>';
-		echo '<table><thead><tr><th>Cookie</th><th>Dominio</th><th>Categoria</th><th>Ultima deteccion</th></tr></thead><tbody>';
+		echo '<table><thead><tr><th>Cookie</th><th>' . esc_html__( 'Domain', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Category', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Last seen', 'piensa-cookie-consent' ) . '</th></tr></thead><tbody>';
 		if ( ! empty( $report['cookies'] ) ) {
 			foreach ( $report['cookies'] as $cookie ) {
 				echo '<tr><td>' . esc_html( $cookie['name'] ) . '</td><td>' . esc_html( $cookie['domain'] ) . '</td><td>' . esc_html( $cookie['category'] ) . '</td><td>' . esc_html( $cookie['last_seen'] ) . '</td></tr>';

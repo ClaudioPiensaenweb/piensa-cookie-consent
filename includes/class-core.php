@@ -17,6 +17,7 @@ require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-log.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-geo.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-icons.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-theme-colors.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-diagnostics.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-api.php';
 
@@ -137,6 +138,12 @@ class Piensa_Cookie_Consent_Core {
 						'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 						'nonce'   => wp_create_nonce( 'piensa_cookie_consent_collect_cookies' ),
 						'domain'  => wp_parse_url( home_url(), PHP_URL_HOST ),
+						'i18n'    => [
+							'running' => __( 'Cookie audit running...', 'piensa-cookie-consent' ),
+							'done'    => __( 'Audit complete. Cookies found:', 'piensa-cookie-consent' ),
+							'none'    => __( 'Audit complete. No cookies were found.', 'piensa-cookie-consent' ),
+							'failed'  => __( 'Audit failed. Check the browser console.', 'piensa-cookie-consent' ),
+						],
 					]
 				);
 			}

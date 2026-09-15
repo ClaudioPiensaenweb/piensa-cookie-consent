@@ -6,7 +6,7 @@
  * @package Piensa_Cookie_Consent
  */
 
-define( 'PIENSA_COOKIE_CONSENT_VERSION', '1.3.0' );
+define( 'PIENSA_COOKIE_CONSENT_VERSION', '1.3.1' );
 define( 'PIENSA_COOKIE_CONSENT_FILE', __DIR__ . '/piensa-cookie-consent.php' );
 define( 'PIENSA_COOKIE_CONSENT_PATH', __DIR__ . '/' );
 define( 'PIENSA_COOKIE_CONSENT_URL', 'https://example.com/wp-content/plugins/piensa-cookie-consent/' );
