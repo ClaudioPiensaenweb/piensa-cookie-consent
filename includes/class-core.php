@@ -34,6 +34,8 @@ class Piensa_Cookie_Consent_Core {
     }
 
     public function init() {
+        add_action('init', [$this, 'load_textdomain']);
+
         $this->consent_mode->init();
         $this->blocker->init();
         $this->admin->init();
@@ -57,6 +59,22 @@ class Piensa_Cookie_Consent_Core {
      *
      * @return void
      */
+
+    /**
+     * Load the translations.
+     *
+     * WordPress.org serves language packs on its own, but the agency build is
+     * installed by hand and still needs the bundled .mo files.
+     *
+     * @return void
+     */
+    public function load_textdomain() {
+        load_plugin_textdomain(
+            'piensa-cookie-consent',
+            false,
+            dirname(PIENSA_COOKIE_CONSENT_BASENAME) . '/languages'
+        );
+    }
 
     /**
      * Whether this build ships the self-hosted updater.
@@ -124,6 +142,9 @@ class Piensa_Cookie_Consent_Core {
         $site_lang = substr(get_locale(), 0, 2);
         wp_localize_script('piensa-cookie-consent-main', 'PiensaCookieConsentConfig', [
             'icons' => Piensa_Cookie_Consent_Icons::get_all_paths(),
+            'i18n' => [
+                'consentStatus' => __('Consent:', 'piensa-cookie-consent'),
+            ],
             'categories' => $categories,
             'cookieDefinitions' => $cookie_definitions,
             'ui' => [
@@ -260,7 +281,7 @@ class Piensa_Cookie_Consent_Core {
                 }
                 $output .= '</tbody></table>';
             } else {
-                $output .= '<p>No se han declarado cookies en esta categoria.</p>';
+                $output .= '<p>' . esc_html__('No cookies have been declared in this category.', 'piensa-cookie-consent') . '</p>';
             }
         }
         $output .= '</div>';

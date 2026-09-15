@@ -98,7 +98,7 @@ class Piensa_Cookie_Consent_Consent_Log {
         header('Content-Disposition: attachment; filename=piensa-cookie-consent-consent-log.csv');
 
         $output = fopen('php://output', 'w');
-        fputcsv($output, ['Date', 'Consent ID', 'Action', 'Categories', 'Revision', 'Language', 'GPC', 'URL']);
+        fputcsv($output, ['Date', 'Consent ID', 'Action', 'Categories', esc_html__('Revision', 'piensa-cookie-consent'), 'Language', 'GPC', 'URL']);
 
         foreach ($logs as $log) {
             fputcsv($output, [

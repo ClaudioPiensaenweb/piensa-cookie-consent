@@ -95,10 +95,10 @@ class Piensa_Cookie_Consent_Updater {
         }
 
         $info = new stdClass();
-        $info->name = 'PW Cookie Monster';
+        $info->name = esc_html__('Piensa Cookie Consent', 'piensa-cookie-consent');
         $info->slug = 'piensa-cookie-consent';
         $info->version = $data['version'];
-        $info->author = 'PW Cookie Monster';
+        $info->author = esc_html__('Piensa Cookie Consent', 'piensa-cookie-consent');
         $info->homepage = isset($data['details_url']) ? $data['details_url'] : '';
         $info->requires = isset($data['requires']) ? $data['requires'] : '';
         $info->tested = isset($data['tested']) ? $data['tested'] : '';
@@ -107,7 +107,7 @@ class Piensa_Cookie_Consent_Updater {
         $info->sections = isset($data['sections']) && is_array($data['sections'])
             ? $data['sections']
             : [
-                'description' => 'Actualizacion gestionada desde el servidor central.',
+                'description' => __('Updates are managed from the central server.', 'piensa-cookie-consent'),
             ];
 
         return $info;
@@ -132,7 +132,7 @@ class Piensa_Cookie_Consent_Updater {
         $alg = $update->ag_checksum_alg ?: 'sha256';
         $checksum = hash_file($alg, $package);
         if (!$checksum || !hash_equals($update->ag_checksum, $checksum)) {
-            return new WP_Error('piensa_cookie_consent_checksum_mismatch', 'Checksum de actualizacion invalido. Actualizacion bloqueada.');
+            return new WP_Error('piensa_cookie_consent_checksum_mismatch', esc_html__('Invalid update checksum. The update was blocked.', 'piensa-cookie-consent'));
         }
 
         return $reply;

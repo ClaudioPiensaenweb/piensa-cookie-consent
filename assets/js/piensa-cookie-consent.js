@@ -521,7 +521,8 @@ function updateConsentStatus(cookie) {
 
     const status = cookie.categories.join(', ');
     document.querySelectorAll('[data-ag-consent-status]').forEach(node => {
-        node.textContent = status ? 'Consentimiento: ' + status : '';
+        const label = ((window.PiensaCookieConsentConfig || {}).i18n || {}).consentStatus || 'Consent:';
+        node.textContent = status ? label + ' ' + status : '';
     });
 }
 

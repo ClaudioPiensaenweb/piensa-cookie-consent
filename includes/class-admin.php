@@ -28,8 +28,8 @@ class Piensa_Cookie_Consent_Admin {
     public function register_menu() {
         // Menu principal independiente con icono
         $this->menu_hook = add_menu_page(
-            'PW Cookie Monster',
-            'PW Cookie Monster',
+            esc_html__('Piensa Cookie Consent', 'piensa-cookie-consent'),
+            esc_html__('Piensa Cookie Consent', 'piensa-cookie-consent'),
             'manage_options',
             'piensa-cookie-consent',
             [$this, 'render_settings_page'],
@@ -48,8 +48,8 @@ class Piensa_Cookie_Consent_Admin {
 
         add_submenu_page(
             'piensa-cookie-consent',
-            'Apariencia',
-            'Apariencia',
+            esc_html__('Appearance', 'piensa-cookie-consent'),
+            esc_html__('Appearance', 'piensa-cookie-consent'),
             'manage_options',
             'piensa-cookie-consent&tab=apariencia',
             [$this, 'render_settings_page']
@@ -81,16 +81,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_main',
-            'Configuracion general',
+            esc_html__(esc_html__('General', 'piensa-cookie-consent') . ' settings', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Configura el funcionamiento general del CMP.</p>';
+                echo '<p>' . esc_html__('Configure how the CMP behaves.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_blocker',
-            'Bloqueo de contenido',
+            esc_html__('Content blocking', 'piensa-cookie-consent'),
             [$this, 'render_blocker_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_main'
@@ -98,7 +98,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_log',
-            'Registro de consentimiento',
+            esc_html__('Consent log', 'piensa-cookie-consent'),
             [$this, 'render_consent_log_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_main'
@@ -106,7 +106,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_policy_revision',
-            'Revision de consentimiento',
+            esc_html__('Consent review', 'piensa-cookie-consent'),
             [$this, 'render_policy_revision_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_main'
@@ -114,16 +114,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_banner',
-            'Textos del banner',
+            esc_html__(esc_html__('Banner', 'piensa-cookie-consent') . ' text', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Personaliza el banner y el modal de preferencias.</p>';
+                echo '<p>' . esc_html__('Customize the banner and the preferences dialog.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_banner_icon',
-            'Icono del banner',
+            esc_html__(esc_html__('Banner', 'piensa-cookie-consent') . ' icon', 'piensa-cookie-consent'),
             [$this, 'render_banner_icon_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_banner'
@@ -131,7 +131,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_banner_title',
-            'Titulo del banner',
+            esc_html__(esc_html__('Banner', 'piensa-cookie-consent') . ' title', 'piensa-cookie-consent'),
             [$this, 'render_banner_title_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_banner'
@@ -139,7 +139,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_banner_description',
-            'Descripcion del banner',
+            esc_html__(esc_html__('Banner', 'piensa-cookie-consent') . ' description', 'piensa-cookie-consent'),
             [$this, 'render_banner_description_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_banner'
@@ -147,7 +147,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_banner_accept_all',
-            'Texto aceptar todas',
+            esc_html__('Accept all label', 'piensa-cookie-consent'),
             [$this, 'render_banner_accept_all_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_banner'
@@ -155,7 +155,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_banner_reject_all',
-            'Texto rechazar no necesarias',
+            esc_html__('Reject non-essential label', 'piensa-cookie-consent'),
             [$this, 'render_banner_reject_all_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_banner'
@@ -163,7 +163,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_banner_manage',
-            'Texto gestionar preferencias',
+            esc_html__('Manage preferences label', 'piensa-cookie-consent'),
             [$this, 'render_banner_manage_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_banner'
@@ -171,7 +171,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_banner_save',
-            'Texto guardar preferencias',
+            esc_html__('Save preferences label', 'piensa-cookie-consent'),
             [$this, 'render_banner_save_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_banner'
@@ -179,7 +179,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_banner_preferences_title',
-            'Titulo del modal',
+            esc_html__('Modal title', 'piensa-cookie-consent'),
             [$this, 'render_banner_preferences_title_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_banner'
@@ -187,16 +187,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_categories',
-            'Categorias y comportamiento',
+            esc_html__('Categories and behavior', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Define etiquetas y comportamiento de categorias.</p>';
+                echo '<p>' . esc_html__('Set the labels and the behavior of each category.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_category_mode',
-            'Modo de categorias',
+            esc_html__('Category mode', 'piensa-cookie-consent'),
             [$this, 'render_category_mode_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_categories'
@@ -204,7 +204,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_necessary_toggle',
-            'Cookies necesarias',
+            esc_html__('Necessary cookies', 'piensa-cookie-consent'),
             [$this, 'render_necessary_toggle_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_categories'
@@ -212,7 +212,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_category_toggles',
-            'Categorias activas',
+            esc_html__('Active categories', 'piensa-cookie-consent'),
             [$this, 'render_category_toggles_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_categories'
@@ -220,7 +220,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_category_labels',
-            'Etiquetas y textos',
+            esc_html__('Labels and text', 'piensa-cookie-consent'),
             [$this, 'render_category_labels_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_categories'
@@ -228,16 +228,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_appearance',
-            'Apariencia y posicion',
+            esc_html__('Appearance and position', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Controla la posicion del banner y los estilos principales.</p>';
+                echo '<p>' . esc_html__('Controls the banner position and the main styles.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_layout_position',
-            'Posicion y layout',
+            esc_html__('Position and layout', 'piensa-cookie-consent'),
             [$this, 'render_layout_position_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_appearance'
@@ -245,7 +245,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_theme_colors',
-            'Colores y radios',
+            esc_html__('Colors and corner radii', 'piensa-cookie-consent'),
             [$this, 'render_theme_colors_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_appearance'
@@ -253,7 +253,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_theme_presets',
-            'Plantillas rapidas',
+            esc_html__('Quick templates', 'piensa-cookie-consent'),
             [$this, 'render_theme_presets_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_appearance'
@@ -269,9 +269,9 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_compliance',
-            'Cumplimiento y privacidad',
+            esc_html__('Compliance and privacy', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Define geolocalizacion, idioma y requisitos legales.</p>';
+                echo '<p>' . esc_html__('Set geo-targeting, language and legal requirements.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
@@ -286,7 +286,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_language',
-            'Idioma y deteccion',
+            esc_html__('Language and detection', 'piensa-cookie-consent'),
             [$this, 'render_language_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_compliance'
@@ -294,7 +294,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_report',
-            'Informe de cumplimiento',
+            esc_html__('Compliance report', 'piensa-cookie-consent'),
             [$this, 'render_report_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_compliance'
@@ -302,16 +302,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_languages',
-            'Textos multilenguaje',
+            esc_html__('Multilingual text', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Define textos en ES y EN.</p>';
+                echo '<p>' . esc_html__('Set the Spanish and English text.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_texts_en',
-            'Textos EN',
+            esc_html__('English text', 'piensa-cookie-consent'),
             [$this, 'render_texts_en_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_languages'
@@ -319,9 +319,9 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_branding',
-            'Branding y white-label',
+            esc_html__('Branding and white-label', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Personaliza el nombre y oculta marcas.</p>';
+                echo '<p>' . esc_html__('Customize the name and hide branding.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
@@ -338,7 +338,7 @@ class Piensa_Cookie_Consent_Admin {
             'piensa_cookie_consent_tools',
             'Importar / Exportar',
             function () {
-                echo '<p>Exporta o importa la configuracion completa.</p>';
+                echo '<p>' . esc_html__('Export or import the full configuration.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
@@ -363,7 +363,7 @@ class Piensa_Cookie_Consent_Admin {
             'piensa_cookie_consent_health',
             'Health check',
             function () {
-                echo '<p>Revisa posibles riesgos de cumplimiento.</p>';
+                echo '<p>' . esc_html__('Review possible compliance risks.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
@@ -378,16 +378,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_content',
-            'Contenido bloqueado',
+            esc_html__('Blocked content', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Dominios que deben neutralizarse hasta que haya consentimiento.</p>';
+                echo '<p>' . esc_html__('Domains to neutralize until consent is given.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_domains',
-            'Dominios bloqueados',
+            esc_html__('Blocked domains', 'piensa-cookie-consent'),
             [$this, 'render_domains_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_content'
@@ -395,16 +395,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_texts',
-            'Textos del placeholder',
+            esc_html__('Placeholder text', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Personaliza el mensaje mostrado sobre el contenido bloqueado.</p>';
+                echo '<p>' . esc_html__('Customize the message shown over blocked content.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_placeholder_title',
-            'Mensaje principal',
+            esc_html__('Main message', 'piensa-cookie-consent'),
             [$this, 'render_placeholder_title_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_texts'
@@ -412,7 +412,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_placeholder_button',
-            'Texto del boton',
+            esc_html__('Button label', 'piensa-cookie-consent'),
             [$this, 'render_placeholder_button_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_texts'
@@ -420,16 +420,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_ui',
-            'Interfaz de consentimiento',
+            esc_html__('Consent interface', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Controla el boton flotante para revisar el consentimiento.</p>';
+                echo '<p>' . esc_html__('Controls the floating button that reopens the consent dialog.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_floating_button',
-            'Boton flotante',
+            esc_html__('Floating button', 'piensa-cookie-consent'),
             [$this, 'render_floating_button_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_ui'
@@ -437,7 +437,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_floating_button_text',
-            'Texto del boton',
+            esc_html__('Button label', 'piensa-cookie-consent'),
             [$this, 'render_floating_button_text_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_ui'
@@ -445,7 +445,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_floating_button_style',
-            'Estilo del boton',
+            esc_html__('Button style', 'piensa-cookie-consent'),
             [$this, 'render_floating_button_style_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_ui'
@@ -453,16 +453,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_discovery',
-            'Descubrimiento automatico',
+            esc_html__('Automatic discovery', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Se detectan recursos externos (scripts, iframes, imagenes) para sugerir categorias.</p>';
+                echo '<p>' . esc_html__('External resources such as scripts, iframes and images are detected to suggest categories.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_discovered',
-            'Dominios detectados',
+            esc_html__('Detected domains', 'piensa-cookie-consent'),
             [$this, 'render_discovered_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_discovery'
@@ -470,7 +470,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_cookie_audit',
-            'Auditoria en navegador',
+            esc_html__('In-browser audit', 'piensa-cookie-consent'),
             [$this, 'render_cookie_audit_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_discovery'
@@ -478,7 +478,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_detected_cookies',
-            'Cookies detectadas',
+            esc_html__('Detected cookies', 'piensa-cookie-consent'),
             [$this, 'render_detected_cookies_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_discovery'
@@ -486,16 +486,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_policy',
-            'Politica de cookies',
+            esc_html__('Cookie policy', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Enlaza tu politica y define cookies personalizadas.</p>';
+                echo '<p>' . esc_html__('Link your policy and declare custom cookies.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_cookie_policy_url',
-            'URL politica de cookies',
+            esc_html__('Cookie policy URL', 'piensa-cookie-consent'),
             [$this, 'render_cookie_policy_url_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_policy'
@@ -503,7 +503,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_privacy_policy_url',
-            'URL politica de privacidad',
+            esc_html__('Privacy policy URL', 'piensa-cookie-consent'),
             [$this, 'render_privacy_policy_url_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_policy'
@@ -511,7 +511,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_custom_cookies',
-            'Cookies personalizadas',
+            esc_html__('Custom cookies', 'piensa-cookie-consent'),
             [$this, 'render_custom_cookies_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_policy'
@@ -519,7 +519,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_logs',
-            'Registro de consentimientos',
+            esc_html__('Consent records', 'piensa-cookie-consent'),
             function () {
                 echo '<p>Ultimos consentimientos registrados.</p>';
             },
@@ -542,16 +542,16 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_section(
             'piensa_cookie_consent_updates',
-            'Actualizaciones seguras',
+            esc_html__('Secure updates', 'piensa-cookie-consent'),
             function () {
-                echo '<p>Configura el servidor central de actualizaciones y la firma.</p>';
+                echo '<p>' . esc_html__('Configure the central update server and its signature.', 'piensa-cookie-consent') . '</p>';
             },
             'piensa-cookie-consent'
         );
 
         add_settings_field(
             'piensa_cookie_consent_update_server',
-            'Servidor de actualizaciones',
+            esc_html__('Update server', 'piensa-cookie-consent'),
             [$this, 'render_update_server_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_updates'
@@ -559,7 +559,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_update_channel',
-            'Canal',
+            esc_html__('Channel', 'piensa-cookie-consent'),
             [$this, 'render_update_channel_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_updates'
@@ -567,7 +567,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_update_token',
-            'Token de acceso',
+            esc_html__('Access token', 'piensa-cookie-consent'),
             [$this, 'render_update_token_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_updates'
@@ -575,7 +575,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_update_public_key',
-            'Clave publica',
+            esc_html__('Public key', 'piensa-cookie-consent'),
             [$this, 'render_update_public_key_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_updates'
@@ -583,7 +583,7 @@ class Piensa_Cookie_Consent_Admin {
 
         add_settings_field(
             'piensa_cookie_consent_update_signature',
-            'Verificacion de firma',
+            esc_html__('Signature verification', 'piensa-cookie-consent'),
             [$this, 'render_update_signature_field'],
             'piensa-cookie-consent',
             'piensa_cookie_consent_updates'
@@ -593,20 +593,20 @@ class Piensa_Cookie_Consent_Admin {
     public function render_blocker_field() {
         $settings = self::get_settings();
         $checked = $settings['enable_blocker'] ? 'checked' : '';
-        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[enable_blocker]" value="1" ' . $checked . '> Activar bloqueo de iframes externos</label>';
+        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[enable_blocker]" value="1" ' . $checked . '> ' . esc_html__('Block external iframes', 'piensa-cookie-consent') . '</label>';
     }
 
     public function render_consent_log_field() {
         $settings = self::get_settings();
         $checked = $settings['enable_consent_log'] ? 'checked' : '';
-        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[enable_consent_log]" value="1" ' . $checked . '> Guardar registro de consentimiento</label>';
+        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[enable_consent_log]" value="1" ' . $checked . '> ' . esc_html__('Keep a consent log', 'piensa-cookie-consent') . '</label>';
     }
 
     public function render_policy_revision_field() {
         $settings = self::get_settings();
         $value = (int) $settings['policy_revision'];
         echo '<input class="small-text" type="number" min="0" name="' . esc_attr($this->option_name) . '[policy_revision]" value="' . $value . '" />';
-        echo '<p class="description">Incrementa este valor cuando cambies el texto o la politica para solicitar nuevo consentimiento.</p>';
+        echo '<p class="description">' . esc_html__('Increase this value when you change the text or the policy, to ask visitors for consent again.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_banner_icon_field() {
@@ -615,7 +615,7 @@ class Piensa_Cookie_Consent_Admin {
         $icon_style = isset($settings['banner_icon_style']) ? $settings['banner_icon_style'] : 'cookie';
 
         echo '<div class="ag-field-group">';
-        echo '<label style="display:block;margin-bottom:12px;"><input type="checkbox" name="' . esc_attr($this->option_name) . '[banner_show_icon]" value="1" ' . ($show_icon ? 'checked' : '') . '> Mostrar icono en el banner</label>';
+        echo '<label style="display:block;margin-bottom:12px;"><input type="checkbox" name="' . esc_attr($this->option_name) . '[banner_show_icon]" value="1" ' . ($show_icon ? 'checked' : '') . '> ' . esc_html__('Show an icon in the banner', 'piensa-cookie-consent') . '</label>';
         echo '<div class="ag-icon-preview" style="display:flex;gap:12px;align-items:stretch;flex-wrap:wrap;">';
 
         $icons = Piensa_Cookie_Consent_Icons::get_choices();
@@ -684,17 +684,17 @@ class Piensa_Cookie_Consent_Admin {
         $settings = self::get_settings();
         $value = $settings['category_mode'];
         echo '<select name="' . esc_attr($this->option_name) . '[category_mode]">';
-        echo '<option value="auto"' . selected($value, 'auto', false) . '>Auto (detectar plugins)</option>';
+        echo '<option value="auto"' . selected($value, 'auto', false) . '>' . esc_html__('Auto (detect plugins)', 'piensa-cookie-consent') . '</option>';
         echo '<option value="manual"' . selected($value, 'manual', false) . '>Manual</option>';
         echo '</select>';
-        echo '<p class="description">En manual puedes forzar si se muestran categorias.</p>';
+        echo '<p class="description">' . esc_html__('In manual mode you decide which categories are shown.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_necessary_toggle_field() {
         $settings = self::get_settings();
         $checked = !empty($settings['allow_necessary_toggle']) ? 'checked' : '';
-        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[allow_necessary_toggle]" value="1" ' . $checked . '> Permitir desactivar cookies necesarias</label>';
-        echo '<p class="description">No recomendado: puede afectar el funcionamiento del sitio.</p>';
+        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[allow_necessary_toggle]" value="1" ' . $checked . '> ' . esc_html__('Let visitors disable necessary cookies', 'piensa-cookie-consent') . '</label>';
+        echo '<p class="description">' . esc_html__('Not recommended: it can break parts of the site.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_category_toggles_field() {
@@ -708,13 +708,13 @@ class Piensa_Cookie_Consent_Admin {
     public function render_category_labels_field() {
         $settings = self::get_settings();
         echo '<div class="ag-field-group">';
-        echo '<strong>Necesarias</strong>';
+        echo '<strong>' . esc_html__('Necessary', 'piensa-cookie-consent') . '</strong>';
         echo '<input class="regular-text" type="text" name="' . esc_attr($this->option_name) . '[necessary_label]" value="' . esc_attr($settings['necessary_label']) . '" />';
         echo '<textarea class="large-text" rows="2" name="' . esc_attr($this->option_name) . '[necessary_description]">' . esc_textarea($settings['necessary_description']) . '</textarea>';
-        echo '<textarea class="large-text" rows="2" name="' . esc_attr($this->option_name) . '[necessary_legal_note]" placeholder="Nota legal (opcional)">' . esc_textarea($settings['necessary_legal_note']) . '</textarea>';
+        echo '<textarea class="large-text" rows="2" name="' . esc_attr($this->option_name) . '[necessary_legal_note]" placeholder="' . esc_attr__('Legal note (optional)', 'piensa-cookie-consent') . '">' . esc_textarea($settings['necessary_legal_note']) . '</textarea>';
         echo '</div>';
         echo '<div class="ag-field-group">';
-        echo '<strong>Analitica</strong>';
+        echo '<strong>' . esc_html__('Analytics', 'piensa-cookie-consent') . '</strong>';
         echo '<input class="regular-text" type="text" name="' . esc_attr($this->option_name) . '[analytics_label]" value="' . esc_attr($settings['analytics_label']) . '" />';
         echo '<textarea class="large-text" rows="2" name="' . esc_attr($this->option_name) . '[analytics_description]">' . esc_textarea($settings['analytics_description']) . '</textarea>';
         echo '</div>';
@@ -733,24 +733,24 @@ class Piensa_Cookie_Consent_Admin {
         $preferences_position = $settings['preferences_position'];
 
         echo '<div class="ag-field-group">';
-        echo '<strong>Banner</strong>';
+        echo '<strong>' . esc_html__('Banner', 'piensa-cookie-consent') . '</strong>';
         echo '<select name="' . esc_attr($this->option_name) . '[consent_layout]">';
         echo '<option value="box"' . selected($consent_layout, 'box', false) . '>Box</option>';
         echo '<option value="cloud"' . selected($consent_layout, 'cloud', false) . '>Cloud</option>';
         echo '<option value="bar"' . selected($consent_layout, 'bar', false) . '>Bar</option>';
         echo '</select> ';
         echo '<select name="' . esc_attr($this->option_name) . '[consent_position]">';
-        echo '<option value="bottom right"' . selected($consent_position, 'bottom right', false) . '>Abajo derecha</option>';
-        echo '<option value="bottom left"' . selected($consent_position, 'bottom left', false) . '>Abajo izquierda</option>';
-        echo '<option value="bottom center"' . selected($consent_position, 'bottom center', false) . '>Abajo centro</option>';
-        echo '<option value="top right"' . selected($consent_position, 'top right', false) . '>Arriba derecha</option>';
-        echo '<option value="top left"' . selected($consent_position, 'top left', false) . '>Arriba izquierda</option>';
-        echo '<option value="top center"' . selected($consent_position, 'top center', false) . '>Arriba centro</option>';
+        echo '<option value="bottom right"' . selected($consent_position, 'bottom right', false) . '>' . esc_html__('Bottom right', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="bottom left"' . selected($consent_position, 'bottom left', false) . '>' . esc_html__('Bottom left', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="bottom center"' . selected($consent_position, 'bottom center', false) . '>' . esc_html__('Bottom center', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="top right"' . selected($consent_position, 'top right', false) . '>' . esc_html__('Top right', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="top left"' . selected($consent_position, 'top left', false) . '>' . esc_html__('Top left', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="top center"' . selected($consent_position, 'top center', false) . '>' . esc_html__('Top center', 'piensa-cookie-consent') . '</option>';
         echo '</select>';
         echo '</div>';
 
         echo '<div class="ag-field-group">';
-        echo '<strong>Preferencias</strong>';
+        echo '<strong>' . esc_html__('Preferences', 'piensa-cookie-consent') . '</strong>';
         echo '<select name="' . esc_attr($this->option_name) . '[preferences_layout]">';
         echo '<option value="box"' . selected($preferences_layout, 'box', false) . '>Box</option>';
         echo '<option value="bar"' . selected($preferences_layout, 'bar', false) . '>Bar</option>';
@@ -766,13 +766,13 @@ class Piensa_Cookie_Consent_Admin {
     public function render_theme_colors_field() {
         $settings = self::get_settings();
         $fields = [
-            ['key' => 'theme_bg', 'label' => 'Fondo modal', 'var' => '--cc-bg'],
-            ['key' => 'theme_primary_color', 'label' => 'Texto principal', 'var' => '--cc-primary-color'],
-            ['key' => 'theme_secondary_color', 'label' => 'Texto secundario', 'var' => '--cc-secondary-color'],
-            ['key' => 'theme_btn_primary_bg', 'label' => 'Boton primario', 'var' => '--cc-btn-primary-bg'],
-            ['key' => 'theme_btn_primary_color', 'label' => 'Texto boton primario', 'var' => '--cc-btn-primary-color'],
-            ['key' => 'theme_btn_secondary_bg', 'label' => 'Boton secundario', 'var' => '--cc-btn-secondary-bg'],
-            ['key' => 'theme_btn_secondary_color', 'label' => 'Texto boton secundario', 'var' => '--cc-btn-secondary-color'],
+            ['key' => 'theme_bg', 'label' => __('Modal background', 'piensa-cookie-consent'), 'var' => '--cc-bg'],
+            ['key' => 'theme_primary_color', 'label' => __('Main text', 'piensa-cookie-consent'), 'var' => '--cc-primary-color'],
+            ['key' => 'theme_secondary_color', 'label' => __('Secondary text', 'piensa-cookie-consent'), 'var' => '--cc-secondary-color'],
+            ['key' => 'theme_btn_primary_bg', 'label' => __('Primary button', 'piensa-cookie-consent'), 'var' => '--cc-btn-primary-bg'],
+            ['key' => 'theme_btn_primary_color', 'label' => __('Primary button label', 'piensa-cookie-consent'), 'var' => '--cc-btn-primary-color'],
+            ['key' => 'theme_btn_secondary_bg', 'label' => __('Secondary button', 'piensa-cookie-consent'), 'var' => '--cc-btn-secondary-bg'],
+            ['key' => 'theme_btn_secondary_color', 'label' => __('Secondary button label', 'piensa-cookie-consent'), 'var' => '--cc-btn-secondary-color'],
         ];
 
         echo '<div class="ag-color-editor">';
@@ -816,7 +816,7 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-preview-frame-wrap">';
         echo '<iframe class="ag-preview-frame" data-ag-preview-frame src="' . esc_url($preview_url . '&nonce=' . $nonce) . '" loading="lazy"></iframe>';
         echo '</div>';
-        echo '<p class="description">Vista previa real del banner. Se actualiza al cambiar los campos.</p>';
+        echo '<p class="description">' . esc_html__('A live preview of the banner. It updates as you change the fields.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_geo_targeting_field() {
@@ -827,26 +827,26 @@ class Piensa_Cookie_Consent_Admin {
 
         echo '<div class="ag-field-group">';
         echo '<select name="' . esc_attr($this->option_name) . '[geo_mode]">';
-        echo '<option value="all"' . selected($mode, 'all', false) . '>Mostrar siempre</option>';
-        echo '<option value="eea"' . selected($mode, 'eea', false) . '>Solo EEE + UK/CH</option>';
-        echo '<option value="custom"' . selected($mode, 'custom', false) . '>Solo paises definidos</option>';
-        echo '<option value="none"' . selected($mode, 'none', false) . '>No mostrar (desactivar CMP)</option>';
+        echo '<option value="all"' . selected($mode, 'all', false) . '>' . esc_html__('Always show', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="eea"' . selected($mode, 'eea', false) . '>' . esc_html__('EEA, UK and Switzerland only', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="custom"' . selected($mode, 'custom', false) . '>' . esc_html__('Selected countries only', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="none"' . selected($mode, 'none', false) . '>' . esc_html__('Never show (disable the CMP)', 'piensa-cookie-consent') . '</option>';
         echo '</select>';
-        echo '<p class="description">Si no hay cabecera de geo, se mostrara siempre.</p>';
+        echo '<p class="description">' . esc_html__('With no geo header available, the banner is always shown.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<div class="ag-field-group">';
         echo '<textarea class="large-text" rows="3" name="' . esc_attr($this->option_name) . '[geo_countries]">' . $countries . '</textarea>';
-        echo '<p class="description">Codigos ISO2 separados por coma (ej: ES,FR,DE). Solo aplica en modo custom.</p>';
+        echo '<p class="description">' . esc_html__('Comma-separated ISO2 codes, for example ES,FR,DE. Only used in custom mode.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<div class="ag-field-group">';
         echo '<select name="' . esc_attr($this->option_name) . '[geo_header]">';
-        echo '<option value="auto"' . selected($header, 'auto', false) . '>Auto detectar (CF/IP/Geo)</option>';
+        echo '<option value="auto"' . selected($header, 'auto', false) . '>' . esc_html__('Auto-detect (CF/IP/Geo)', 'piensa-cookie-consent') . '</option>';
         echo '<option value="CF-IPCountry"' . selected($header, 'CF-IPCountry', false) . '>CF-IPCountry</option>';
         echo '<option value="X-GeoIP-Country"' . selected($header, 'X-GeoIP-Country', false) . '>X-GeoIP-Country</option>';
         echo '<option value="X-Country-Code"' . selected($header, 'X-Country-Code', false) . '>X-Country-Code</option>';
         echo '<option value="X-Geo-Country"' . selected($header, 'X-Geo-Country', false) . '>X-Geo-Country</option>';
         echo '</select>';
-        echo '<p class="description">Selecciona la cabecera que tu hosting/CDN expone.</p>';
+        echo '<p class="description">' . esc_html__('Select the header your host or CDN exposes.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
     }
 
@@ -857,10 +857,10 @@ class Piensa_Cookie_Consent_Admin {
 
         echo '<div class="ag-field-group">';
         echo '<select name="' . esc_attr($this->option_name) . '[language_mode]">';
-        echo '<option value="auto"' . selected($mode, 'auto', false) . '>Auto (documento o navegador)</option>';
-        echo '<option value="site"' . selected($mode, 'site', false) . '>Idioma del sitio (WP)</option>';
-        echo '<option value="browser"' . selected($mode, 'browser', false) . '>Idioma del navegador</option>';
-        echo '<option value="custom"' . selected($mode, 'custom', false) . '>Forzar idioma</option>';
+        echo '<option value="auto"' . selected($mode, 'auto', false) . '>' . esc_html__('Auto (document or browser)', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="site"' . selected($mode, 'site', false) . '>' . esc_html__('Site language (WP)', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="browser"' . selected($mode, 'browser', false) . '>' . esc_html__('Browser language', 'piensa-cookie-consent') . '</option>';
+        echo '<option value="custom"' . selected($mode, 'custom', false) . '>' . esc_html__('Force a language', 'piensa-cookie-consent') . '</option>';
         echo '</select>';
         echo '</div>';
         echo '<div class="ag-field-group">';
@@ -868,21 +868,21 @@ class Piensa_Cookie_Consent_Admin {
         echo '<option value="es"' . selected($default, 'es', false) . '>Espanol</option>';
         echo '<option value="en"' . selected($default, 'en', false) . '>English</option>';
         echo '</select>';
-        echo '<p class="description">Se usa si no se puede detectar.</p>';
+        echo '<p class="description">' . esc_html__('Used when detection fails.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
     }
 
     public function render_report_field() {
         $html_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_report_html'), 'piensa_cookie_consent_report_html');
         $json_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_report_json'), 'piensa_cookie_consent_report_json');
-        echo '<a class="button" href="' . esc_url($html_url) . '">Descargar informe HTML</a> ';
-        echo '<a class="button" href="' . esc_url($json_url) . '">Descargar informe JSON</a>';
+        echo '<a class="button" href="' . esc_url($html_url) . '">' . esc_html__('Download the HTML report', 'piensa-cookie-consent') . '</a> ';
+        echo '<a class="button" href="' . esc_url($json_url) . '">' . esc_html__('Download the JSON report', 'piensa-cookie-consent') . '</a>';
     }
 
     public function render_texts_en_field() {
         $settings = self::get_settings();
         echo '<div class="ag-field-group">';
-        echo '<strong>Banner</strong>';
+        echo '<strong>' . esc_html__('Banner', 'piensa-cookie-consent') . '</strong>';
         echo '<input class="regular-text" type="text" name="' . esc_attr($this->option_name) . '[banner_title_en]" value="' . esc_attr($settings['banner_title_en']) . '" placeholder="Title" />';
         echo '<textarea class="large-text" rows="2" name="' . esc_attr($this->option_name) . '[banner_description_en]">' . esc_textarea($settings['banner_description_en']) . '</textarea>';
         echo '<div class="ag-field-row">';
@@ -909,27 +909,27 @@ class Piensa_Cookie_Consent_Admin {
         $settings = self::get_settings();
         $checked = $settings['hide_branding'] ? 'checked' : '';
         echo '<div class="ag-field-group">';
-        echo '<input class="regular-text" type="text" name="' . esc_attr($this->option_name) . '[brand_name]" value="' . esc_attr($settings['brand_name']) . '" placeholder="Nombre de marca (opcional)" />';
-        echo '<input class="regular-text" type="url" name="' . esc_attr($this->option_name) . '[brand_logo_url]" value="' . esc_attr($settings['brand_logo_url']) . '" placeholder="URL del logo (opcional)" />';
-        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[hide_branding]" value="1" ' . $checked . '> Ocultar branding en el banner</label>';
+        echo '<input class="regular-text" type="text" name="' . esc_attr($this->option_name) . '[brand_name]" value="' . esc_attr($settings['brand_name']) . '" placeholder="' . esc_attr__('Brand name (optional)', 'piensa-cookie-consent') . '" />';
+        echo '<input class="regular-text" type="url" name="' . esc_attr($this->option_name) . '[brand_logo_url]" value="' . esc_attr($settings['brand_logo_url']) . '" placeholder="' . esc_attr__('Logo URL (optional)', 'piensa-cookie-consent') . '" />';
+        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[hide_branding]" value="1" ' . $checked . '> ' . esc_html__('Hide branding in the banner', 'piensa-cookie-consent') . '</label>';
         echo '</div>';
     }
 
     public function render_export_field() {
         $export_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_export_settings'), 'piensa_cookie_consent_export_settings');
-        echo '<a class="button" href="' . esc_url($export_url) . '">Descargar configuracion (JSON)</a>';
+        echo '<a class="button" href="' . esc_url($export_url) . '">' . esc_html__('Download settings (JSON)', 'piensa-cookie-consent') . '</a>';
     }
 
     public function render_import_field() {
         echo '<input type="file" name="piensa_cookie_consent_settings_file" form="ag-import-form" accept="application/json" />';
         echo ' ';
-        echo '<button type="submit" class="button" form="ag-import-form">Importar configuracion</button>';
+        echo '<button type="submit" class="button" form="ag-import-form">' . esc_html__('Import settings', 'piensa-cookie-consent') . '</button>';
     }
 
     public function render_health_field() {
         $issues = $this->get_health_issues();
         if (!$issues) {
-            echo '<p class="description">Todo correcto. No se detectaron riesgos.</p>';
+            echo '<p class="description">' . esc_html__('All good. No risks detected.', 'piensa-cookie-consent') . '</p>';
             return;
         }
         echo '<ul class="ag-health">';
@@ -943,7 +943,7 @@ class Piensa_Cookie_Consent_Admin {
         $settings = self::get_settings();
         $value = esc_textarea($settings['blocked_domains']);
         echo '<textarea class="large-text code" rows="7" name="' . esc_attr($this->option_name) . '[blocked_domains]">' . $value . '</textarea>';
-        echo '<p class="description">Uno por linea. Ejemplo: youtube.com</p>';
+        echo '<p class="description">' . esc_html__('One per line. For example: youtube.com', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_placeholder_title_field() {
@@ -961,7 +961,7 @@ class Piensa_Cookie_Consent_Admin {
     public function render_floating_button_field() {
         $settings = self::get_settings();
         $checked = $settings['show_floating_button'] ? 'checked' : '';
-        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[show_floating_button]" value="1" ' . $checked . '> Mostrar boton flotante de revision</label>';
+        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[show_floating_button]" value="1" ' . $checked . '> ' . esc_html__('Show a floating review button', 'piensa-cookie-consent') . '</label>';
     }
 
     public function render_floating_button_text_field() {
@@ -977,7 +977,7 @@ class Piensa_Cookie_Consent_Admin {
         echo '<option value="icon"' . selected($value, 'icon', false) . '>Icono</option>';
         echo '<option value="text"' . selected($value, 'text', false) . '>Texto</option>';
         echo '</select>';
-        echo '<p class="description">Recomendado: icono para no molestar al usuario.</p>';
+        echo '<p class="description">' . esc_html__('Recommended: an icon, so the page stays uncluttered.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_discovered_field() {
@@ -986,10 +986,10 @@ class Piensa_Cookie_Consent_Admin {
         $overrides = isset($settings['domain_overrides']) && is_array($settings['domain_overrides']) ? $settings['domain_overrides'] : [];
         $scan_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_scan'), 'piensa_cookie_consent_scan');
 
-        echo '<p><a class="button" href="' . esc_url($scan_url) . '">Escanear ahora</a></p>';
+        echo '<p><a class="button" href="' . esc_url($scan_url) . '">' . esc_html__('Scan now', 'piensa-cookie-consent') . '</a></p>';
 
         if (!is_array($discovered) || !$discovered) {
-            echo '<p class="description">Aun no se han detectado dominios externos.</p>';
+            echo '<p class="description">' . esc_html__('No external domains have been detected yet.', 'piensa-cookie-consent') . '</p>';
             return;
         }
 
@@ -1022,14 +1022,14 @@ class Piensa_Cookie_Consent_Admin {
             home_url('/')
         );
 
-        echo '<p><a class="button" href="' . esc_url($audit_url) . '" target="_blank" rel="noopener">Escanear cookies en el navegador</a></p>';
-        echo '<p class="description">Abre tu sitio en modo auditoria para detectar cookies reales (JS). Solo admins. Se guardan nombres, no valores.</p>';
+        echo '<p><a class="button" href="' . esc_url($audit_url) . '" target="_blank" rel="noopener">' . esc_html__('Scan cookies in the browser', 'piensa-cookie-consent') . '</a></p>';
+        echo '<p class="description">' . esc_html__('Opens your site in audit mode to detect the cookies scripts actually set. Administrators only. Names are stored, never values.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_detected_cookies_field() {
         $cookies = get_option('piensa_cookie_consent_detected_cookies', []);
         if (!is_array($cookies) || !$cookies) {
-            echo '<p class="description">Aun no se han detectado cookies durante el escaneo.</p>';
+            echo '<p class="description">' . esc_html__('No cookies have been detected in a scan yet.', 'piensa-cookie-consent') . '</p>';
             return;
         }
 
@@ -1054,7 +1054,7 @@ class Piensa_Cookie_Consent_Admin {
         $settings = self::get_settings();
         $value = esc_attr($settings['cookie_policy_url']);
         echo '<input class="regular-text" type="url" name="' . esc_attr($this->option_name) . '[cookie_policy_url]" value="' . $value . '" placeholder="https://tusitio.com/politica-de-cookies" />';
-        echo '<p class="description">Usa el shortcode [piensa_cookie_consent_policy] en una pagina si no tienes URL propia.</p>';
+        echo '<p class="description">' . esc_html__('Use the [piensa_cookie_consent_policy] shortcode on a page if you do not have a URL of your own.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_privacy_policy_url_field() {
@@ -1067,21 +1067,21 @@ class Piensa_Cookie_Consent_Admin {
         $settings = self::get_settings();
         $value = esc_textarea($settings['custom_cookies']);
         echo '<textarea class="large-text code" rows="6" name="' . esc_attr($this->option_name) . '[custom_cookies]">' . $value . '</textarea>';
-        echo '<p class="description">Formato: nombre|categoria|finalidad|duracion|dominio. Ejemplo: my_cookie|analytics|Medicion basica|variable|tusitio.com</p>';
+        echo '<p class="description">' . esc_html__('Format: name|category|purpose|duration|domain. For example:', 'piensa-cookie-consent') . ' my_cookie|analytics|Medicion basica|variable|tusitio.com</p>';
     }
 
     public function render_logs_field() {
         $logs = Piensa_Cookie_Consent_Consent_Log::get_logs(50, 0);
         if (!$logs) {
-            echo '<p class="description">Aun no hay registros.</p>';
+            echo '<p class="description">' . esc_html__('No records yet.', 'piensa-cookie-consent') . '</p>';
             return;
         }
 
         $export_url = wp_nonce_url(admin_url('admin-post.php?action=piensa_cookie_consent_export_logs'), 'piensa_cookie_consent_export_logs');
 
-        echo '<p><a class="button" href="' . esc_url($export_url) . '">Exportar CSV</a></p>';
+        echo '<p><a class="button" href="' . esc_url($export_url) . '">' . esc_html__('Export CSV', 'piensa-cookie-consent') . '</a></p>';
         echo '<table class="widefat striped">';
-        echo '<thead><tr><th>Fecha</th><th>Consent ID</th><th>Accion</th><th>Categorias</th><th>Revision</th><th>Idioma</th><th>URL</th></tr></thead><tbody>';
+        echo '<thead><tr><th>' . esc_html__('Date', 'piensa-cookie-consent') . '</th><th>Consent ID</th><th>' . esc_html__('Action', 'piensa-cookie-consent') . '</th><th>' . esc_html__('Categories', 'piensa-cookie-consent') . '</th><th>' . esc_html__('Revision', 'piensa-cookie-consent') . '</th><th>' . esc_html__('Language', 'piensa-cookie-consent') . '</th><th>URL</th></tr></thead><tbody>';
         foreach ($logs as $log) {
             echo '<tr>';
             echo '<td>' . esc_html($log['created_at']) . '</td>';
@@ -1100,7 +1100,7 @@ class Piensa_Cookie_Consent_Admin {
         $settings = self::get_settings();
         $value = esc_attr($settings['update_server_url']);
         echo '<input class="regular-text" type="url" name="' . esc_attr($this->option_name) . '[update_server_url]" value="' . $value . '" placeholder="https://updates.tu-dominio.com/cmp.json" />';
-        echo '<p class="description">Soporta variables: {slug}, {channel}, {site}. Si no las usas se agregan via query.</p>';
+        echo '<p class="description">' . esc_html__('Supports the {slug}, {channel} and {site} variables. Left out, they are appended as query arguments.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_update_channel_field() {
@@ -1115,22 +1115,22 @@ class Piensa_Cookie_Consent_Admin {
     public function render_update_token_field() {
         $settings = self::get_settings();
         $value = esc_attr($settings['update_token']);
-        echo '<input class="regular-text" type="text" name="' . esc_attr($this->option_name) . '[update_token]" value="' . $value . '" placeholder="Bearer token (opcional)" />';
-        echo '<p class="description">Se envia en la cabecera Authorization.</p>';
+        echo '<input class="regular-text" type="text" name="' . esc_attr($this->option_name) . '[update_token]" value="' . $value . '" placeholder="' . esc_attr__('Bearer token (optional)', 'piensa-cookie-consent') . '" />';
+        echo '<p class="description">' . esc_html__('Sent in the Authorization header.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_update_public_key_field() {
         $settings = self::get_settings();
         $value = esc_textarea($settings['update_public_key']);
         echo '<textarea class="large-text code" rows="4" name="' . esc_attr($this->option_name) . '[update_public_key]" placeholder="-----BEGIN PUBLIC KEY-----">' . $value . '</textarea>';
-        echo '<p class="description">Clave publica para verificar firmas del servidor central.</p>';
+        echo '<p class="description">' . esc_html__('Public key', 'piensa-cookie-consent') . ' ' . esc_html__('to verify signatures from the central server.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_update_signature_field() {
         $settings = self::get_settings();
         $checked = !empty($settings['update_require_signature']) ? 'checked' : '';
-        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[update_require_signature]" value="1" ' . $checked . '> Requerir firma valida</label>';
-        echo '<p class="description">Si esta activo, el update se bloquea sin firma valida.</p>';
+        echo '<label><input type="checkbox" name="' . esc_attr($this->option_name) . '[update_require_signature]" value="1" ' . $checked . '> ' . esc_html__('Require a valid signature', 'piensa-cookie-consent') . '</label>';
+        echo '<p class="description">' . esc_html__('When enabled, an update without a valid signature is blocked.', 'piensa-cookie-consent') . '</p>';
     }
 
     public function render_settings_page() {
@@ -1144,22 +1144,22 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="wrap ag-admin">';
         echo '<div class="ag-admin-hero">';
         echo '<div class="ag-admin-hero__content">';
-        echo '<span class="ag-admin-eyebrow">PW Cookie Monster</span>';
-        echo '<h1>Panel central de consentimiento</h1>';
-        echo '<p class="ag-admin-subtitle">Gestion profesional con un guino al monstruo de las cookies: cumplimiento, control y datos limpios.</p>';
+        echo '<span class="ag-admin-eyebrow">' . esc_html__('Piensa Cookie Consent', 'piensa-cookie-consent') . '</span>';
+        echo '<h1>' . esc_html__('Consent control panel', 'piensa-cookie-consent') . '</h1>';
+        echo '<p class="ag-admin-subtitle">' . esc_html__('Consent management for agencies: compliance, control and clean data.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<div class="ag-admin-hero__actions">';
-        echo '<a class="button button-primary" href="' . esc_url($scan_url) . '">Escanear ahora</a>';
-        echo '<a class="button" href="' . esc_url($export_url) . '">Exportar CSV</a>';
+        echo '<a class="button button-primary" href="' . esc_url($scan_url) . '">' . esc_html__('Scan now', 'piensa-cookie-consent') . '</a>';
+        echo '<a class="button" href="' . esc_url($export_url) . '">' . esc_html__('Export CSV', 'piensa-cookie-consent') . '</a>';
         if (!empty($cookie_policy_url)) {
-            echo '<a class="button" href="' . esc_url($cookie_policy_url) . '" target="_blank" rel="noopener">Ver politica</a>';
+            echo '<a class="button" href="' . esc_url($cookie_policy_url) . '" target="_blank" rel="noopener">' . esc_html__('View the policy', 'piensa-cookie-consent') . '</a>';
         }
         echo '</div>';
         echo '</div>';
 
         echo '<div class="ag-admin-kpis">';
         echo '<div class="ag-kpi">';
-        echo '<span class="ag-kpi__label">Revision legal</span>';
+        echo '<span class="ag-kpi__label">' . esc_html__('Revision', 'piensa-cookie-consent') . ' legal</span>';
         echo '<span class="ag-kpi__value">' . esc_html($settings['policy_revision']) . '</span>';
         echo '</div>';
         echo '<div class="ag-kpi">';
@@ -1167,11 +1167,11 @@ class Piensa_Cookie_Consent_Admin {
         echo '<span class="ag-kpi__value">' . ($settings['enable_consent_log'] ? 'Activo' : 'Inactivo') . '</span>';
         echo '</div>';
         echo '<div class="ag-kpi">';
-        echo '<span class="ag-kpi__label">Dominios detectados</span>';
+        echo '<span class="ag-kpi__label">' . esc_html__('Detected domains', 'piensa-cookie-consent') . '</span>';
         echo '<span class="ag-kpi__value">' . esc_html($domains_count) . '</span>';
         echo '</div>';
         echo '<div class="ag-kpi">';
-        echo '<span class="ag-kpi__label">Modo categorias</span>';
+        echo '<span class="ag-kpi__label">' . esc_html__('Category mode', 'piensa-cookie-consent') . '</span>';
         echo '<span class="ag-kpi__value">' . esc_html(ucfirst($settings['category_mode'])) . '</span>';
         echo '</div>';
         echo '</div>';
@@ -1183,15 +1183,15 @@ class Piensa_Cookie_Consent_Admin {
         }
 
         echo '<nav class="ag-admin-tabs" data-ag-tabs>';
-        echo '<button type="button" class="ag-tab-btn is-active" data-tab="general">General</button>';
+        echo '<button type="button" class="ag-tab-btn is-active" data-tab="general">' . esc_html__('General', 'piensa-cookie-consent') . '</button>';
         echo '<button type="button" class="ag-tab-btn" data-tab="compliance">Compliance</button>';
-        echo '<button type="button" class="ag-tab-btn" data-tab="idiomas">Idiomas</button>';
-        echo '<button type="button" class="ag-tab-btn" data-tab="categorias">Categorias</button>';
-        echo '<button type="button" class="ag-tab-btn" data-tab="apariencia">Apariencia</button>';
-        echo '<button type="button" class="ag-tab-btn" data-tab="banner">Banner</button>';
-        echo '<button type="button" class="ag-tab-btn" data-tab="bloqueo">Bloqueo</button>';
+        echo '<button type="button" class="ag-tab-btn" data-tab="idiomas">' . esc_html__('Languages', 'piensa-cookie-consent') . '</button>';
+        echo '<button type="button" class="ag-tab-btn" data-tab="categorias">' . esc_html__('Categories', 'piensa-cookie-consent') . '</button>';
+        echo '<button type="button" class="ag-tab-btn" data-tab="apariencia">' . esc_html__('Appearance', 'piensa-cookie-consent') . '</button>';
+        echo '<button type="button" class="ag-tab-btn" data-tab="banner">' . esc_html__('Banner', 'piensa-cookie-consent') . '</button>';
+        echo '<button type="button" class="ag-tab-btn" data-tab="bloqueo">' . esc_html__('Blocking', 'piensa-cookie-consent') . '</button>';
         echo '<button type="button" class="ag-tab-btn" data-tab="scanner">Scanner</button>';
-        echo '<button type="button" class="ag-tab-btn" data-tab="politica">Politica</button>';
+        echo '<button type="button" class="ag-tab-btn" data-tab="politica">' . esc_html__('Policy', 'piensa-cookie-consent') . '</button>';
         echo '<button type="button" class="ag-tab-btn" data-tab="branding">Branding</button>';
         echo '<button type="button" class="ag-tab-btn" data-tab="tools">Tools</button>';
         echo '<button type="button" class="ag-tab-btn" data-tab="health">Health</button>';
@@ -1205,7 +1205,7 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab is-active" data-tab="general">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Configuracion general</h2>';
+        echo '<h2>' . esc_html__(esc_html__('General', 'piensa-cookie-consent') . ' settings', 'piensa-cookie-consent') . '</h2>';
         echo '<p class="ag-section-intro">Datos principales, revision legal y registro.</p>';
         echo '</div>';
         echo '<table class="form-table">';
@@ -1215,8 +1215,8 @@ class Piensa_Cookie_Consent_Admin {
 
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h3>Accesos rapidos</h3>';
-        echo '<p class="ag-section-intro">Boton flotante y revision de consentimiento.</p>';
+        echo '<h3>' . esc_html__('Quick actions', 'piensa-cookie-consent') . '</h3>';
+        echo '<p class="ag-section-intro">' . esc_html__('Floating button', 'piensa-cookie-consent') . esc_html__(' and consent review.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_ui');
@@ -1227,8 +1227,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="compliance">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Cumplimiento y privacidad</h2>';
-        echo '<p class="ag-section-intro">Define geolocalizacion e idioma.</p>';
+        echo '<h2>' . esc_html__('Compliance and privacy', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Set geo-targeting and language.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_compliance');
@@ -1239,8 +1239,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="idiomas">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Textos multilenguaje</h2>';
-        echo '<p class="ag-section-intro">Configura EN (ES se gestiona en Banner/Categorias).</p>';
+        echo '<h2>' . esc_html__('Multilingual text', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Configure the English text. Spanish is managed under Banner and Categories.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_languages');
@@ -1251,8 +1251,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="categorias">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Categorias y comportamiento</h2>';
-        echo '<p class="ag-section-intro">Define etiquetas y activa o desactiva categorias.</p>';
+        echo '<h2>' . esc_html__('Categories and behavior', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Set the labels, and turn categories on or off.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_categories');
@@ -1263,8 +1263,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="apariencia">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Apariencia y posicion</h2>';
-        echo '<p class="ag-section-intro">Ajusta el layout, posicion y colores.</p>';
+        echo '<h2>' . esc_html__('Appearance and position', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Adjust the layout, position and colors.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_appearance');
@@ -1275,8 +1275,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="banner">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Textos del banner</h2>';
-        echo '<p class="ag-section-intro">Personaliza el banner y el modal de preferencias.</p>';
+        echo '<h2>' . esc_html__(esc_html__('Banner', 'piensa-cookie-consent') . ' text', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Customize the banner and the preferences dialog.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_banner');
@@ -1287,8 +1287,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="bloqueo">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Bloqueo de contenido</h2>';
-        echo '<p class="ag-section-intro">Controla los dominios bloqueados y el texto de placeholders.</p>';
+        echo '<h2>' . esc_html__('Content blocking', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Controls the blocked domains and the placeholder text.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_content');
@@ -1300,8 +1300,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="scanner">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Descubrimiento automatico</h2>';
-        echo '<p class="ag-section-intro">Escanea tu sitio y clasifica dominios externos.</p>';
+        echo '<h2>' . esc_html__('Automatic discovery', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Scan your site and classify its external domains.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_discovery');
@@ -1312,8 +1312,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="politica">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Politica de cookies</h2>';
-        echo '<p class="ag-section-intro">Enlaza la politica y define cookies personalizadas.</p>';
+        echo '<h2>' . esc_html__('Cookie policy', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Link your policy and declare custom cookies.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_policy');
@@ -1324,8 +1324,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="branding">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Branding y white-label</h2>';
-        echo '<p class="ag-section-intro">Personaliza la marca visible.</p>';
+        echo '<h2>' . esc_html__('Branding and white-label', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Customize the visible branding.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_branding');
@@ -1336,8 +1336,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="tools">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Herramientas</h2>';
-        echo '<p class="ag-section-intro">Importa o exporta configuraciones.</p>';
+        echo '<h2>' . esc_html__('Tools', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Import and export settings.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_tools');
@@ -1352,7 +1352,7 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
         echo '<h2>Health check</h2>';
-        echo '<p class="ag-section-intro">Revision rapida de riesgos.</p>';
+        echo '<p class="ag-section-intro">' . esc_html__('Revision', 'piensa-cookie-consent') . ' rapida de riesgos.</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_health');
@@ -1363,8 +1363,8 @@ class Piensa_Cookie_Consent_Admin {
         echo '<div class="ag-tab" data-tab="logs">';
         echo '<div class="ag-panel">';
         echo '<div class="ag-panel-header">';
-        echo '<h2>Registro de consentimientos</h2>';
-        echo '<p class="ag-section-intro">Consulta y exporta el historial de consentimientos.</p>';
+        echo '<h2>' . esc_html__('Consent records', 'piensa-cookie-consent') . '</h2>';
+        echo '<p class="ag-section-intro">' . esc_html__('Review and export the consent history.', 'piensa-cookie-consent') . '</p>';
         echo '</div>';
         echo '<table class="form-table">';
         do_settings_fields('piensa-cookie-consent', 'piensa_cookie_consent_logs');
@@ -1372,7 +1372,7 @@ class Piensa_Cookie_Consent_Admin {
         echo '</div>';
         echo '</div>';
 
-        submit_button('Guardar cambios');
+        submit_button(esc_html__('Save changes', 'piensa-cookie-consent'));
         echo '</form>';
         echo '<form id="ag-import-form" method="post" action="' . esc_url(admin_url('admin-post.php?action=piensa_cookie_consent_import_settings')) . '" enctype="multipart/form-data">';
         wp_nonce_field('piensa_cookie_consent_import_settings');
@@ -1383,7 +1383,7 @@ class Piensa_Cookie_Consent_Admin {
 
     public function render_preview() {
         if (!current_user_can('manage_options')) {
-            wp_die('No autorizado.');
+            wp_die(esc_html__('Not authorized.', 'piensa-cookie-consent'));
         }
 
         check_ajax_referer('piensa_cookie_consent_preview', 'nonce');
@@ -1808,10 +1808,10 @@ class Piensa_Cookie_Consent_Admin {
                 'facebook.com/plugins',
                 'platform.twitter.com',
             ]),
-            'placeholder_title' => 'Contenido externo bloqueado (Privacidad)',
-            'placeholder_button' => 'Aceptar Cookies para ver',
+            'placeholder_title' => __('External content blocked (privacy)', 'piensa-cookie-consent'),
+            'placeholder_button' => __('Accept cookies to view', 'piensa-cookie-consent'),
             'show_floating_button' => true,
-            'floating_button_text' => 'Revisar consentimiento',
+            'floating_button_text' => __('Review consent', 'piensa-cookie-consent'),
             'floating_button_style' => 'icon',
             'enable_consent_log' => true,
             'policy_revision' => 1,
@@ -1822,13 +1822,13 @@ class Piensa_Cookie_Consent_Admin {
             'update_token' => '',
             'update_public_key' => '',
             'update_require_signature' => true,
-            'banner_title' => 'Preferencias de cookies',
-            'banner_description' => 'Usamos cookies para mejorar la experiencia y medir el rendimiento.',
-            'banner_accept_all' => 'Aceptar todas',
-            'banner_reject_all' => 'Rechazar no necesarias',
-            'banner_manage_prefs' => 'Gestionar preferencias',
-            'banner_save_prefs' => 'Guardar preferencias',
-            'banner_preferences_title' => 'Preferencias de cookies',
+            'banner_title' => __('Cookie preferences', 'piensa-cookie-consent'),
+            'banner_description' => __('We use cookies to improve the experience and measure performance.', 'piensa-cookie-consent'),
+            'banner_accept_all' => __('Accept all', 'piensa-cookie-consent'),
+            'banner_reject_all' => __('Reject non-essential', 'piensa-cookie-consent'),
+            'banner_manage_prefs' => __('Manage preferences', 'piensa-cookie-consent'),
+            'banner_save_prefs' => __('Save preferences', 'piensa-cookie-consent'),
+            'banner_preferences_title' => __('Cookie preferences', 'piensa-cookie-consent'),
             'banner_show_icon' => true,
             'banner_icon_style' => 'cookie',
             'custom_cookies' => '',
@@ -1837,13 +1837,13 @@ class Piensa_Cookie_Consent_Admin {
             'allow_necessary_toggle' => false,
             'analytics_enabled' => true,
             'marketing_enabled' => true,
-            'necessary_label' => 'Cookies necesarias',
-            'necessary_description' => 'Requeridas para el funcionamiento basico del sitio.',
-            'necessary_legal_note' => 'Puedes desactivarlas, pero algunas funciones esenciales pueden dejar de estar disponibles.',
-            'analytics_label' => 'Cookies de analitica',
-            'analytics_description' => 'Nos ayudan a mejorar midiendo el uso del sitio.',
-            'marketing_label' => 'Cookies de marketing',
-            'marketing_description' => 'Permiten contenido externo y publicidad personalizada.',
+            'necessary_label' => __('Necessary cookies', 'piensa-cookie-consent'),
+            'necessary_description' => __('Required for the basic functioning of the site.', 'piensa-cookie-consent'),
+            'necessary_legal_note' => __('You can disable them, but some essential features may stop working.', 'piensa-cookie-consent'),
+            'analytics_label' => __('Analytics cookies', 'piensa-cookie-consent'),
+            'analytics_description' => __('Help us improve by measuring site usage.', 'piensa-cookie-consent'),
+            'marketing_label' => __('Marketing cookies', 'piensa-cookie-consent'),
+            'marketing_description' => __('Enable external content and personalized ads.', 'piensa-cookie-consent'),
             'consent_layout' => 'box',
             'consent_position' => 'bottom right',
             'preferences_layout' => 'box',
@@ -1938,10 +1938,10 @@ class Piensa_Cookie_Consent_Admin {
     private function render_domain_select($domain, $selected) {
         $options = [
             'auto' => 'Auto',
-            'necessary' => 'Necesarias',
-            'analytics' => 'Analitica',
+            'necessary' => __('Necessary', 'piensa-cookie-consent'),
+            'analytics' => __('Analytics', 'piensa-cookie-consent'),
             'marketing' => 'Marketing',
-            'unknown' => 'Desconocido',
+            'unknown' => __('Unknown', 'piensa-cookie-consent'),
         ];
 
         $html = '<select name="' . esc_attr($this->option_name) . '[domain_overrides][' . esc_attr($domain) . ']">';
@@ -1956,7 +1956,7 @@ class Piensa_Cookie_Consent_Admin {
 
     public function handle_scan_request() {
         if (!current_user_can('manage_options')) {
-            wp_die('No autorizado.');
+            wp_die(esc_html__('Not authorized.', 'piensa-cookie-consent'));
         }
 
         check_admin_referer('piensa_cookie_consent_scan');
@@ -1964,7 +1964,7 @@ class Piensa_Cookie_Consent_Admin {
         $scanner = new Piensa_Cookie_Consent_Scanner();
         $result = $scanner->scan_site(25);
 
-        $message = sprintf('Escaneo completado. URLs: %d, dominios: %d', $result['urls'], $result['domains']);
+        $message = sprintf(esc_html__('Scan complete. URLs: %1$d, domains: %2$d', 'piensa-cookie-consent'), $result['urls'], $result['domains']);
         set_transient('piensa_cookie_consent_scan_notice', $message, 60);
 
         wp_safe_redirect(admin_url('options-general.php?page=piensa-cookie-consent'));
@@ -1973,7 +1973,7 @@ class Piensa_Cookie_Consent_Admin {
 
     public function handle_export_logs() {
         if (!current_user_can('manage_options')) {
-            wp_die('No autorizado.');
+            wp_die(esc_html__('Not authorized.', 'piensa-cookie-consent'));
         }
 
         check_admin_referer('piensa_cookie_consent_export_logs');
@@ -1982,7 +1982,7 @@ class Piensa_Cookie_Consent_Admin {
 
     public function handle_export_settings() {
         if (!current_user_can('manage_options')) {
-            wp_die('No autorizado.');
+            wp_die(esc_html__('Not authorized.', 'piensa-cookie-consent'));
         }
 
         check_admin_referer('piensa_cookie_consent_export_settings');
@@ -1996,7 +1996,7 @@ class Piensa_Cookie_Consent_Admin {
 
     public function handle_import_settings() {
         if (!current_user_can('manage_options')) {
-            wp_die('No autorizado.');
+            wp_die(esc_html__('Not authorized.', 'piensa-cookie-consent'));
         }
 
         check_admin_referer('piensa_cookie_consent_import_settings');
@@ -2022,7 +2022,7 @@ class Piensa_Cookie_Consent_Admin {
 
     public function handle_report_html() {
         if (!current_user_can('manage_options')) {
-            wp_die('No autorizado.');
+            wp_die(esc_html__('Not authorized.', 'piensa-cookie-consent'));
         }
 
         check_admin_referer('piensa_cookie_consent_report_html');
@@ -2032,26 +2032,26 @@ class Piensa_Cookie_Consent_Admin {
         header('Content-Type: text/html; charset=utf-8');
         header('Content-Disposition: attachment; filename=piensa-cookie-consent-report.html');
 
-        echo '<!doctype html><html><head><meta charset="utf-8"><title>PW Cookie Monster Report</title>';
+        echo '<!doctype html><html><head><meta charset="utf-8"><title>' . esc_html__('Piensa Cookie Consent', 'piensa-cookie-consent') . ' Report</title>';
         echo '<style>body{font-family:Arial,sans-serif;margin:20px;color:#111;}h1{margin-bottom:6px;}table{border-collapse:collapse;width:100%;margin-top:12px;}th,td{border:1px solid #ddd;padding:8px;text-align:left;}th{background:#f3f4f6;}</style>';
         echo '</head><body>';
-        echo '<h1>PW Cookie Monster - Informe</h1>';
-        echo '<p><strong>Fecha:</strong> ' . esc_html($report['generated_at']) . '</p>';
+        echo '<h1>' . esc_html__('Piensa Cookie Consent', 'piensa-cookie-consent') . ' - ' . esc_html__('Report', 'piensa-cookie-consent') . '</h1>';
+        echo '<p><strong>' . esc_html__('Date', 'piensa-cookie-consent') . ':</strong> ' . esc_html($report['generated_at']) . '</p>';
         echo '<p><strong>Sitio:</strong> ' . esc_html($report['site_url']) . '</p>';
-        echo '<h2>Categorias</h2>';
-        echo '<table><thead><tr><th>Categoria</th><th>Descripcion</th><th>Cookies definidas</th><th>Cookies detectadas</th></tr></thead><tbody>';
+        echo '<h2>' . esc_html__('Categories', 'piensa-cookie-consent') . '</h2>';
+        echo '<table><thead><tr><th>Categoria</th><th>Descripcion</th><th>Cookies definidas</th><th>' . esc_html__('Detected cookies', 'piensa-cookie-consent') . '</th></tr></thead><tbody>';
         foreach ($report['categories'] as $category) {
             $detected = isset($category['detected_count']) ? $category['detected_count'] : 0;
             echo '<tr><td>' . esc_html($category['label']) . '</td><td>' . esc_html($category['description']) . '</td><td>' . esc_html($category['cookies_count']) . '</td><td>' . esc_html($detected) . '</td></tr>';
         }
         echo '</tbody></table>';
-        echo '<h2>Dominios detectados</h2>';
+        echo '<h2>' . esc_html__('Detected domains', 'piensa-cookie-consent') . '</h2>';
         echo '<table><thead><tr><th>Dominio</th><th>Categoria</th><th>Servicio</th><th>Ultima deteccion</th></tr></thead><tbody>';
         foreach ($report['domains'] as $domain) {
             echo '<tr><td>' . esc_html($domain['domain']) . '</td><td>' . esc_html($domain['category']) . '</td><td>' . esc_html($domain['service']) . '</td><td>' . esc_html($domain['last_seen']) . '</td></tr>';
         }
         echo '</tbody></table>';
-        echo '<h2>Cookies detectadas</h2>';
+        echo '<h2>' . esc_html__('Detected cookies', 'piensa-cookie-consent') . '</h2>';
         echo '<table><thead><tr><th>Cookie</th><th>Dominio</th><th>Categoria</th><th>Ultima deteccion</th></tr></thead><tbody>';
         if (!empty($report['cookies'])) {
             foreach ($report['cookies'] as $cookie) {
@@ -2065,7 +2065,7 @@ class Piensa_Cookie_Consent_Admin {
 
     public function handle_report_json() {
         if (!current_user_can('manage_options')) {
-            wp_die('No autorizado.');
+            wp_die(esc_html__('Not authorized.', 'piensa-cookie-consent'));
         }
 
         check_admin_referer('piensa_cookie_consent_report_json');
@@ -2080,7 +2080,7 @@ class Piensa_Cookie_Consent_Admin {
 
     public function handle_collect_cookies() {
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(['message' => 'No autorizado'], 403);
+            wp_send_json_error(['message' => __('Not authorized', 'piensa-cookie-consent')], 403);
         }
 
         check_ajax_referer('piensa_cookie_consent_collect_cookies', 'nonce');
@@ -2130,14 +2130,14 @@ class Piensa_Cookie_Consent_Admin {
         $settings = self::get_settings();
 
         if ($settings['geo_mode'] === 'none') {
-            $issues[] = 'El CMP esta desactivado por geolocalizacion. Verifica cumplimiento.';
+            $issues[] = esc_html__('The CMP is switched off by geo-targeting. Check that this meets your obligations.', 'piensa-cookie-consent');
         }
         if ($settings['geo_mode'] === 'custom' && trim($settings['geo_countries']) === '') {
-            $issues[] = 'Geo-targeting en modo custom sin paises definidos.';
+            $issues[] = esc_html__('Geo-targeting is set to a custom list, but no countries are defined.', 'piensa-cookie-consent');
         }
 
         if ($settings['enable_consent_log'] === false) {
-            $issues[] = 'Registro de consentimiento desactivado.';
+            $issues[] = esc_html__('The consent log is switched off.', 'piensa-cookie-consent');
         }
 
         $discovered = get_option('piensa_cookie_consent_discovered', []);
@@ -2149,16 +2149,16 @@ class Piensa_Cookie_Consent_Admin {
                 }
             }
             if ($unknown > 0) {
-                $issues[] = sprintf('Hay %d dominios sin clasificar.', $unknown);
+                $issues[] = sprintf(esc_html__('%d domains are still unclassified.', 'piensa-cookie-consent'), $unknown);
             }
         }
 
         if (empty($settings['cookie_policy_url'])) {
-            $issues[] = 'No hay URL de politica de cookies.';
+            $issues[] = esc_html__('No cookie policy URL is set.', 'piensa-cookie-consent');
         }
 
         if (empty($settings['privacy_policy_url'])) {
-            $issues[] = 'No hay URL de politica de privacidad.';
+            $issues[] = esc_html__('No privacy policy URL is set.', 'piensa-cookie-consent');
         }
 
         return $issues;
