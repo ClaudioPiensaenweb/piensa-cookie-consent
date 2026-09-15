@@ -86,12 +86,12 @@ jobs:
       - name: Assert the updater is excluded
         run: |
           zip="$(find build -name '*.zip' | head -n1)"
-          if unzip -l "$zip" | grep -q 'class-updater.php'; then
+          if unzip -Z1 "$zip" | grep -q 'class-updater.php'; then
             echo "::error::class-updater.php leaked into the wp.org package"
             exit 1
           fi
           # A previous build left in the tree must not end up inside the next one.
-          if unzip -l "$zip" | grep -qE '\.zip$'; then
+          if unzip -Z1 "$zip" | grep -qE '\.zip$'; then
             echo "::error::a ZIP was packaged inside the release package"
             exit 1
           fi
