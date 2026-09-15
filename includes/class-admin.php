@@ -20,6 +20,7 @@ class Piensa_Cookie_Consent_Admin {
 			add_action( 'update_option_piensa_cookie_consent_settings', [ __CLASS__, 'flush_settings_cache' ] );
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 			add_action( 'admin_post_piensa_cookie_consent_scan', [ $this, 'handle_scan_request' ] );
+			add_action( 'admin_post_piensa_cookie_consent_clear_domains', [ $this, 'handle_clear_domains' ] );
 			add_action( 'admin_post_piensa_cookie_consent_export_logs', [ $this, 'handle_export_logs' ] );
 			add_action( 'admin_post_piensa_cookie_consent_export_settings', [ $this, 'handle_export_settings' ] );
 			add_action( 'admin_post_piensa_cookie_consent_import_settings', [ $this, 'handle_import_settings' ] );
@@ -1099,7 +1100,11 @@ class Piensa_Cookie_Consent_Admin {
 		$overrides  = isset( $settings['domain_overrides'] ) && is_array( $settings['domain_overrides'] ) ? $settings['domain_overrides'] : [];
 		$scan_url   = wp_nonce_url( admin_url( 'admin-post.php?action=piensa_cookie_consent_scan' ), 'piensa_cookie_consent_scan' );
 
-		echo '<p><a class="button" href="' . esc_url( $scan_url ) . '">' . esc_html__( 'Scan now', 'piensa-cookie-consent' ) . '</a></p>';
+		$clear_url = wp_nonce_url( admin_url( 'admin-post.php?action=piensa_cookie_consent_clear_domains' ), 'piensa_cookie_consent_clear_domains' );
+
+		echo '<p><a class="button" href="' . esc_url( $scan_url ) . '">' . esc_html__( 'Scan now', 'piensa-cookie-consent' ) . '</a> ';
+		echo '<a class="button" href="' . esc_url( $clear_url ) . '">' . esc_html__( 'Clear the list', 'piensa-cookie-consent' ) . '</a></p>';
+		echo '<p class="description">' . esc_html__( 'Discovered domains accumulate across scans and are never removed on their own, so an entry can outlive the page that introduced it. Clear the list and scan again to see only what the site loads today.', 'piensa-cookie-consent' ) . '</p>';
 
 		if ( ! is_array( $discovered ) || ! $discovered ) {
 			echo '<p class="description">' . esc_html__( 'No external domains have been detected yet.', 'piensa-cookie-consent' ) . '</p>';
@@ -1107,7 +1112,7 @@ class Piensa_Cookie_Consent_Admin {
 		}
 
 		echo '<table class="widefat striped">';
-		echo '<thead><tr><th>' . esc_html__( 'Domain', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Service', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Suggested category', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Final category', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Last seen', 'piensa-cookie-consent' ) . '</th></tr></thead>';
+		echo '<thead><tr><th>' . esc_html__( 'Domain', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Service', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Suggested category', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Final category', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Found on', 'piensa-cookie-consent' ) . '</th><th>' . esc_html__( 'Last seen', 'piensa-cookie-consent' ) . '</th></tr></thead>';
 		echo '<tbody>';
 		foreach ( $discovered as $domain => $data ) {
 			$category  = isset( $data['category'] ) ? esc_html( $data['category'] ) : 'unknown';
@@ -1120,6 +1125,14 @@ class Piensa_Cookie_Consent_Admin {
 			echo '<td>' . esc_attr( $category ) . '</td>';
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_domain_select() escapes every value it interpolates.
 			echo '<td>' . $this->render_domain_select( $domain, $selected ) . '</td>';
+
+			// Entries recorded before this column existed have no page.
+			if ( ! empty( $data['found_on'] ) ) {
+				echo '<td><a href="' . esc_url( $data['found_on'] ) . '" target="_blank" rel="noopener">' . esc_html( wp_parse_url( $data['found_on'], PHP_URL_PATH ) ) . '</a></td>';
+			} else {
+				echo '<td><span class="description">' . esc_html__( 'before this was recorded — scan again', 'piensa-cookie-consent' ) . '</span></td>';
+			}
+
 			echo '<td>' . esc_html( $last_seen ) . '</td>';
 			echo '</tr>';
 		}
@@ -2171,6 +2184,30 @@ class Piensa_Cookie_Consent_Admin {
 		set_transient( 'piensa_cookie_consent_scan_notice', $message, 60 );
 
 		wp_safe_redirect( admin_url( 'options-general.php?page=piensa-cookie-consent' ) );
+		exit;
+	}
+
+	/**
+	 * Empty the discovered-domains list.
+	 *
+	 * The list only ever grows, so a domain that appeared once stays for good.
+	 * Clearing it and scanning again is the only way to see what the site
+	 * loads now rather than what it has ever loaded.
+	 *
+	 * @return void
+	 */
+	public function handle_clear_domains() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Not authorized.', 'piensa-cookie-consent' ) );
+		}
+
+		check_admin_referer( 'piensa_cookie_consent_clear_domains' );
+
+		delete_option( 'piensa_cookie_consent_discovered' );
+		delete_option( 'piensa_cookie_consent_detected_cookies' );
+		delete_transient( Piensa_Cookie_Consent_Blocker::DISCOVERY_THROTTLE );
+
+		wp_safe_redirect( admin_url( 'admin.php?page=piensa-cookie-consent#ag-tab=scanner' ) );
 		exit;
 	}
 

@@ -4,6 +4,24 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-09-15
+
+Prompted by a question the plugin could not answer: a domain appeared in the
+scan results that was nowhere in the site's markup, and nothing in the report
+said where it had come from.
+
+### Added
+- The scanner records the page each domain was found on, shown as a column and
+  linked. A domain nobody recognises is otherwise a dead end.
+- A button to clear the discovered list. It only ever grew, so an entry could
+  outlive the page that introduced it by any amount of time.
+
+### Fixed
+- Host comparison normalises `www` in the scanner and the blocker too. A site
+  addressed as example.com whose markup writes www.example.com was recording
+  itself as a third party. The same fix went into the crawler in 1.3.2; these
+  are the two places it was still missing.
+
 ## [1.3.2] - 2026-09-15
 
 Reported from a live site: "Scan now" found nothing, while the in-browser

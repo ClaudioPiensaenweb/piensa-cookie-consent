@@ -342,7 +342,10 @@ class Piensa_Cookie_Consent_Blocker {
 			if ( preg_match_all( $pattern, $html, $matches ) ) {
 				foreach ( $matches[1] as $src ) {
 					$host = $this->extract_host( $src );
-					if ( $host && $host !== $this->site_host ) {
+
+					// Same www normalisation the scanner uses, so the site does
+					// not record itself as a third party.
+					if ( $host && ! Piensa_Cookie_Consent_Scanner::is_same_site( $host ) ) {
 						$found[ $host ] = true;
 					}
 				}

@@ -392,7 +392,12 @@ class Piensa_Cookie_Consent_Scanner {
 			$html  = wp_remote_retrieve_body( $response );
 			$found = $this->extract_hosts_from_html( $html );
 			foreach ( $found as $host ) {
-				$domains[ $host ] = true;
+				// Keep the first page each host was seen on. A domain nobody
+				// recognises is otherwise a dead end: there is no way to tell
+				// a real third party from a leftover of an earlier scan.
+				if ( ! isset( $domains[ $host ] ) ) {
+					$domains[ $host ] = $url;
+				}
 			}
 
 			$cookies_found = $this->extract_cookies_from_response( $response, $url );
@@ -420,13 +425,12 @@ class Piensa_Cookie_Consent_Scanner {
 			$discovered = [];
 		}
 
-		foreach ( array_keys( $domains ) as $host ) {
-			$category            = $this->categorize_domain( $host, $map );
-			$service             = self::get_service_for_domain( $host );
+		foreach ( $domains as $host => $found_on ) {
 			$discovered[ $host ] = [
-				'category'  => $category,
-				'service'   => $service,
+				'category'  => $this->categorize_domain( $host, $map ),
+				'service'   => self::get_service_for_domain( $host ),
 				'last_seen' => time(),
+				'found_on'  => is_string( $found_on ) ? $found_on : '',
 			];
 		}
 
@@ -840,10 +844,34 @@ class Piensa_Cookie_Consent_Scanner {
 		return $locations;
 	}
 
+	/**
+	 * Whether a host is this site, ignoring the www prefix.
+	 *
+	 * A site addressed as example.com whose markup writes www.example.com
+	 * would otherwise list itself as a third party.
+	 *
+	 * @param string $host Host to test.
+	 *
+	 * @return bool
+	 */
+	public static function is_same_site( $host ) {
+		$site = wp_parse_url( home_url(), PHP_URL_HOST );
+
+		if ( ! $host || ! $site ) {
+			return false;
+		}
+
+		$strip = static function ( $value ) {
+			$value = strtolower( (string) $value );
+			return 0 === strpos( $value, 'www.' ) ? substr( $value, 4 ) : $value;
+		};
+
+		return $strip( $host ) === $strip( $site );
+	}
+
 	private function extract_hosts_from_html( $html ) {
-		$hosts     = [];
-		$site_host = wp_parse_url( home_url(), PHP_URL_HOST );
-		$patterns  = [
+		$hosts    = [];
+		$patterns = [
 			'/<script[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
 			'/<iframe[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
 			'/<img[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
@@ -854,7 +882,7 @@ class Piensa_Cookie_Consent_Scanner {
 			if ( preg_match_all( $pattern, $html, $matches ) ) {
 				foreach ( $matches[1] as $src ) {
 					$host = $this->extract_host( $src );
-					if ( $host && $host !== $site_host ) {
+					if ( $host && ! self::is_same_site( $host ) ) {
 						$hosts[ $host ] = true;
 					}
 				}

@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.2
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,11 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.4.0 =
+* **The scanner now records which page each domain was found on**, shown as a new column. A domain nobody recognises was previously a dead end: there was no way to tell a real third party from a leftover of an earlier scan.
+* **A button to clear the discovered list.** It only ever grew, so a domain that appeared once stayed for good, even after the page that introduced it was gone.
+* A site addressed without `www` whose markup writes `www` was recording itself as a third party. Host comparison now normalises the prefix everywhere it is done.
+
 = 1.3.2 =
 * **Scan now found nothing on sites with an SEO plugin.** A sitemap index lists other sitemaps, not pages, and the scanner crawled those XML documents looking for script tags. Because the list was not empty it never fell back to the home page either, so the scan reported no third parties on a site full of them. It now follows a sitemap index to the sitemaps underneath, knows about WordPress's own `wp-sitemap.xml`, and always includes the home page.
 * Hosts are compared with `www` normalised. A sitemap listing the www form on a site configured without it (or the reverse) made every URL look external, and the scan found nothing.
@@ -131,6 +136,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+The scanner now records where each domain was found. Clear the list and scan again to see only what your site loads today.
 
 = 1.3.2 =
 Fixes Scan now finding nothing on sites with an SEO plugin sitemap. Re-run the scan after updating.
