@@ -4,6 +4,29 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2] - 2026-09-15
+
+Reported from a live site: "Scan now" found nothing, while the in-browser
+audit did.
+
+### Fixed
+- **The crawler was reading sitemaps, not pages.** A sitemap index lists other
+  sitemaps; the scanner put those URLs straight into the crawl queue and looked
+  for script tags in XML. Nothing was found, and because the queue was not
+  empty the fall back to the home page never ran either — so a site with Yoast
+  or RankMath scanned clean however many third parties it loaded. The index is
+  now followed one level down, `wp-sitemap.xml` is recognised, and the home
+  page is always in the queue.
+- Host comparison normalises `www`. A sitemap listing `www.example.com` on a
+  site whose home_url() is `example.com` made every URL look like someone
+  else's, and the SSRF guard added in 1.2.0 discarded them all.
+- A second copy of the plugin now produces an admin notice naming both
+  folders. Two copies declare the same classes, and the fatal error that
+  results names a class rather than the problem.
+- The diagnostics report contradicted itself, saying no domain activated a
+  category while the category was shown. A category has two independent
+  routes — a detected plugin or a scanned domain — and only one was reported.
+
 ## [1.3.1] - 2026-09-15
 
 Installing the plugin on a real site turned up behaviour that reading the code

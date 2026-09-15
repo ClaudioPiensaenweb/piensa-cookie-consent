@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Piensa Cookie Consent 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/piensaenweb/piensa-cookie-consent/issues\n"
-"POT-Creation-Date: 2026-09-15 16:01+0000\n"
+"POT-Creation-Date: 2026-09-15 16:23+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -913,7 +913,7 @@ msgstr ""
 msgid "Purpose"
 msgstr ""
 
-#: includes/class-core.php:326 includes/class-diagnostics.php:147
+#: includes/class-core.php:326 includes/class-diagnostics.php:185
 msgid "Retention"
 msgstr ""
 
@@ -989,67 +989,83 @@ msgstr ""
 msgid "NOT shown in the banner"
 msgstr ""
 
-#: includes/class-diagnostics.php:87
+#: includes/class-diagnostics.php:85
 msgid "Decided by"
 msgstr ""
 
-#: includes/class-diagnostics.php:87
+#: includes/class-diagnostics.php:85
 msgid "the manual toggles under Categories"
 msgstr ""
 
-#: includes/class-diagnostics.php:100
+#: includes/class-diagnostics.php:94
+msgid "Plugins that activate a category"
+msgstr ""
+
+#: includes/class-diagnostics.php:107
 msgid "Domains that activate a category"
 msgstr ""
 
-#: includes/class-diagnostics.php:102
-msgid "none — this is why only the necessary category is shown"
+#: includes/class-diagnostics.php:109
+msgid "none found by the scanner"
 msgstr ""
 
-#: includes/class-diagnostics.php:131
+#: includes/class-diagnostics.php:112
+msgid "Why only necessary is shown"
+msgstr ""
+
+#: includes/class-diagnostics.php:112
+msgid "neither route found anything: run a scan, or switch Category mode to manual and turn the categories on yourself"
+msgstr ""
+
+#: includes/class-diagnostics.php:143
+msgid "none active"
+msgstr ""
+
+#: includes/class-diagnostics.php:169
 msgid "Logging enabled"
 msgstr ""
 
-#: includes/class-diagnostics.php:132 includes/class-diagnostics.php:136
+#: includes/class-diagnostics.php:170 includes/class-diagnostics.php:174
 msgid "yes"
 msgstr ""
 
-#: includes/class-diagnostics.php:133 includes/class-diagnostics.php:137
+#: includes/class-diagnostics.php:171 includes/class-diagnostics.php:175
 msgid "no"
 msgstr ""
 
-#: includes/class-diagnostics.php:134
+#: includes/class-diagnostics.php:172
 msgid "Table"
 msgstr ""
 
-#: includes/class-diagnostics.php:135
+#: includes/class-diagnostics.php:173
 msgid "Marked as installed"
 msgstr ""
 
-#: includes/class-diagnostics.php:138
+#: includes/class-diagnostics.php:176
 msgid "Records stored"
 msgstr ""
 
-#: includes/class-diagnostics.php:139
+#: includes/class-diagnostics.php:177
 msgid "the table could not be read — it may not exist"
 msgstr ""
 
-#: includes/class-diagnostics.php:144
+#: includes/class-diagnostics.php:182
 msgid "Most recent record"
 msgstr ""
 
-#: includes/class-diagnostics.php:149
+#: includes/class-diagnostics.php:187
 msgid "kept indefinitely"
 msgstr ""
 
-#: includes/class-diagnostics.php:177
+#: includes/class-diagnostics.php:215
 msgid "Domains discovered"
 msgstr ""
 
-#: includes/class-diagnostics.php:178
+#: includes/class-diagnostics.php:216
 msgid "By category"
 msgstr ""
 
-#: includes/class-diagnostics.php:179
+#: includes/class-diagnostics.php:217
 msgid "Cookies recorded"
 msgstr ""
 
@@ -1129,7 +1145,11 @@ msgstr ""
 msgid "Invalid update checksum. The update was blocked."
 msgstr ""
 
+#: piensa-cookie-consent.php:38
+msgid "Piensa Cookie Consent is installed twice. Only the first copy is running; deactivate and delete the other one."
+msgstr ""
+
 #. translators: 1: required PHP version, 2: current PHP version
-#: piensa-cookie-consent.php:44
+#: piensa-cookie-consent.php:68
 msgid "Piensa Cookie Consent requires PHP %1$s or higher. This site runs PHP %2$s."
 msgstr ""

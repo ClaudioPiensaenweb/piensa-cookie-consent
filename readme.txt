@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,12 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.3.2 =
+* **Scan now found nothing on sites with an SEO plugin.** A sitemap index lists other sitemaps, not pages, and the scanner crawled those XML documents looking for script tags. Because the list was not empty it never fell back to the home page either, so the scan reported no third parties on a site full of them. It now follows a sitemap index to the sitemaps underneath, knows about WordPress's own `wp-sitemap.xml`, and always includes the home page.
+* Hosts are compared with `www` normalised. A sitemap listing the www form on a site configured without it (or the reverse) made every URL look external, and the scan found nothing.
+* Two copies of the plugin installed at once now produce an admin notice naming both folders, instead of a fatal error naming a class.
+* The diagnostics report said no domain activated a category while a category was being shown. It now reports both routes — plugins detected and domains scanned — because either one can turn a category on.
+
 = 1.3.1 =
 * Added a Diagnostics section under Health: which categories the banner is offering and what decided that, whether the consent table exists and how many records it holds, what the scanner has found, and the database engine in use. When the banner offers the wrong categories or the log looks empty, this says which input produced that result instead of leaving you to guess.
 * The scanner table headings and the in-browser audit messages were still fixed in Spanish.
@@ -125,6 +131,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.3.2 =
+Fixes Scan now finding nothing on sites with an SEO plugin sitemap. Re-run the scan after updating.
 
 = 1.3.1 =
 Adds a diagnostics report under Health, for working out why the banner or the log is behaving as it is.

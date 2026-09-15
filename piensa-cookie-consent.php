@@ -3,7 +3,7 @@
  * Plugin Name:       Piensa Cookie Consent
  * Plugin URI:        https://github.com/ClaudioPiensaenweb/piensa-cookie-consent
  * Description:       GDPR and ePrivacy cookie consent banner with Google Consent Mode v2, automatic script blocking, cookie scanning, geo-targeting and a consent log.
- * Version:           1.3.1
+ * Version:           1.3.2
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Piensaenweb
@@ -20,7 +20,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'PIENSA_COOKIE_CONSENT_VERSION', '1.3.1' );
+/**
+ * Refuse to load twice.
+ *
+ * Two copies of the plugin in the plugins directory — a leftover folder from a
+ * previous install, or the same plugin under two names — both declare the same
+ * classes, and the second one to load kills the request with a fatal error
+ * that names a class rather than the actual problem. Bowing out with a notice
+ * says what is wrong and leaves the site up.
+ */
+if ( defined( 'PIENSA_COOKIE_CONSENT_FILE' ) ) {
+	add_action(
+		'admin_notices',
+		static function () {
+			printf(
+				'<div class="notice notice-error"><p>%s</p><p><code>%s</code><br><code>%s</code></p></div>',
+				esc_html__( 'Piensa Cookie Consent is installed twice. Only the first copy is running; deactivate and delete the other one.', 'piensa-cookie-consent' ),
+				esc_html( PIENSA_COOKIE_CONSENT_FILE ),
+				esc_html( __FILE__ )
+			);
+		}
+	);
+	return;
+}
+
+define( 'PIENSA_COOKIE_CONSENT_VERSION', '1.3.2' );
 define( 'PIENSA_COOKIE_CONSENT_FILE', __FILE__ );
 define( 'PIENSA_COOKIE_CONSENT_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PIENSA_COOKIE_CONSENT_URL', plugin_dir_url( __FILE__ ) );

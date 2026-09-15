@@ -694,54 +694,136 @@ class Piensa_Cookie_Consent_Scanner {
 			return false;
 		}
 
-		return strtolower( $host ) === strtolower( $site );
+		// A sitemap commonly lists the www form while home_url() has it
+		// without, or the other way round. Treating those as different hosts
+		// discards every URL and the scan silently finds nothing.
+		$strip = static function ( $value ) {
+			$value = strtolower( (string) $value );
+			return 0 === strpos( $value, 'www.' ) ? substr( $value, 4 ) : $value;
+		};
+
+		return $strip( $host ) === $strip( $site );
 	}
 
+	/**
+	 * Build the list of pages to crawl.
+	 *
+	 * Sitemaps come in two shapes and the difference matters: a sitemap index
+	 * lists other sitemaps, not pages. Feeding those straight to the crawler
+	 * means fetching XML documents and looking for script tags in them, which
+	 * finds nothing — and because the list was not empty, the fall back to the
+	 * home page never happened either, so the scan reported no third parties
+	 * on a site full of them.
+	 *
+	 * The home page is always included: whatever the sitemap situation, it is
+	 * the page most likely to carry the site's tags.
+	 *
+	 * @param int $limit Maximum number of URLs.
+	 *
+	 * @return string[]
+	 */
 	private function get_scan_urls( $limit ) {
-		$urls     = [];
-		$sitemaps = [
+		$urls = [ home_url( '/' ) ];
+
+		// wp-sitemap.xml is WordPress's own, present since 5.5; the others come
+		// from the SEO plugins that replace it.
+		$candidates = [
+			home_url( '/wp-sitemap.xml' ),
 			home_url( '/sitemap.xml' ),
 			home_url( '/sitemap_index.xml' ),
+			home_url( '/sitemap-index.xml' ),
 		];
 
-		foreach ( $sitemaps as $sitemap ) {
-			$response = wp_remote_get(
-				$sitemap,
-				[
-					'timeout'     => 8,
-					'redirection' => 3,
-				]
-			);
-			if ( is_wp_error( $response ) ) {
+		foreach ( $candidates as $sitemap ) {
+			$locations = $this->read_sitemap( $sitemap );
+
+			if ( ! $locations ) {
 				continue;
 			}
 
-			$body = wp_remote_retrieve_body( $response );
-			preg_match_all( '/<loc>([^<]+)<\\/loc>/i', $body, $matches );
-			if ( ! empty( $matches[1] ) ) {
-				foreach ( $matches[1] as $loc ) {
-					// A sitemap can name any URL at all. Fetching one that is
-					// not ours would turn an admin-triggered scan into a
-					// request to an arbitrary address, so the host is checked
-					// before the crawler is handed the URL.
-					$url = esc_url_raw( $loc );
-					if ( ! $url || ! $this->is_own_url( $url ) ) {
-						continue;
-					}
+			foreach ( $locations as $url ) {
+				$urls[] = $url;
 
-					$urls[] = $url;
-					if ( count( $urls ) >= $limit ) {
-						break 2;
-					}
+				if ( count( $urls ) >= $limit ) {
+					break 2;
 				}
 			}
-		}
 
-		if ( ! $urls ) {
-			$urls[] = home_url( '/' );
+			// One usable sitemap is enough; the rest would repeat it.
+			break;
 		}
 
 		return array_slice( array_unique( $urls ), 0, $limit );
+	}
+
+	/**
+	 * Read a sitemap, following one level of index if that is what it is.
+	 *
+	 * @param string $url   Sitemap URL.
+	 * @param bool   $index Whether this call is already resolving an index.
+	 *
+	 * @return string[] Page URLs belonging to this site.
+	 */
+	private function read_sitemap( $url, $index = false ) {
+		$response = wp_remote_get(
+			$url,
+			[
+				'timeout'     => 8,
+				'redirection' => 3,
+			]
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return [];
+		}
+
+		$code = wp_remote_retrieve_response_code( $response );
+		if ( $code < 200 || $code >= 300 ) {
+			return [];
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+
+		if ( ! $body || false === stripos( $body, '<loc' ) ) {
+			return [];
+		}
+
+		preg_match_all( '/<loc>([^<]+)<\/loc>/i', $body, $matches );
+
+		if ( empty( $matches[1] ) ) {
+			return [];
+		}
+
+		$locations = [];
+		foreach ( $matches[1] as $loc ) {
+			// A sitemap can name any URL at all. Fetching one that is not ours
+			// would turn an admin-triggered scan into a request to an arbitrary
+			// address, so the host is checked before the crawler sees it.
+			$clean = esc_url_raw( trim( html_entity_decode( $loc ) ) );
+
+			if ( $clean && $this->is_own_url( $clean ) ) {
+				$locations[] = $clean;
+			}
+		}
+
+		// A sitemap index lists sitemaps. Only one level is followed: a deeper
+		// nesting is not worth the requests, and the home page is in the list
+		// regardless.
+		if ( ! $index && false !== stripos( $body, '<sitemapindex' ) ) {
+			$pages = [];
+
+			foreach ( array_slice( $locations, 0, 5 ) as $child ) {
+				$pages = array_merge( $pages, $this->read_sitemap( $child, true ) );
+
+				if ( count( $pages ) >= 50 ) {
+					break;
+				}
+			}
+
+			return $pages;
+		}
+
+		return $locations;
 	}
 
 	private function extract_hosts_from_html( $html ) {
@@ -787,7 +869,9 @@ class Piensa_Cookie_Consent_Scanner {
 				}
 
 				$host = wp_parse_url( $href, PHP_URL_HOST );
-				if ( $host && $host === $site_host ) {
+				// Same www normalisation as is_own_url(): otherwise the crawl
+				// stops at the first page whose links use the other form.
+				if ( $host && $this->is_own_url( $href ) ) {
 					$clean = esc_url_raw( $href );
 					if ( $clean ) {
 						$links[ $clean ] = true;

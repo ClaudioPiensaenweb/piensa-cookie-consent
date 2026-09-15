@@ -81,28 +81,66 @@ class Piensa_Cookie_Consent_Diagnostics {
 				: __( 'NOT shown in the banner', 'piensa-cookie-consent' );
 		}
 
-		// In auto mode the decision comes from the discovered domains, so the
-		// reason is worth stating rather than leaving to be inferred.
 		if ( 'manual' === $settings['category_mode'] ) {
 			$rows[ __( 'Decided by', 'piensa-cookie-consent' ) ] = __( 'the manual toggles under Categories', 'piensa-cookie-consent' );
-		} else {
-			$discovered = get_option( 'piensa_cookie_consent_discovered', [] );
-			$found      = [];
 
-			if ( is_array( $discovered ) ) {
-				foreach ( $discovered as $host => $data ) {
-					if ( ! empty( $data['category'] ) && in_array( $data['category'], [ 'analytics', 'marketing' ], true ) ) {
-						$found[] = $host . ' (' . $data['category'] . ')';
-					}
+			return $rows;
+		}
+
+		// Automatic mode has two independent routes to a category: a plugin
+		// known to use it, and a domain the scanner classified. Reporting only
+		// one of them made this report contradict itself — saying no domain
+		// activates a category while the category was being shown.
+		$rows[ __( 'Plugins that activate a category', 'piensa-cookie-consent' ) ] = self::activating_plugins();
+
+		$discovered = get_option( 'piensa_cookie_consent_discovered', [] );
+		$found      = [];
+
+		if ( is_array( $discovered ) ) {
+			foreach ( $discovered as $host => $data ) {
+				if ( ! empty( $data['category'] ) && in_array( $data['category'], [ 'analytics', 'marketing' ], true ) ) {
+					$found[] = $host . ' (' . $data['category'] . ')';
 				}
 			}
+		}
 
-			$rows[ __( 'Domains that activate a category', 'piensa-cookie-consent' ) ] = $found
-				? implode( ', ', array_slice( $found, 0, 8 ) )
-				: __( 'none — this is why only the necessary category is shown', 'piensa-cookie-consent' );
+		$rows[ __( 'Domains that activate a category', 'piensa-cookie-consent' ) ] = $found
+			? implode( ', ', array_slice( $found, 0, 8 ) )
+			: __( 'none found by the scanner', 'piensa-cookie-consent' );
+
+		if ( empty( $active['analytics'] ) && empty( $active['marketing'] ) ) {
+			$rows[ __( 'Why only necessary is shown', 'piensa-cookie-consent' ) ] = __( 'neither route found anything: run a scan, or switch Category mode to manual and turn the categories on yourself', 'piensa-cookie-consent' );
 		}
 
 		return $rows;
+	}
+
+	/**
+	 * Installed plugins that cause a category to be offered.
+	 *
+	 * @return string
+	 */
+	private static function activating_plugins() {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$known = [
+			'google-site-kit/google-site-kit.php'                             => 'analytics',
+			'google-analytics-for-wordpress/googleanalytics.php'              => 'analytics',
+			'pixelyoursite/pixelyoursite.php'                                 => 'marketing',
+			'facebook-for-woocommerce/facebook-for-woocommerce.php'           => 'marketing',
+			'duracelltomi-google-tag-manager/duracelltomi-google-tag-manager.php' => 'marketing',
+		];
+
+		$found = [];
+		foreach ( $known as $plugin => $category ) {
+			if ( is_plugin_active( $plugin ) ) {
+				$found[] = dirname( $plugin ) . ' (' . $category . ')';
+			}
+		}
+
+		return $found ? implode( ', ', $found ) : __( 'none active', 'piensa-cookie-consent' );
 	}
 
 	/**
