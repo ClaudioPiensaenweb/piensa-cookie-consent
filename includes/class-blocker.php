@@ -17,6 +17,8 @@ class Piensa_Cookie_Consent_Blocker {
 	private $allowed_categories = [];
 	private $domain_overrides   = [];
 	private $site_host          = '';
+	private $block_unknown      = true;
+	private $allowed_domains    = [];
 
 	public function init() {
 		if ( ! is_admin() ) {

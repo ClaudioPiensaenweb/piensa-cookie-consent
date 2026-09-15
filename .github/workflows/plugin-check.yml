@@ -25,17 +25,57 @@ jobs:
         with:
           persist-credentials: false
 
-      # Check the package that actually ships, not the working tree: the
-      # working tree carries dev tooling and the self-hosted updater, neither
-      # of which reaches wp.org.
+      # Check the package that actually ships, not the working tree: the tree
+      # carries dev tooling and the self-hosted updater, neither of which
+      # reaches wp.org.
       - name: Build the wp.org release package
         run: |
-          bash scripts/build-release.sh --output-dir=/tmp/release
-          unzip -q /tmp/release/*.zip -d /tmp/package
+          bash scripts/build-release.sh --output-dir=build
+          unzip -q build/*.zip -d /tmp/package
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # NOTE: wordpress/plugin-check-action@v1 is deliberately not used. It
+      # generates a .wp-env.json that brings up the tests environment, whose
+      # image build installs PHPUnit through Composer and fails on the current
+      # runner image. Driving wp-env directly, with the tests environment off
+      # and plugin-check installed after boot, avoids that path entirely.
+      - name: Provision wp-env
+        run: |
+          mkdir -p /tmp/plugin-check-results
+          cat > .wp-env.json <<'JSON'
+          {
+            "core": null,
+            "port": 8880,
+            "testsPort": 8881,
+            "testsEnvironment": false,
+            "mappings": {
+              "wp-content/plugins/piensa-cookie-consent": "/tmp/package/piensa-cookie-consent",
+              "plugin-check-results": "/tmp/plugin-check-results"
+            }
+          }
+          JSON
+          npm -g --no-fund i @wordpress/env@10.17.0
+          wp-env start --update
+          # wp-env can exit 0 without actually starting Docker; this turns that
+          # silent failure into a loud one.
+          wp-env run cli wp cli info
 
       - name: Run Plugin Check
-        uses: wordpress/plugin-check-action@v1
+        run: |
+          wp-env run cli sh -c 'wp plugin install plugin-check --activate'
+          wp-env run cli wp plugin activate piensa-cookie-consent
+          # The CLI can print ERROR findings and still exit 0, so the result is
+          # written out and judged separately.
+          wp-env run cli sh -c 'wp plugin check piensa-cookie-consent --categories=plugin_repo --format=json --fields=file,line,column,type,code,message > /var/www/html/plugin-check-results/results.json'
+          python3 scripts/check-plugin-check.py /tmp/plugin-check-results/results.json
+
+      - name: Upload the findings
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          build-dir: /tmp/package/piensa-cookie-consent
-          categories: |
-            plugin_repo
+          name: plugin-check-results
+          path: /tmp/plugin-check-results/results.json
+          if-no-files-found: ignore
