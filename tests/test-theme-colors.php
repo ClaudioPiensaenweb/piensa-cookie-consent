@@ -229,7 +229,9 @@ return function ( $assert ) {
 			'color' => 'var(--brand)',
 		],
 	];
+
 	$shorthand = Piensa_Cookie_Consent_Theme_Colors::suggest();
+
 	$assert( '#ffffff' === $shorthand['theme_bg'], 'three-digit hex is expanded' );
 	$assert( '#111111' === $shorthand['theme_primary_color'], 'rgba() is read, alpha dropped' );
 };
