@@ -22,11 +22,30 @@ jobs:
       - name: Verify version consistency
         run: bash scripts/check-version.sh
 
+      - name: Build the release package
+        id: package
+        run: |
+          bash scripts/build-release.sh --output-dir=build
+          echo "path=$(find build -name '*.zip' | head -n1)" >> "$GITHUB_OUTPUT"
+
+      # The plugin has to be approved by the directory before SVN exists to
+      # push to. Until the credentials are set, build and attach the ZIP but
+      # skip the upload rather than failing the release.
+      - name: Check for directory credentials
+        id: credentials
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+        run: |
+          if [ -n "$SVN_USERNAME" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::SVN_USERNAME is not set, so the upload to WordPress.org was skipped."
+          fi
+
       - name: Deploy to the WordPress.org plugin directory
+        if: steps.credentials.outputs.available == 'true'
         uses: 10up/action-wordpress-plugin-deploy@stable
-        id: deploy
-        with:
-          generate-zip: true
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
@@ -37,4 +56,4 @@ jobs:
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ steps.deploy.outputs.zip-path }}
+          files: ${{ steps.package.outputs.path }}
