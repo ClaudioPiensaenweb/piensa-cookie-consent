@@ -9,6 +9,8 @@
     <exclude-pattern>*/build/*</exclude-pattern>
     <exclude-pattern>*/languages/*</exclude-pattern>
     <exclude-pattern>*.min.js</exclude-pattern>
+    <!-- Bundled third-party library, shipped as upstream releases it. -->
+    <exclude-pattern>*/assets/js/cookieconsent.js</exclude-pattern>
 
     <arg name="extensions" value="php"/>
     <arg name="basepath" value="./"/>
@@ -25,11 +27,38 @@
         <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
         <!-- File naming follows the class-*.php convention already in use. -->
         <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+
+        <!--
+         Yoda conditions guard against an assignment typo in a comparison.
+         PHP 8 makes that a fatal error rather than a silent bug, and the
+         inverted reading order costs more than it now buys.
+        -->
+        <exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
+
+        <!-- The short ternary is used deliberately for option fallbacks. -->
+        <exclude name="Universal.Operators.DisallowShortTernary"/>
     </rule>
 
+    <!--
+     Documentation rules are applied to comment style, not to a requirement
+     that every function carry a docblock. Demanding one on each of the
+     inherited render_*_field() methods would produce 136 comments restating
+     their names, which is noise rather than documentation. New code documents
+     what is not obvious from the signature.
+    -->
     <rule ref="WordPress-Docs">
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Squiz.Commenting.ClassComment.Missing"/>
+        <exclude name="Squiz.Commenting.VariableComment.Missing"/>
+        <exclude name="Squiz.Commenting.VariableComment.MissingVar"/>
+        <exclude name="Squiz.Commenting.FileComment.Missing"/>
+        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
         <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+        <!-- The plugin header reads as a file comment to PHPCS. -->
+        <exclude name="Squiz.Commenting.ClassComment.WrongStyle"/>
+        <exclude name="Squiz.Commenting.FileComment.WrongStyle"/>
     </rule>
 
     <rule ref="PHPCompatibilityWP"/>

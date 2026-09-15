@@ -125,7 +125,7 @@ class Piensa_Cookie_Consent_Core {
 					[
 						'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 						'nonce'   => wp_create_nonce( 'piensa_cookie_consent_collect_cookies' ),
-						'domain'  => parse_url( home_url(), PHP_URL_HOST ),
+						'domain'  => wp_parse_url( home_url(), PHP_URL_HOST ),
 					]
 				);
 			}

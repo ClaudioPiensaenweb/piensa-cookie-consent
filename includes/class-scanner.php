@@ -332,7 +332,7 @@ class Piensa_Cookie_Consent_Scanner {
 		$domains          = [];
 		$visited          = [];
 		$queue            = $urls;
-		$site_host        = parse_url( home_url(), PHP_URL_HOST );
+		$site_host        = wp_parse_url( home_url(), PHP_URL_HOST );
 		$detected_cookies = get_option( 'piensa_cookie_consent_detected_cookies', [] );
 		if ( ! is_array( $detected_cookies ) ) {
 			$detected_cookies = [];
@@ -408,7 +408,7 @@ class Piensa_Cookie_Consent_Scanner {
 	}
 
 	private function get_cookie_domain() {
-		$host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : parse_url( home_url(), PHP_URL_HOST );
+		$host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : wp_parse_url( home_url(), PHP_URL_HOST );
 		if ( is_string( $host ) && strpos( $host, ':' ) !== false ) {
 			$host = preg_replace( '/:\\d+$/', '', $host );
 		}
@@ -474,7 +474,7 @@ class Piensa_Cookie_Consent_Scanner {
 
 		$items        = is_array( $set_cookie ) ? $set_cookie : [ $set_cookie ];
 		$found        = [];
-		$request_host = parse_url( $url, PHP_URL_HOST );
+		$request_host = wp_parse_url( $url, PHP_URL_HOST );
 		foreach ( $items as $header ) {
 			$cookie = $this->parse_set_cookie_header( $header, $request_host );
 			if ( ! $cookie ) {
@@ -690,7 +690,7 @@ class Piensa_Cookie_Consent_Scanner {
 
 	private function extract_hosts_from_html( $html ) {
 		$hosts     = [];
-		$site_host = parse_url( home_url(), PHP_URL_HOST );
+		$site_host = wp_parse_url( home_url(), PHP_URL_HOST );
 		$patterns  = [
 			'/<script[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
 			'/<iframe[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
@@ -730,7 +730,7 @@ class Piensa_Cookie_Consent_Scanner {
 					$href = home_url( $href );
 				}
 
-				$host = parse_url( $href, PHP_URL_HOST );
+				$host = wp_parse_url( $href, PHP_URL_HOST );
 				if ( $host && $host === $site_host ) {
 					$clean = esc_url_raw( $href );
 					if ( $clean ) {
@@ -752,7 +752,7 @@ class Piensa_Cookie_Consent_Scanner {
 			$url = 'https:' . $url;
 		}
 
-		$host = parse_url( $url, PHP_URL_HOST );
+		$host = wp_parse_url( $url, PHP_URL_HOST );
 		if ( ! $host ) {
 			return '';
 		}

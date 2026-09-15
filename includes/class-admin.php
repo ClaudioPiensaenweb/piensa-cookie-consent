@@ -85,7 +85,7 @@ class Piensa_Cookie_Consent_Admin {
 
 		add_settings_section(
 			'piensa_cookie_consent_main',
-			esc_html__( esc_html__( 'General', 'piensa-cookie-consent' ) . ' settings', 'piensa-cookie-consent' ),
+			esc_html__( 'General settings', 'piensa-cookie-consent' ),
 			function () {
 				echo '<p>' . esc_html__( 'Configure how the CMP behaves.', 'piensa-cookie-consent' ) . '</p>';
 			},
@@ -118,7 +118,7 @@ class Piensa_Cookie_Consent_Admin {
 
 		add_settings_section(
 			'piensa_cookie_consent_banner',
-			esc_html__( esc_html__( 'Banner', 'piensa-cookie-consent' ) . ' text', 'piensa-cookie-consent' ),
+			esc_html__( 'Banner text', 'piensa-cookie-consent' ),
 			function () {
 				echo '<p>' . esc_html__( 'Customize the banner and the preferences dialog.', 'piensa-cookie-consent' ) . '</p>';
 			},
@@ -127,7 +127,7 @@ class Piensa_Cookie_Consent_Admin {
 
 		add_settings_field(
 			'piensa_cookie_consent_banner_icon',
-			esc_html__( esc_html__( 'Banner', 'piensa-cookie-consent' ) . ' icon', 'piensa-cookie-consent' ),
+			esc_html__( 'Banner icon', 'piensa-cookie-consent' ),
 			[ $this, 'render_banner_icon_field' ],
 			'piensa-cookie-consent',
 			'piensa_cookie_consent_banner'
@@ -135,7 +135,7 @@ class Piensa_Cookie_Consent_Admin {
 
 		add_settings_field(
 			'piensa_cookie_consent_banner_title',
-			esc_html__( esc_html__( 'Banner', 'piensa-cookie-consent' ) . ' title', 'piensa-cookie-consent' ),
+			esc_html__( 'Banner title', 'piensa-cookie-consent' ),
 			[ $this, 'render_banner_title_field' ],
 			'piensa-cookie-consent',
 			'piensa_cookie_consent_banner'
@@ -143,7 +143,7 @@ class Piensa_Cookie_Consent_Admin {
 
 		add_settings_field(
 			'piensa_cookie_consent_banner_description',
-			esc_html__( esc_html__( 'Banner', 'piensa-cookie-consent' ) . ' description', 'piensa-cookie-consent' ),
+			esc_html__( 'Banner description', 'piensa-cookie-consent' ),
 			[ $this, 'render_banner_description_field' ],
 			'piensa-cookie-consent',
 			'piensa_cookie_consent_banner'
@@ -597,19 +597,19 @@ class Piensa_Cookie_Consent_Admin {
 	public function render_blocker_field() {
 		$settings = self::get_settings();
 		$checked  = $settings['enable_blocker'] ? 'checked' : '';
-		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[enable_blocker]" value="1" ' . $checked . '> ' . esc_html__( 'Block external iframes', 'piensa-cookie-consent' ) . '</label>';
+		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[enable_blocker]" value="1" ' . esc_attr( $checked ) . '> ' . esc_html__( 'Block external iframes', 'piensa-cookie-consent' ) . '</label>';
 	}
 
 	public function render_consent_log_field() {
 		$settings = self::get_settings();
 		$checked  = $settings['enable_consent_log'] ? 'checked' : '';
-		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[enable_consent_log]" value="1" ' . $checked . '> ' . esc_html__( 'Keep a consent log', 'piensa-cookie-consent' ) . '</label>';
+		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[enable_consent_log]" value="1" ' . esc_attr( $checked ) . '> ' . esc_html__( 'Keep a consent log', 'piensa-cookie-consent' ) . '</label>';
 	}
 
 	public function render_policy_revision_field() {
 		$settings = self::get_settings();
 		$value    = (int) $settings['policy_revision'];
-		echo '<input class="small-text" type="number" min="0" name="' . esc_attr( $this->option_name ) . '[policy_revision]" value="' . $value . '" />';
+		echo '<input class="small-text" type="number" min="0" name="' . esc_attr( $this->option_name ) . '[policy_revision]" value="' . esc_attr( $value ) . '" />';
 		echo '<p class="description">' . esc_html__( 'Increase this value when you change the text or the policy, to ask visitors for consent again.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
@@ -629,8 +629,8 @@ class Piensa_Cookie_Consent_Admin {
 			$checked      = $icon_style === $key ? 'checked' : '';
 			$border_color = $icon_style === $key ? '#2271b1' : '#dcdcde';
 			$bg_color     = $icon_style === $key ? '#f0f6fc' : '#fff';
-			echo '<label style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;padding:14px 16px;border:2px solid ' . $border_color . ';border-radius:10px;min-width:90px;background:' . $bg_color . ';transition:all 0.15s ease;">';
-			echo '<input type="radio" name="' . esc_attr( $this->option_name ) . '[banner_icon_style]" value="' . esc_attr( $key ) . '" ' . $checked . ' style="display:none;">';
+			echo '<label style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;padding:14px 16px;border:2px solid ' . esc_attr( $border_color ) . ';border-radius:10px;min-width:90px;background:' . esc_attr( $bg_color ) . ';transition:all 0.15s ease;">';
+			echo '<input type="radio" name="' . esc_attr( $this->option_name ) . '[banner_icon_style]" value="' . esc_attr( $key ) . '" ' . esc_attr( $checked ) . ' style="display:none;">';
 			// The icon markup is built from a fixed internal table, not user input.
 			echo wp_kses( Piensa_Cookie_Consent_Icons::get( $key, 28 ), Piensa_Cookie_Consent_Icons::get_allowed_html() );
 			echo '<span style="font-size:11px;color:#50575e;font-weight:500;">' . esc_html( $label ) . '</span>';
@@ -644,44 +644,44 @@ class Piensa_Cookie_Consent_Admin {
 
 	public function render_banner_title_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['banner_title'] );
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_title]" value="' . $value . '" />';
+		$value    = $settings['banner_title'];
+		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_title]" value="' . esc_attr( $value ) . '" />';
 	}
 
 	public function render_banner_description_field() {
 		$settings = self::get_settings();
 		$value    = esc_textarea( $settings['banner_description'] );
-		echo '<textarea class="large-text" rows="3" name="' . esc_attr( $this->option_name ) . '[banner_description]">' . $value . '</textarea>';
+		echo '<textarea class="large-text" rows="3" name="' . esc_attr( $this->option_name ) . '[banner_description]">' . esc_attr( $value ) . '</textarea>';
 	}
 
 	public function render_banner_accept_all_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['banner_accept_all'] );
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_accept_all]" value="' . $value . '" />';
+		$value    = $settings['banner_accept_all'];
+		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_accept_all]" value="' . esc_attr( $value ) . '" />';
 	}
 
 	public function render_banner_reject_all_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['banner_reject_all'] );
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_reject_all]" value="' . $value . '" />';
+		$value    = $settings['banner_reject_all'];
+		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_reject_all]" value="' . esc_attr( $value ) . '" />';
 	}
 
 	public function render_banner_manage_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['banner_manage_prefs'] );
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_manage_prefs]" value="' . $value . '" />';
+		$value    = $settings['banner_manage_prefs'];
+		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_manage_prefs]" value="' . esc_attr( $value ) . '" />';
 	}
 
 	public function render_banner_save_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['banner_save_prefs'] );
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_save_prefs]" value="' . $value . '" />';
+		$value    = $settings['banner_save_prefs'];
+		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_save_prefs]" value="' . esc_attr( $value ) . '" />';
 	}
 
 	public function render_banner_preferences_title_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['banner_preferences_title'] );
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_preferences_title]" value="' . $value . '" />';
+		$value    = $settings['banner_preferences_title'];
+		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_preferences_title]" value="' . esc_attr( $value ) . '" />';
 	}
 
 	public function render_category_mode_field() {
@@ -697,7 +697,7 @@ class Piensa_Cookie_Consent_Admin {
 	public function render_necessary_toggle_field() {
 		$settings = self::get_settings();
 		$checked  = ! empty( $settings['allow_necessary_toggle'] ) ? 'checked' : '';
-		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[allow_necessary_toggle]" value="1" ' . $checked . '> ' . esc_html__( 'Let visitors disable necessary cookies', 'piensa-cookie-consent' ) . '</label>';
+		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[allow_necessary_toggle]" value="1" ' . esc_attr( $checked ) . '> ' . esc_html__( 'Let visitors disable necessary cookies', 'piensa-cookie-consent' ) . '</label>';
 		echo '<p class="description">' . esc_html__( 'Not recommended: it can break parts of the site.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
@@ -705,8 +705,8 @@ class Piensa_Cookie_Consent_Admin {
 		$settings  = self::get_settings();
 		$analytics = ! empty( $settings['analytics_enabled'] ) ? 'checked' : '';
 		$marketing = ! empty( $settings['marketing_enabled'] ) ? 'checked' : '';
-		echo '<label style="display:block;margin-bottom:6px;"><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[analytics_enabled]" value="1" ' . $analytics . '> Analytics</label>';
-		echo '<label style="display:block;"><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[marketing_enabled]" value="1" ' . $marketing . '> Marketing</label>';
+		echo '<label style="display:block;margin-bottom:6px;"><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[analytics_enabled]" value="1" ' . esc_attr( $analytics ) . '> Analytics</label>';
+		echo '<label style="display:block;"><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[marketing_enabled]" value="1" ' . esc_attr( $marketing ) . '> Marketing</label>';
 	}
 
 	public function render_category_labels_field() {
@@ -810,15 +810,15 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<div class="ag-color-editor">';
 		foreach ( $fields as $field ) {
 			$key   = $field['key'];
-			$value = esc_attr( $settings[ $key ] );
+			$value = $settings[ $key ];
 			echo '<div class="ag-color-item">';
 			echo '<div class="ag-color-meta">';
 			echo '<strong>' . esc_html( $field['label'] ) . '</strong>';
 			echo '<code>' . esc_html( $field['var'] ) . '</code>';
 			echo '</div>';
 			echo '<div class="ag-color-controls">';
-			echo '<input type="color" data-ag-color="' . esc_attr( $key ) . '" name="' . esc_attr( $this->option_name ) . '[' . esc_attr( $key ) . ']" value="' . $value . '" />';
-			echo '<input type="text" class="regular-text ag-color-text" data-ag-color-text="' . esc_attr( $key ) . '" value="' . $value . '" placeholder="#ffffff" />';
+			echo '<input type="color" data-ag-color="' . esc_attr( $key ) . '" name="' . esc_attr( $this->option_name ) . '[' . esc_attr( $key ) . ']" value="' . esc_attr( $value ) . '" />';
+			echo '<input type="text" class="regular-text ag-color-text" data-ag-color-text="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" placeholder="#ffffff" />';
 			echo '</div>';
 			echo '</div>';
 		}
@@ -867,7 +867,7 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<p class="description">' . esc_html__( 'With no geo header available, the banner is always shown.', 'piensa-cookie-consent' ) . '</p>';
 		echo '</div>';
 		echo '<div class="ag-field-group">';
-		echo '<textarea class="large-text" rows="3" name="' . esc_attr( $this->option_name ) . '[geo_countries]">' . $countries . '</textarea>';
+		echo '<textarea class="large-text" rows="3" name="' . esc_attr( $this->option_name ) . '[geo_countries]">' . esc_attr( $countries ) . '</textarea>';
 		echo '<p class="description">' . esc_html__( 'Comma-separated ISO2 codes, for example ES,FR,DE. Only used in custom mode.', 'piensa-cookie-consent' ) . '</p>';
 		echo '</div>';
 		echo '<div class="ag-field-group">';
@@ -943,7 +943,7 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<div class="ag-field-group">';
 		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[brand_name]" value="' . esc_attr( $settings['brand_name'] ) . '" placeholder="' . esc_attr__( 'Brand name (optional)', 'piensa-cookie-consent' ) . '" />';
 		echo '<input class="regular-text" type="url" name="' . esc_attr( $this->option_name ) . '[brand_logo_url]" value="' . esc_attr( $settings['brand_logo_url'] ) . '" placeholder="' . esc_attr__( 'Logo URL (optional)', 'piensa-cookie-consent' ) . '" />';
-		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[hide_branding]" value="1" ' . $checked . '> ' . esc_html__( 'Hide branding in the banner', 'piensa-cookie-consent' ) . '</label>';
+		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[hide_branding]" value="1" ' . esc_attr( $checked ) . '> ' . esc_html__( 'Hide branding in the banner', 'piensa-cookie-consent' ) . '</label>';
 		echo '</div>';
 	}
 
@@ -974,32 +974,32 @@ class Piensa_Cookie_Consent_Admin {
 	public function render_domains_field() {
 		$settings = self::get_settings();
 		$value    = esc_textarea( $settings['blocked_domains'] );
-		echo '<textarea class="large-text code" rows="7" name="' . esc_attr( $this->option_name ) . '[blocked_domains]">' . $value . '</textarea>';
+		echo '<textarea class="large-text code" rows="7" name="' . esc_attr( $this->option_name ) . '[blocked_domains]">' . esc_attr( $value ) . '</textarea>';
 		echo '<p class="description">' . esc_html__( 'One per line. For example: youtube.com', 'piensa-cookie-consent' ) . '</p>';
 	}
 
 	public function render_placeholder_title_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['placeholder_title'] );
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[placeholder_title]" value="' . $value . '" />';
+		$value    = $settings['placeholder_title'];
+		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[placeholder_title]" value="' . esc_attr( $value ) . '" />';
 	}
 
 	public function render_placeholder_button_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['placeholder_button'] );
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[placeholder_button]" value="' . $value . '" />';
+		$value    = $settings['placeholder_button'];
+		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[placeholder_button]" value="' . esc_attr( $value ) . '" />';
 	}
 
 	public function render_floating_button_field() {
 		$settings = self::get_settings();
 		$checked  = $settings['show_floating_button'] ? 'checked' : '';
-		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[show_floating_button]" value="1" ' . $checked . '> ' . esc_html__( 'Show a floating review button', 'piensa-cookie-consent' ) . '</label>';
+		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[show_floating_button]" value="1" ' . esc_attr( $checked ) . '> ' . esc_html__( 'Show a floating review button', 'piensa-cookie-consent' ) . '</label>';
 	}
 
 	public function render_floating_button_text_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['floating_button_text'] );
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[floating_button_text]" value="' . $value . '" />';
+		$value    = $settings['floating_button_text'];
+		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[floating_button_text]" value="' . esc_attr( $value ) . '" />';
 	}
 
 	public function render_floating_button_style_field() {
@@ -1035,8 +1035,8 @@ class Piensa_Cookie_Consent_Admin {
 			$selected  = isset( $overrides[ $domain ] ) ? $overrides[ $domain ] : 'auto';
 			echo '<tr>';
 			echo '<td>' . esc_html( $domain ) . '</td>';
-			echo '<td>' . $service . '</td>';
-			echo '<td>' . $category . '</td>';
+			echo '<td>' . esc_attr( $service ) . '</td>';
+			echo '<td>' . esc_attr( $category ) . '</td>';
 			echo '<td>' . $this->render_domain_select( $domain, $selected ) . '</td>';
 			echo '<td>' . esc_html( $last_seen ) . '</td>';
 			echo '</tr>';
@@ -1084,21 +1084,21 @@ class Piensa_Cookie_Consent_Admin {
 
 	public function render_cookie_policy_url_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['cookie_policy_url'] );
-		echo '<input class="regular-text" type="url" name="' . esc_attr( $this->option_name ) . '[cookie_policy_url]" value="' . $value . '" placeholder="https://tusitio.com/politica-de-cookies" />';
+		$value    = $settings['cookie_policy_url'];
+		echo '<input class="regular-text" type="url" name="' . esc_attr( $this->option_name ) . '[cookie_policy_url]" value="' . esc_attr( $value ) . '" placeholder="https://tusitio.com/politica-de-cookies" />';
 		echo '<p class="description">' . esc_html__( 'Use the [piensa_cookie_consent_policy] shortcode on a page if you do not have a URL of your own.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
 	public function render_privacy_policy_url_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['privacy_policy_url'] );
-		echo '<input class="regular-text" type="url" name="' . esc_attr( $this->option_name ) . '[privacy_policy_url]" value="' . $value . '" placeholder="https://tusitio.com/privacidad" />';
+		$value    = $settings['privacy_policy_url'];
+		echo '<input class="regular-text" type="url" name="' . esc_attr( $this->option_name ) . '[privacy_policy_url]" value="' . esc_attr( $value ) . '" placeholder="https://tusitio.com/privacidad" />';
 	}
 
 	public function render_custom_cookies_field() {
 		$settings = self::get_settings();
 		$value    = esc_textarea( $settings['custom_cookies'] );
-		echo '<textarea class="large-text code" rows="6" name="' . esc_attr( $this->option_name ) . '[custom_cookies]">' . $value . '</textarea>';
+		echo '<textarea class="large-text code" rows="6" name="' . esc_attr( $this->option_name ) . '[custom_cookies]">' . esc_attr( $value ) . '</textarea>';
 		echo '<p class="description">' . esc_html__( 'Format: name|category|purpose|duration|domain. For example:', 'piensa-cookie-consent' ) . ' my_cookie|analytics|Medicion basica|variable|tusitio.com</p>';
 	}
 
@@ -1130,8 +1130,8 @@ class Piensa_Cookie_Consent_Admin {
 
 	public function render_update_server_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['update_server_url'] );
-		echo '<input class="regular-text" type="url" name="' . esc_attr( $this->option_name ) . '[update_server_url]" value="' . $value . '" placeholder="https://updates.tu-dominio.com/cmp.json" />';
+		$value    = $settings['update_server_url'];
+		echo '<input class="regular-text" type="url" name="' . esc_attr( $this->option_name ) . '[update_server_url]" value="' . esc_attr( $value ) . '" placeholder="https://updates.tu-dominio.com/cmp.json" />';
 		echo '<p class="description">' . esc_html__( 'Supports the {slug}, {channel} and {site} variables. Left out, they are appended as query arguments.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
@@ -1146,22 +1146,22 @@ class Piensa_Cookie_Consent_Admin {
 
 	public function render_update_token_field() {
 		$settings = self::get_settings();
-		$value    = esc_attr( $settings['update_token'] );
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[update_token]" value="' . $value . '" placeholder="' . esc_attr__( 'Bearer token (optional)', 'piensa-cookie-consent' ) . '" />';
+		$value    = $settings['update_token'];
+		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[update_token]" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr__( 'Bearer token (optional)', 'piensa-cookie-consent' ) . '" />';
 		echo '<p class="description">' . esc_html__( 'Sent in the Authorization header.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
 	public function render_update_public_key_field() {
 		$settings = self::get_settings();
 		$value    = esc_textarea( $settings['update_public_key'] );
-		echo '<textarea class="large-text code" rows="4" name="' . esc_attr( $this->option_name ) . '[update_public_key]" placeholder="-----BEGIN PUBLIC KEY-----">' . $value . '</textarea>';
-		echo '<p class="description">' . esc_html__( 'Public key', 'piensa-cookie-consent' ) . ' ' . esc_html__( 'to verify signatures from the central server.', 'piensa-cookie-consent' ) . '</p>';
+		echo '<textarea class="large-text code" rows="4" name="' . esc_attr( $this->option_name ) . '[update_public_key]" placeholder="-----BEGIN PUBLIC KEY-----">' . esc_attr( $value ) . '</textarea>';
+		echo '<p class="description">' . esc_html__( 'Public key used to verify signatures from the central server.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
 	public function render_update_signature_field() {
 		$settings = self::get_settings();
 		$checked  = ! empty( $settings['update_require_signature'] ) ? 'checked' : '';
-		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[update_require_signature]" value="1" ' . $checked . '> ' . esc_html__( 'Require a valid signature', 'piensa-cookie-consent' ) . '</label>';
+		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[update_require_signature]" value="1" ' . esc_attr( $checked ) . '> ' . esc_html__( 'Require a valid signature', 'piensa-cookie-consent' ) . '</label>';
 		echo '<p class="description">' . esc_html__( 'When enabled, an update without a valid signature is blocked.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
@@ -1237,7 +1237,7 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<div class="ag-tab is-active" data-tab="general">';
 		echo '<div class="ag-panel">';
 		echo '<div class="ag-panel-header">';
-		echo '<h2>' . esc_html__( esc_html__( 'General', 'piensa-cookie-consent' ) . ' settings', 'piensa-cookie-consent' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'General settings', 'piensa-cookie-consent' ) . '</h2>';
 		echo '<p class="ag-section-intro">Datos principales, revision legal y registro.</p>';
 		echo '</div>';
 		echo '<table class="form-table">';
@@ -1248,7 +1248,7 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<div class="ag-panel">';
 		echo '<div class="ag-panel-header">';
 		echo '<h3>' . esc_html__( 'Quick actions', 'piensa-cookie-consent' ) . '</h3>';
-		echo '<p class="ag-section-intro">' . esc_html__( 'Floating button', 'piensa-cookie-consent' ) . esc_html__( ' and consent review.', 'piensa-cookie-consent' ) . '</p>';
+		echo '<p class="ag-section-intro">' . esc_html__( 'Floating button and consent review.', 'piensa-cookie-consent' ) . '</p>';
 		echo '</div>';
 		echo '<table class="form-table">';
 		do_settings_fields( 'piensa-cookie-consent', 'piensa_cookie_consent_ui' );
@@ -1307,7 +1307,7 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<div class="ag-tab" data-tab="banner">';
 		echo '<div class="ag-panel">';
 		echo '<div class="ag-panel-header">';
-		echo '<h2>' . esc_html__( esc_html__( 'Banner', 'piensa-cookie-consent' ) . ' text', 'piensa-cookie-consent' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Banner text', 'piensa-cookie-consent' ) . '</h2>';
 		echo '<p class="ag-section-intro">' . esc_html__( 'Customize the banner and the preferences dialog.', 'piensa-cookie-consent' ) . '</p>';
 		echo '</div>';
 		echo '<table class="form-table">';
@@ -1436,6 +1436,11 @@ class Piensa_Cookie_Consent_Admin {
 		$js_main  = PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent.js';
 
 		header( 'Content-Type: text/html; charset=utf-8' );
+
+		// A standalone document served into the preview iframe: there is no
+		// wp_head() here, so the enqueue system has nowhere to print to and the
+		// assets have to be linked directly.
+		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet, WordPress.WP.EnqueuedResources.NonEnqueuedScript
 		echo '<!doctype html><html><head><meta charset="utf-8">';
 		echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
 		echo '<link rel="stylesheet" href="' . esc_url( $css_cc ) . '">';
@@ -1448,6 +1453,7 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<script src="' . esc_url( $js_main ) . '"></script>';
 		echo '<script>setTimeout(function(){if(window.CookieConsent&&CookieConsent.show){CookieConsent.show();}},60);</script>';
 		echo '</body></html>';
+		// phpcs:enable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet, WordPress.WP.EnqueuedResources.NonEnqueuedScript
 		exit;
 	}
 
@@ -2003,6 +2009,7 @@ class Piensa_Cookie_Consent_Admin {
 		$scanner = new Piensa_Cookie_Consent_Scanner();
 		$result  = $scanner->scan_site( 25 );
 
+		/* translators: 1: number of URLs crawled, 2: number of external domains found */
 		$message = sprintf( esc_html__( 'Scan complete. URLs: %1$d, domains: %2$d', 'piensa-cookie-consent' ), $result['urls'], $result['domains'] );
 		set_transient( 'piensa_cookie_consent_scan_notice', $message, 60 );
 
@@ -2177,10 +2184,10 @@ class Piensa_Cookie_Consent_Admin {
 
 		$domain = isset( $_POST['domain'] ) ? sanitize_text_field( wp_unslash( $_POST['domain'] ) ) : '';
 		if ( $domain === '' ) {
-			$domain = parse_url( home_url(), PHP_URL_HOST );
+			$domain = wp_parse_url( home_url(), PHP_URL_HOST );
 		}
 
-		$host       = parse_url( home_url(), PHP_URL_HOST );
+		$host       = wp_parse_url( home_url(), PHP_URL_HOST );
 		$normalized = [];
 		foreach ( $cookies as $cookie ) {
 			$name = sanitize_text_field( $cookie );
@@ -2233,6 +2240,7 @@ class Piensa_Cookie_Consent_Admin {
 				}
 			}
 			if ( $unknown > 0 ) {
+				/* translators: %d: number of domains without a category */
 				$issues[] = sprintf( esc_html__( '%d domains are still unclassified.', 'piensa-cookie-consent' ), $unknown );
 			}
 		}

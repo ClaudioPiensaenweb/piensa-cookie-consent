@@ -35,7 +35,7 @@ jobs:
         run: git diff > phpcbf.patch
 
       - name: Report what could not be fixed automatically
-        run: vendor/bin/phpcs --report=csv > phpcs-remaining.csv || true
+        run: vendor/bin/phpcs -q --report=csv --report-file=phpcs-remaining.csv || true
 
       - name: Summarise
         run: |

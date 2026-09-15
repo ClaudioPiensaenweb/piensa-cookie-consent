@@ -27,7 +27,7 @@ class Piensa_Cookie_Consent_Blocker {
 		$this->placeholder_title  = $settings['placeholder_title'];
 		$this->placeholder_button = $settings['placeholder_button'];
 		$this->domain_overrides   = isset( $settings['domain_overrides'] ) && is_array( $settings['domain_overrides'] ) ? $settings['domain_overrides'] : [];
-		$this->site_host          = parse_url( home_url(), PHP_URL_HOST );
+		$this->site_host          = wp_parse_url( home_url(), PHP_URL_HOST );
 
 		if ( ! Piensa_Cookie_Consent_Geo::should_show_cmp( $settings ) ) {
 			$this->enabled = false;
@@ -347,7 +347,7 @@ class Piensa_Cookie_Consent_Blocker {
 			$url = 'https:' . $url;
 		}
 
-		$host = parse_url( $url, PHP_URL_HOST );
+		$host = wp_parse_url( $url, PHP_URL_HOST );
 		if ( ! $host ) {
 			return '';
 		}
