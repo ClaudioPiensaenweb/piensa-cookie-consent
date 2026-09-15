@@ -5,8 +5,11 @@ parameters:
         - includes
         - uninstall.php
     excludePaths:
-        - vendor
-        - node_modules
+        analyseAndScan:
+            # Marked optional: the PHP job does not install the npm or composer
+            # trees, and PHPStan treats a missing exclude path as a config error.
+            - vendor (?)
+            - node_modules (?)
     bootstrapFiles:
         - phpstan-bootstrap.php
     ignoreErrors:
