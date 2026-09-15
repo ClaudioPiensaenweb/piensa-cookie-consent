@@ -75,6 +75,10 @@ if command -v msgfmt >/dev/null 2>&1; then
 fi
 
 mkdir -p "$OUTPUT_DIR"
+
+# Resolve to an absolute path: the zip(1) branch below runs from the staging
+# directory, where a relative output path would point somewhere else entirely.
+OUTPUT_DIR="$(cd "$OUTPUT_DIR" && pwd)"
 ZIP="${OUTPUT_DIR}/${SLUG}-${VERSION}.zip"
 rm -f "$ZIP"
 
