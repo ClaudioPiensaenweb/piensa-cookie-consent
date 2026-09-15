@@ -25,10 +25,10 @@ class Piensa_Cookie_Consent_Diagnostics {
 	 */
 	public static function collect() {
 		return [
-			__( 'Environment', 'piensa-cookie-consent' )     => self::environment(),
+			__( 'Environment', 'piensa-cookie-consent' ) => self::environment(),
 			__( 'Banner categories', 'piensa-cookie-consent' ) => self::categories(),
-			__( 'Consent log', 'piensa-cookie-consent' )     => self::consent_log(),
-			__( 'Scanner', 'piensa-cookie-consent' )         => self::scanner(),
+			__( 'Consent log', 'piensa-cookie-consent' ) => self::consent_log(),
+			__( 'Scanner', 'piensa-cookie-consent' )     => self::scanner(),
 		];
 	}
 
@@ -51,13 +51,13 @@ class Piensa_Cookie_Consent_Diagnostics {
 
 		return [
 			__( 'Plugin version', 'piensa-cookie-consent' ) => PIENSA_COOKIE_CONSENT_VERSION,
-			__( 'WordPress', 'piensa-cookie-consent' )      => $wp_version,
-			__( 'PHP', 'piensa-cookie-consent' )            => PHP_VERSION,
-			__( 'Database', 'piensa-cookie-consent' )       => $database,
-			__( 'Build', 'piensa-cookie-consent' )          => Piensa_Cookie_Consent_Core::has_self_hosted_updater()
+			__( 'WordPress', 'piensa-cookie-consent' )     => $wp_version,
+			__( 'PHP', 'piensa-cookie-consent' )           => PHP_VERSION,
+			__( 'Database', 'piensa-cookie-consent' )      => $database,
+			__( 'Build', 'piensa-cookie-consent' )         => Piensa_Cookie_Consent_Core::has_self_hosted_updater()
 				? __( 'agency (self-hosted updates)', 'piensa-cookie-consent' )
 				: __( 'WordPress.org', 'piensa-cookie-consent' ),
-			__( 'Site language', 'piensa-cookie-consent' )  => get_locale(),
+			__( 'Site language', 'piensa-cookie-consent' ) => get_locale(),
 		];
 	}
 
@@ -131,11 +131,11 @@ class Piensa_Cookie_Consent_Diagnostics {
 			__( 'Logging enabled', 'piensa-cookie-consent' ) => ! empty( $settings['enable_consent_log'] )
 				? __( 'yes', 'piensa-cookie-consent' )
 				: __( 'no', 'piensa-cookie-consent' ),
-			__( 'Table', 'piensa-cookie-consent' )           => $table,
+			__( 'Table', 'piensa-cookie-consent' ) => $table,
 			__( 'Marked as installed', 'piensa-cookie-consent' ) => get_option( Piensa_Cookie_Consent_Consent_Log::INSTALLED_OPTION )
 				? __( 'yes', 'piensa-cookie-consent' )
 				: __( 'no', 'piensa-cookie-consent' ),
-			__( 'Records stored', 'piensa-cookie-consent' )  => null === $count
+			__( 'Records stored', 'piensa-cookie-consent' ) => null === $count
 				? __( 'the table could not be read — it may not exist', 'piensa-cookie-consent' )
 				: (string) (int) $count,
 		];
@@ -175,8 +175,8 @@ class Piensa_Cookie_Consent_Diagnostics {
 
 		return [
 			__( 'Domains discovered', 'piensa-cookie-consent' ) => is_array( $discovered ) ? (string) count( $discovered ) : '0',
-			__( 'By category', 'piensa-cookie-consent' )        => $summary ? implode( ', ', $summary ) : '—',
-			__( 'Cookies recorded', 'piensa-cookie-consent' )   => is_array( $cookies ) ? (string) count( $cookies ) : '0',
+			__( 'By category', 'piensa-cookie-consent' ) => $summary ? implode( ', ', $summary ) : '—',
+			__( 'Cookies recorded', 'piensa-cookie-consent' ) => is_array( $cookies ) ? (string) count( $cookies ) : '0',
 		];
 	}
 
