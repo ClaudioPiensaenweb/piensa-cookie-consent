@@ -29,20 +29,12 @@ class Piensa_Cookie_Consent_Scanner {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		if ( is_plugin_active( 'google-site-kit/google-site-kit.php' ) || is_plugin_active( 'google-analytics-for-wordpress/googleanalytics.php' ) ) {
-			$categories['analytics'] = true;
-		}
-
-		$marketing_triggers = [
-			'pixelyoursite/pixelyoursite.php',
-			'facebook-for-woocommerce/facebook-for-woocommerce.php',
-			'duracelltomi-google-tag-manager/duracelltomi-google-tag-manager.php',
-		];
-
-		foreach ( $marketing_triggers as $plugin ) {
-			if ( is_plugin_active( $plugin ) ) {
-				$categories['marketing'] = true;
-				break;
+		foreach ( self::get_category_plugins() as $category => $plugins ) {
+			foreach ( $plugins as $plugin ) {
+				if ( is_plugin_active( $plugin ) ) {
+					$categories[ $category ] = true;
+					break;
+				}
 			}
 		}
 
@@ -59,6 +51,28 @@ class Piensa_Cookie_Consent_Scanner {
 		}
 
 		return $categories;
+	}
+
+	/**
+	 * Plugins whose presence means a category is in use.
+	 *
+	 * Shared with the diagnostics report: kept in one place so the report
+	 * cannot describe a rule the scanner no longer follows.
+	 *
+	 * @return array<string, string[]> Category => plugin basenames.
+	 */
+	public static function get_category_plugins() {
+		return [
+			'analytics' => [
+				'google-site-kit/google-site-kit.php',
+				'google-analytics-for-wordpress/googleanalytics.php',
+			],
+			'marketing' => [
+				'pixelyoursite/pixelyoursite.php',
+				'facebook-for-woocommerce/facebook-for-woocommerce.php',
+				'duracelltomi-google-tag-manager/duracelltomi-google-tag-manager.php',
+			],
+		];
 	}
 
 	public static function get_domain_category_map() {

@@ -125,18 +125,13 @@ class Piensa_Cookie_Consent_Diagnostics {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		$known = [
-			'google-site-kit/google-site-kit.php' => 'analytics',
-			'google-analytics-for-wordpress/googleanalytics.php' => 'analytics',
-			'pixelyoursite/pixelyoursite.php' => 'marketing',
-			'facebook-for-woocommerce/facebook-for-woocommerce.php' => 'marketing',
-			'duracelltomi-google-tag-manager/duracelltomi-google-tag-manager.php' => 'marketing',
-		];
-
 		$found = [];
-		foreach ( $known as $plugin => $category ) {
-			if ( is_plugin_active( $plugin ) ) {
-				$found[] = dirname( $plugin ) . ' (' . $category . ')';
+
+		foreach ( Piensa_Cookie_Consent_Scanner::get_category_plugins() as $category => $plugins ) {
+			foreach ( $plugins as $plugin ) {
+				if ( is_plugin_active( $plugin ) ) {
+					$found[] = dirname( $plugin ) . ' (' . $category . ')';
+				}
 			}
 		}
 
