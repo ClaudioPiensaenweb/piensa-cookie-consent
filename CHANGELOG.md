@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-09-15
+
+Found by running the plugin in WordPress Playground rather than reading it.
+
+### Fixed
+- The consent log read as permanently empty under the SQLite integration.
+  `SHOW TABLES LIKE` is MySQL syntax; SQLite answers nothing, so every read
+  concluded the table was missing and every write was skipped. The table is now
+  recorded in an option at creation, which also takes a query out of each read
+  and each write.
+- The consent log status in the dashboard was hardcoded in Spanish and printed
+  without escaping.
+
 ## [1.2.0] - 2026-09-15
 
 Findings from a security and scalability review.

@@ -1248,7 +1248,10 @@ class Piensa_Cookie_Consent_Admin {
 		echo '</div>';
 		echo '<div class="ag-kpi">';
 		echo '<span class="ag-kpi__label">Logs</span>';
-		echo '<span class="ag-kpi__value">' . ( $settings['enable_consent_log'] ? 'Activo' : 'Inactivo' ) . '</span>';
+		$log_state = $settings['enable_consent_log']
+			? __( 'On', 'piensa-cookie-consent' )
+			: __( 'Off', 'piensa-cookie-consent' );
+		echo '<span class="ag-kpi__value">' . esc_html( $log_state ) . '</span>';
 		echo '</div>';
 		echo '<div class="ag-kpi">';
 		echo '<span class="ag-kpi__label">' . esc_html__( 'Detected domains', 'piensa-cookie-consent' ) . '</span>';

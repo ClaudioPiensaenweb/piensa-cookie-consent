@@ -123,6 +123,11 @@ class Piensa_Cookie_Consent_Migrator {
 		$old_table = $wpdb->prefix . 'agency_shield_cmp_consent';
 		$new_table = $wpdb->prefix . Piensa_Cookie_Consent_Consent_Log::TABLE;
 
+		// SHOW TABLES is MySQL syntax and simply returns nothing under the
+		// SQLite integration. Treating "no answer" as "no table" is the safe
+		// reading: the rename is skipped and the new table is created empty,
+		// rather than a rename being attempted against a table that is not
+		// there.
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$old_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $old_table ) );
 		$new_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $new_table ) );
@@ -130,6 +135,7 @@ class Piensa_Cookie_Consent_Migrator {
 		if ( $old_exists && ! $new_exists ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names cannot be parameterised; both are built from the trusted table prefix.
 			$wpdb->query( "RENAME TABLE `{$old_table}` TO `{$new_table}`" );
+			update_option( Piensa_Cookie_Consent_Consent_Log::INSTALLED_OPTION, 1, true );
 		}
 		// phpcs:enable
 	}
@@ -143,7 +149,7 @@ class Piensa_Cookie_Consent_Migrator {
 		return array_merge(
 			array_values( self::$renamed_options ),
 			array_keys( self::$renamed_options ),
-			[ self::VERSION_OPTION ]
+			[ self::VERSION_OPTION, Piensa_Cookie_Consent_Consent_Log::INSTALLED_OPTION ]
 		);
 	}
 }

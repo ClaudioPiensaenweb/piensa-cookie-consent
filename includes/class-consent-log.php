@@ -30,6 +30,11 @@ class Piensa_Cookie_Consent_Consent_Log {
 	 */
 	const PURGE_HOOK = 'piensa_cookie_consent_purge_log';
 
+	/**
+	 * Option recording that the table has been created.
+	 */
+	const INSTALLED_OPTION = 'piensa_cookie_consent_log_installed';
+
 	public function init() {
 		add_action( 'wp_ajax_piensa_cookie_consent_log_consent', [ $this, 'handle_log_request' ] );
 		add_action( 'wp_ajax_nopriv_piensa_cookie_consent_log_consent', [ $this, 'handle_log_request' ] );
@@ -66,6 +71,31 @@ class Piensa_Cookie_Consent_Consent_Log {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+
+		update_option( self::INSTALLED_OPTION, 1, true );
+	}
+
+	/**
+	 * Whether the consent table is ready to use.
+	 *
+	 * Recorded in an option rather than asked of the database. `SHOW TABLES
+	 * LIKE` is MySQL syntax: under the SQLite integration, which WordPress
+	 * Playground uses and some hosts offer, it does not answer, and the log
+	 * silently reads as empty. Asking once per read and once per write was
+	 * also a query the plugin did not need.
+	 *
+	 * @return bool
+	 */
+	private static function table_ready() {
+		if ( get_option( self::INSTALLED_OPTION ) ) {
+			return true;
+		}
+
+		// An install that predates this option, or one where activation did
+		// not run. Creating the table is idempotent.
+		self::install_table();
+
+		return (bool) get_option( self::INSTALLED_OPTION );
 	}
 
 	public function handle_log_request() {
@@ -115,11 +145,11 @@ class Piensa_Cookie_Consent_Consent_Log {
 		global $wpdb;
 		$table = $wpdb->prefix . self::TABLE;
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table owned by this plugin; a cached consent record would not be evidence of anything.
-		$exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
-		if ( $exists !== $table ) {
+		if ( ! self::table_ready() ) {
 			return [];
 		}
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table owned by this plugin; a cached consent record would not be evidence of anything.
 
 		$limit  = max( 1, (int) $limit );
 		$offset = max( 0, (int) $offset );
@@ -198,10 +228,8 @@ class Piensa_Cookie_Consent_Consent_Log {
 		global $wpdb;
 		$table = $wpdb->prefix . self::TABLE;
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table owned by this plugin.
-		$exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
-		if ( $exists !== $table ) {
-			self::install_table();
+		if ( ! self::table_ready() ) {
+			return;
 		}
 
 		$created_at   = current_time( 'mysql' );
@@ -314,9 +342,7 @@ class Piensa_Cookie_Consent_Consent_Log {
 		$table  = $wpdb->prefix . self::TABLE;
 		$cutoff = gmdate( 'Y-m-d H:i:s', time() - ( $days * DAY_IN_SECONDS ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table owned by this plugin.
-		$exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
-		if ( $exists !== $table ) {
+		if ( ! self::table_ready() ) {
 			return;
 		}
 

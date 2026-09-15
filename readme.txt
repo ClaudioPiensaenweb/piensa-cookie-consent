@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,10 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.2.1 =
+* The consent log could read as permanently empty on installs using the SQLite integration, including WordPress Playground. The table was detected with `SHOW TABLES LIKE`, which is MySQL syntax and simply returns nothing there, so every read reported no table and every write was skipped. Detection now uses a recorded option, which also removes a database query from each read and write.
+* The consent log status in the dashboard was shown in Spanish regardless of language, and unescaped.
+
 = 1.2.0 =
 * **Works with page caching.** The blocker varied the HTML by the visitor's consent cookie, so any page cache would store one visitor's version and serve it to everyone — releasing scripts to people who never accepted. The server now blocks unconditionally and the front-end script releases what the visitor accepted, so every visitor gets the same cacheable markup. Consent Mode likewise always declares the denied default, which is what Google documents.
 * **No longer writes to the database on every page view.** Third-party discovery refreshed a timestamp in wp_options on each request. It now writes only for a host it has not seen, or once an hour, and the stored list is capped.
@@ -112,6 +116,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+Fixes the consent log reading as empty on sites using the SQLite integration.
 
 = 1.2.0 =
 Fixes a serious interaction with page caching that could serve blocked scripts to visitors who never consented, and stops the plugin writing to the database on every page view. Recommended for every site.
