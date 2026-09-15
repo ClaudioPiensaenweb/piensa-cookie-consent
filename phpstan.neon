@@ -1,0 +1,14 @@
+parameters:
+    level: 5
+    paths:
+        - piensa-cookie-consent.php
+        - includes
+        - uninstall.php
+    excludePaths:
+        - vendor
+        - node_modules
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    ignoreErrors:
+        # WordPress core stubs do not model every dynamic $wpdb property.
+        - '#Access to an undefined property wpdb::#'

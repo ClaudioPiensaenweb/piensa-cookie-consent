@@ -1,0 +1,29 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Build artefacts
+/build/
+/dist/
+*.zip
+
+# Tooling caches
+.phpcs-cache
+.phpunit.result.cache
+/.wp-env.json
+/.cache/
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Local env
+.env
+.env.*
+!.env.example
+
+# Generated translations (kept out of VCS, built on release)
+/languages/*.mo

@@ -1,0 +1,41 @@
+name: Plugin Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  plugin-check:
+    name: WordPress.org readiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      # Check the package that actually ships, not the working tree: the
+      # working tree carries dev tooling and the self-hosted updater, neither
+      # of which reaches wp.org.
+      - name: Build the wp.org release package
+        run: |
+          bash scripts/build-release.sh --output-dir=/tmp/release
+          unzip -q /tmp/release/*.zip -d /tmp/package
+
+      - name: Run Plugin Check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: /tmp/package/piensa-cookie-consent
+          categories: |
+            plugin_repo

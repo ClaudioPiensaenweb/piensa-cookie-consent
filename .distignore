@@ -1,0 +1,39 @@
+# Files excluded from the WordPress.org release ZIP.
+# Must stay in sync with scripts/build-release.sh.
+
+# VCS / CI
+.git
+.github
+.gitignore
+.distignore
+.gitattributes
+.editorconfig
+
+# Dev tooling
+/node_modules
+/vendor
+composer.json
+composer.lock
+package.json
+package-lock.json
+phpcs.xml
+phpstan.neon
+.phpcs-cache
+.wp-env.json
+
+# Dev-only sources and docs
+/scripts
+/tests
+/.wordpress-org
+README.md
+CHANGELOG.md
+CONTRIBUTING.md
+
+# Self-hosted updater: prohibited by WordPress.org guideline #8,
+# shipped only in the GitHub/agency build.
+includes/class-updater.php
+
+# Misc
+*.log
+*.zip
+*.dist

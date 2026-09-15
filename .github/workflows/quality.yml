@@ -1,0 +1,92 @@
+name: Quality
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  php:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.4', '8.3' ]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Syntax check
+        run: find . -path ./vendor -prune -o -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+
+      # The coding standard and static analysis only need to run once.
+      - name: Coding standards
+        if: matrix.php == '8.3'
+        run: composer lint
+
+      - name: Static analysis
+        if: matrix.php == '8.3'
+        run: composer analyse
+
+  js:
+    name: JavaScript
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint:js
+
+  release-package:
+    name: Release package builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Build the wp.org ZIP
+        run: bash scripts/build-release.sh --output-dir=/tmp/release
+
+      # The self-hosted updater is prohibited by wp.org guideline #8, so the
+      # release package must never contain it.
+      - name: Assert the updater is excluded
+        run: |
+          zip="$(find /tmp/release -name '*.zip' | head -n1)"
+          if unzip -l "$zip" | grep -q 'class-updater.php'; then
+            echo "::error::class-updater.php leaked into the wp.org package"
+            exit 1
+          fi
+          echo "Package contents verified: $zip"

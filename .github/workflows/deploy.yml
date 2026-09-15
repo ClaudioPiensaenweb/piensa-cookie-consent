@@ -1,0 +1,40 @@
+name: Deploy to WordPress.org
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    name: Publish release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # The tag, the plugin header and the readme stable tag must agree, or
+      # wp.org will serve a version that does not match the code.
+      - name: Verify version consistency
+        run: bash scripts/check-version.sh
+
+      - name: Deploy to the WordPress.org plugin directory
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        id: deploy
+        with:
+          generate-zip: true
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: piensa-cookie-consent
+          ASSETS_DIR: .wordpress-org
+
+      - name: Attach the ZIP to the GitHub release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.deploy.outputs.zip-path }}

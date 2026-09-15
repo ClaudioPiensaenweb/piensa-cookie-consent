@@ -1,0 +1,43 @@
+{
+    "name": "piensaenweb/piensa-cookie-consent",
+    "description": "GDPR/ePrivacy cookie consent banner with Google Consent Mode v2, script blocking, cookie scanning and consent logging.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Piensaenweb",
+            "homepage": "https://piensaenweb.com"
+        }
+    ],
+    "keywords": ["wordpress", "cookie", "consent", "gdpr", "ccpa", "privacy", "cmp", "consent-mode"],
+    "support": {
+        "issues": "https://github.com/piensaenweb/piensa-cookie-consent/issues",
+        "source": "https://github.com/piensaenweb/piensa-cookie-consent"
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.9",
+        "wp-coding-standards/wpcs": "^3.1",
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "phpcsstandards/phpcsutils": "^1.0",
+        "phpstan/phpstan": "^2.1",
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "phpstan/extension-installer": "^1.4",
+        "php-stubs/wordpress-stubs": "^6.7"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "lint": "phpcs",
+        "lint:fix": "phpcbf",
+        "analyse": "phpstan analyse --memory-limit=1G",
+        "check": ["@lint", "@analyse"]
+    }
+}
