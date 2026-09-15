@@ -39,26 +39,82 @@ require_once __DIR__ . '/../includes/class-theme-colors.php';
 function piensa_test_palettes() {
 	return [
 		'twentytwentyfour'  => [
-			[ 'slug' => 'base', 'name' => 'Base', 'color' => '#f9f9f9' ],
-			[ 'slug' => 'contrast', 'name' => 'Contrast', 'color' => '#111111' ],
-			[ 'slug' => 'accent-1', 'name' => 'Accent 1', 'color' => '#FFE2C7' ],
-			[ 'slug' => 'accent-2', 'name' => 'Accent 2', 'color' => '#C8A78B' ],
+			[
+				'slug'  => 'base',
+				'name'  => 'Base',
+				'color' => '#f9f9f9',
+			],
+			[
+				'slug'  => 'contrast',
+				'name'  => 'Contrast',
+				'color' => '#111111',
+			],
+			[
+				'slug'  => 'accent-1',
+				'name'  => 'Accent 1',
+				'color' => '#FFE2C7',
+			],
+			[
+				'slug'  => 'accent-2',
+				'name'  => 'Accent 2',
+				'color' => '#C8A78B',
+			],
 		],
 		'twentytwentythree' => [
-			[ 'slug' => 'base', 'name' => 'Base', 'color' => '#ffffff' ],
-			[ 'slug' => 'contrast', 'name' => 'Contrast', 'color' => '#000000' ],
-			[ 'slug' => 'primary', 'name' => 'Primary', 'color' => '#9DFF20' ],
-			[ 'slug' => 'secondary', 'name' => 'Secondary', 'color' => '#345C00' ],
+			[
+				'slug'  => 'base',
+				'name'  => 'Base',
+				'color' => '#ffffff',
+			],
+			[
+				'slug'  => 'contrast',
+				'name'  => 'Contrast',
+				'color' => '#000000',
+			],
+			[
+				'slug'  => 'primary',
+				'name'  => 'Primary',
+				'color' => '#9DFF20',
+			],
+			[
+				'slug'  => 'secondary',
+				'name'  => 'Secondary',
+				'color' => '#345C00',
+			],
 		],
 		'dark'              => [
-			[ 'slug' => 'background', 'name' => 'Background', 'color' => '#14161a' ],
-			[ 'slug' => 'foreground', 'name' => 'Foreground', 'color' => '#f2f2f2' ],
-			[ 'slug' => 'primary', 'name' => 'Primary', 'color' => '#4f8cff' ],
+			[
+				'slug'  => 'background',
+				'name'  => 'Background',
+				'color' => '#14161a',
+			],
+			[
+				'slug'  => 'foreground',
+				'name'  => 'Foreground',
+				'color' => '#f2f2f2',
+			],
+			[
+				'slug'  => 'primary',
+				'name'  => 'Primary',
+				'color' => '#4f8cff',
+			],
 		],
 		'unusual-slugs-rgb' => [
-			[ 'slug' => 'lienzo', 'name' => 'Lienzo', 'color' => 'rgb(250, 248, 245)' ],
-			[ 'slug' => 'tinta', 'name' => 'Tinta', 'color' => 'rgb(26, 26, 26)' ],
-			[ 'slug' => 'marca', 'name' => 'Marca', 'color' => '#e4572e' ],
+			[
+				'slug'  => 'lienzo',
+				'name'  => 'Lienzo',
+				'color' => 'rgb(250, 248, 245)',
+			],
+			[
+				'slug'  => 'tinta',
+				'name'  => 'Tinta',
+				'color' => 'rgb(26, 26, 26)',
+			],
+			[
+				'slug'  => 'marca',
+				'name'  => 'Marca',
+				'color' => '#e4572e',
+			],
 		],
 	];
 }
@@ -144,7 +200,11 @@ return function ( $assert ) {
 
 	// A palette with nothing to work from must decline rather than guess.
 	$GLOBALS['piensa_test_palette'] = [
-		[ 'slug' => 'base', 'name' => 'Base', 'color' => '#ffffff' ],
+		[
+			'slug'  => 'base',
+			'name'  => 'Base',
+			'color' => '#ffffff',
+		],
 	];
 	$assert( [] === Piensa_Cookie_Consent_Theme_Colors::suggest(), 'single-colour palette: declines' );
 
@@ -153,9 +213,21 @@ return function ( $assert ) {
 
 	// Colours the palette can legitimately carry.
 	$GLOBALS['piensa_test_palette'] = [
-		[ 'slug' => 'base', 'name' => 'Base', 'color' => '#FFF' ],
-		[ 'slug' => 'contrast', 'name' => 'Contrast', 'color' => 'rgba(17, 17, 17, 0.9)' ],
-		[ 'slug' => 'primary', 'name' => 'Primary', 'color' => 'var(--brand)' ],
+		[
+			'slug'  => 'base',
+			'name'  => 'Base',
+			'color' => '#FFF',
+		],
+		[
+			'slug'  => 'contrast',
+			'name'  => 'Contrast',
+			'color' => 'rgba(17, 17, 17, 0.9)',
+		],
+		[
+			'slug'  => 'primary',
+			'name'  => 'Primary',
+			'color' => 'var(--brand)',
+		],
 	];
 	$shorthand = Piensa_Cookie_Consent_Theme_Colors::suggest();
 	$assert( '#ffffff' === $shorthand['theme_bg'], 'three-digit hex is expanded' );
