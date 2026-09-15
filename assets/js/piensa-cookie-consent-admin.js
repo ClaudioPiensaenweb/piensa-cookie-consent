@@ -262,6 +262,37 @@
         });
     }
 
+    // Shared by the preset buttons and the theme-colour button: writing the
+    // value is not enough, the colour picker beside each field listens for
+    // these events to stay in step.
+    function setSettingsField(name, value) {
+        const input = document.querySelector('[name="piensa_cookie_consent_settings[' + name + ']"]');
+        if (!input || value === undefined) {
+            return;
+        }
+        input.value = value;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function initThemeColors() {
+        const button = document.querySelector('[data-ag-use-theme-colors]');
+        if (!button || !window.PiensaCookieConsentAdminConfig) {
+            return;
+        }
+
+        const colors = PiensaCookieConsentAdminConfig.themeColors || {};
+        if (!Object.keys(colors).length) {
+            return;
+        }
+
+        button.addEventListener('click', function() {
+            Object.keys(colors).forEach(function(key) {
+                setSettingsField(key, colors[key]);
+            });
+        });
+    }
+
     function initPresets() {
         const applyBtn = document.querySelector('[data-ag-apply-preset]');
         const select = document.querySelector('.ag-preset-select');
@@ -271,15 +302,7 @@
 
         const presets = PiensaCookieConsentAdminConfig.presets || {};
 
-        function setField(name, value) {
-            const input = document.querySelector('[name="piensa_cookie_consent_settings[' + name + ']"]');
-            if (!input || value === undefined) {
-                return;
-            }
-            input.value = value;
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            input.dispatchEvent(new Event('change', { bubbles: true }));
-        }
+        const setField = setSettingsField;
 
         applyBtn.addEventListener('click', function() {
             const key = select.value;
@@ -309,6 +332,7 @@
         initPreview();
         initColorEditor();
         initPresets();
+        initThemeColors();
     }
 
     if (document.readyState === 'loading') {

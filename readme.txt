@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,7 @@ Everything runs on your own server. The plugin makes no calls to third-party ser
 * **Consent log.** Every choice is recorded with a hashed IP, never the address itself, and can be exported to CSV as evidence of compliance.
 * **Geo-targeting.** Show the banner across the EEA, the UK and Switzerland, in a country list of your own, or everywhere.
 * **WP Consent API.** Registers as the site's consent manager so other plugins can ask whether they are allowed to set a cookie.
-* **Appearance.** Layout, position, colours, radii and icons, with a live preview in the admin.
+* **Appearance.** Layout, position, colours, radii and icons, with a live preview in the admin. One button reads your theme's own palette and fills the colours in for you.
 
 = Shortcodes =
 
@@ -85,6 +85,11 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.3.0 =
+* **Use the theme colors.** A button under Appearance reads the palette your theme declares and fills in the banner colours. It picks the background, the text and an accent, and derives the rest, checking WCAG contrast as it goes: the button label stays legible and the button stands out from the panel it sits on, whatever palette the theme happens to have. Themes that declare no palette say so instead of guessing.
+* Added a test suite. It covers the colour logic against real theme palettes and found a bug before release.
+* Two more admin strings that were still fixed in Spanish are now translatable.
+
 = 1.2.1 =
 * The consent log could read as permanently empty on installs using the SQLite integration, including WordPress Playground. The table was detected with `SHOW TABLES LIKE`, which is MySQL syntax and simply returns nothing there, so every read reported no table and every write was skipped. Detection now uses a recorded option, which also removes a database query from each read and write.
 * The consent log status in the dashboard was shown in Spanish regardless of language, and unescaped.
@@ -116,6 +121,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+Adds a button that fills the banner colours from your theme's palette.
 
 = 1.2.1 =
 Fixes the consent log reading as empty on sites using the SQLite integration.

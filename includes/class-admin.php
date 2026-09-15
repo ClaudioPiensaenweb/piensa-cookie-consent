@@ -875,7 +875,7 @@ class Piensa_Cookie_Consent_Admin {
 		}
 		echo '</div>';
 		echo '<div class="ag-field-grid" style="margin-top:12px;">';
-		echo '<label>Radio modal (px) <input class="small-text" type="number" min="0" name="' . esc_attr( $this->option_name ) . '[theme_modal_radius]" value="' . esc_attr( $settings['theme_modal_radius'] ) . '" /></label>';
+		echo '<label>' . esc_html__( 'Modal radius (px)', 'piensa-cookie-consent' ) . ' <input class="small-text" type="number" min="0" name="' . esc_attr( $this->option_name ) . '[theme_modal_radius]" value="' . esc_attr( $settings['theme_modal_radius'] ) . '" /></label>';
 		echo '<label>Radio botones (px) <input class="small-text" type="number" min="0" name="' . esc_attr( $this->option_name ) . '[theme_button_radius]" value="' . esc_attr( $settings['theme_button_radius'] ) . '" /></label>';
 		echo '</div>';
 	}
@@ -888,8 +888,26 @@ class Piensa_Cookie_Consent_Admin {
 			echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $preset['label'] ) . '</option>';
 		}
 		echo '</select>';
-		echo '<button type="button" class="button ag-apply-preset" data-ag-apply-preset="1">Aplicar plantilla</button>';
-		echo '<span class="description">Aplica colores, radios y layouts.</span>';
+		echo '<button type="button" class="button ag-apply-preset" data-ag-apply-preset="1">' . esc_html__( 'Apply template', 'piensa-cookie-consent' ) . '</button>';
+		echo '<span class="description">' . esc_html__( 'Applies colors, corner radii and layout.', 'piensa-cookie-consent' ) . '</span>';
+		echo '</div>';
+
+		$suggestion = Piensa_Cookie_Consent_Theme_Colors::suggest();
+
+		echo '<div class="ag-field-row" style="margin-top:12px;">';
+
+		if ( $suggestion ) {
+			echo '<button type="button" class="button ag-use-theme-colors" data-ag-use-theme-colors="1">' . esc_html__( 'Use the theme colors', 'piensa-cookie-consent' ) . '</button>';
+			echo '<span class="ag-theme-swatches" style="display:inline-flex;gap:4px;margin-left:10px;vertical-align:middle;">';
+			foreach ( [ 'theme_bg', 'theme_primary_color', 'theme_btn_primary_bg' ] as $key ) {
+				echo '<span style="display:inline-block;width:18px;height:18px;border-radius:4px;border:1px solid #dcdcde;background:' . esc_attr( $suggestion[ $key ] ) . ';"></span>';
+			}
+			echo '</span>';
+			echo '<span class="description" style="display:block;margin-top:6px;">' . esc_html__( 'Reads the palette your theme declares and fills the fields below. Review the result before saving: a palette says which colors a theme uses, not which one belongs on a button.', 'piensa-cookie-consent' ) . '</span>';
+		} else {
+			echo '<span class="description">' . esc_html__( 'This theme declares no color palette, so its colors cannot be read. Pick a template above or set the colors by hand.', 'piensa-cookie-consent' ) . '</span>';
+		}
+
 		echo '</div>';
 	}
 
@@ -1644,6 +1662,7 @@ class Piensa_Cookie_Consent_Admin {
 			'PiensaCookieConsentAdminConfig',
 			[
 				'presets'       => self::get_theme_presets(),
+				'themeColors'   => Piensa_Cookie_Consent_Theme_Colors::suggest(),
 				'previewUrl'    => admin_url( 'admin-ajax.php?action=piensa_cookie_consent_preview' ),
 				'previewNonce'  => wp_create_nonce( 'piensa_cookie_consent_preview' ),
 				'previewAssets' => [

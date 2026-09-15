@@ -42,6 +42,11 @@ jobs:
       - name: Syntax check
         run: find . -path ./vendor -prune -o -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
 
+      # Runs on both PHP versions: the logic under test has to behave the same
+      # on the oldest version the plugin supports and the newest.
+      - name: Tests
+        run: composer test
+
       # The coding standard and static analysis only need to run once.
       - name: Coding standards
         if: matrix.php == '8.3'

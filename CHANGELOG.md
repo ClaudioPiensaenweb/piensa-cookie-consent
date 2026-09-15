@@ -4,6 +4,30 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-09-15
+
+### Added
+- **Colours from the theme's own palette.** A button under Appearance reads
+  `wp_get_global_settings()` and fills the banner colours in. Parsing the
+  theme's CSS was the alternative and is a poor one: colours live in custom
+  properties, preprocessor output and media queries, and picking "the brand
+  colour" out of CSS text is guesswork that shows up directly in the banner.
+  The palette is the theme's own declaration of the same thing.
+
+  Slugs vary between themes, so a named slug wins when present and relative
+  luminance decides otherwise, which keeps the result sensible on a palette
+  using names the plugin has never seen. Contrast is checked throughout: the
+  button label is black or white by WCAG luminance, and an accent that does not
+  reach 3:1 against the background is passed over even when its slug says it is
+  the accent — a theme can call a pale tint "accent-1", and on a button over a
+  near-white panel that reads as no button at all.
+- **A test suite**, run on both supported PHP versions in CI. It covers the
+  colour logic against real theme palettes, and caught a normalisation bug in
+  three-digit hex colours before release.
+
+### Changed
+- Two more admin strings that were still hardcoded in Spanish.
+
 ## [1.2.1] - 2026-09-15
 
 Found by running the plugin in WordPress Playground rather than reading it.

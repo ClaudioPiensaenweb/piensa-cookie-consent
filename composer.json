@@ -9,7 +9,16 @@
             "homepage": "https://piensaenweb.com"
         }
     ],
-    "keywords": ["wordpress", "cookie", "consent", "gdpr", "ccpa", "privacy", "cmp", "consent-mode"],
+    "keywords": [
+        "wordpress",
+        "cookie",
+        "consent",
+        "gdpr",
+        "ccpa",
+        "privacy",
+        "cmp",
+        "consent-mode"
+    ],
     "support": {
         "issues": "https://github.com/ClaudioPiensaenweb/piensa-cookie-consent/issues",
         "source": "https://github.com/ClaudioPiensaenweb/piensa-cookie-consent"
@@ -38,6 +47,11 @@
         "lint": "phpcs",
         "lint:fix": "phpcbf",
         "analyse": "phpstan analyse --memory-limit=1G",
-        "check": ["@lint", "@analyse"]
+        "check": [
+            "@lint",
+            "@analyse",
+            "@test"
+        ],
+        "test": "php tests/run.php"
     }
 }

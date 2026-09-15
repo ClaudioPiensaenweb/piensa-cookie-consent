@@ -16,6 +16,7 @@ require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-blocker.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-log.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-geo.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-icons.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-theme-colors.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-api.php';
 
