@@ -27,7 +27,7 @@ $assert = function ( $condition, $description ) use ( &$passed, &$failed ) {
 $files = glob( __DIR__ . '/test-*.php' );
 
 if ( ! $files ) {
-	echo "No test files found." . PHP_EOL;
+	echo 'No test files found.' . PHP_EOL;
 	exit( 1 );
 }
 

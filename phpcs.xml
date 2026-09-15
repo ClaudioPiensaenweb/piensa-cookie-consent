@@ -74,6 +74,27 @@
         </properties>
     </rule>
 
+    <!--
+     The test runner is a CLI script that WordPress never loads, so the rules
+     guarding the global namespace of a running site do not apply to it. The
+     rest of the standard still does.
+    -->
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.Security.EscapeOutput">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.WP.AlternativeFunctions">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.PHP.DiscouragedFunctions">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.PHP.DevelopmentFunctions">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
     <!-- The text domain must match the wp.org slug. -->
     <rule ref="WordPress.WP.I18n">
         <properties>
