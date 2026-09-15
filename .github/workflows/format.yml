@@ -1,0 +1,50 @@
+name: Format
+
+# Run by hand. The local toolchain cannot run PHPCS, so the formatter runs here
+# and hands back a patch to apply, rather than committing to the branch itself.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  phpcbf:
+    name: Auto-format and report
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+          coverage: none
+
+      - run: composer install --no-interaction --no-progress --prefer-dist
+
+      # phpcbf exits non-zero when it fixes something, which is the normal case.
+      - name: Apply the automatic fixes
+        run: vendor/bin/phpcbf || true
+
+      - name: Produce the patch
+        run: git diff > phpcbf.patch
+
+      - name: Report what could not be fixed automatically
+        run: vendor/bin/phpcs --report=csv > phpcs-remaining.csv || true
+
+      - name: Summarise
+        run: |
+          echo "Patch size: $(wc -l < phpcbf.patch) lines"
+          echo "Remaining findings: $(( $(wc -l < phpcs-remaining.csv) - 1 ))"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phpcbf
+          path: |
+            phpcbf.patch
+            phpcs-remaining.csv
