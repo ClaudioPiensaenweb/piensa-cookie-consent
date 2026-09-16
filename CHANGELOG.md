@@ -4,6 +4,28 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2026-09-16
+
+### Fixed
+- **The Spanish language block showed English.** Releases 1.0 to 1.5 set
+  English as the source language, so the values sitting in the Spanish option
+  keys of an install nobody had edited were English. The 1.6.0 migration
+  compared them only against the new Spanish defaults, found them different,
+  and concluded the site had chosen that wording — carrying English into the
+  Spanish block.
+
+  The migration now knows the defaults those releases shipped and rejects them,
+  and a further step clears them from sites that already ran 1.6.0. Text the
+  site genuinely wrote is untouched.
+- The Languages tab still carried the subtitle explaining that Spanish was
+  managed elsewhere, which stopped being true in 1.6.0.
+
+### Added
+- Tests for the banner text: that every language has a default for every
+  field, that no Spanish default is its English counterpart — which is the bug
+  above, stated as an assertion — and that an emptied field falls back rather
+  than rendering blank.
+
 ## [1.6.0] - 2026-09-16
 
 ### Changed

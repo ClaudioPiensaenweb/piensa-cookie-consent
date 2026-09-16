@@ -1318,7 +1318,7 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<div class="ag-panel">';
 		echo '<div class="ag-panel-header">';
 		echo '<h2>' . esc_html__( 'Multilingual text', 'piensa-cookie-consent' ) . '</h2>';
-		echo '<p class="ag-section-intro">' . esc_html__( 'Configure the English text. Spanish is managed under Banner and Categories.', 'piensa-cookie-consent' ) . '</p>';
+		echo '<p class="ag-section-intro">' . esc_html__( 'The text visitors read, in every language the banner ships with.', 'piensa-cookie-consent' ) . '</p>';
 		echo '</div>';
 		echo '<table class="form-table">';
 		do_settings_fields( 'piensa-cookie-consent', 'piensa_cookie_consent_languages' );

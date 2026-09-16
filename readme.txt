@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,10 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.6.1 =
+* **The Spanish tab was showing English.** Releases 1.0 to 1.5 used English as their source language, so an untouched install had English sitting in the Spanish settings. The migration read that as wording the site had chosen and carried it into the Spanish block. It now recognises those values and clears them, on sites that already migrated too, restoring the shipped Spanish.
+* The Languages tab still carried its old subtitle saying Spanish was managed elsewhere.
+
 = 1.6.0 =
 * **Spanish, English, German and French, all pre-translated.** The banner text now ships in four languages and is edited in one place, with Spanish first. It was previously Spanish on one screen and English on another, and adding a third language would have meant a third set of fields.
 * Leaving a field empty restores the shipped translation, so you only override the wording you actually want to change.
@@ -153,6 +157,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.6.1 =
+Fixes the Spanish tab showing English text. Recommended for anyone who installed 1.6.0.
 
 = 1.6.0 =
 Banner text now ships in four languages, edited in one place. Your customised text is carried over.

@@ -23,7 +23,7 @@ class Piensa_Cookie_Consent_Migrator {
 	/**
 	 * Schema version this release expects.
 	 */
-	const CURRENT_VERSION = 3;
+	const CURRENT_VERSION = 4;
 
 	/**
 	 * Options renamed in schema version 2, old key => new key.
@@ -77,6 +77,9 @@ class Piensa_Cookie_Consent_Migrator {
 			},
 			3 => static function () {
 				self::migrate_to_3();
+			},
+			4 => static function () {
+				self::migrate_to_4();
 			},
 		];
 	}
@@ -149,10 +152,13 @@ class Piensa_Cookie_Consent_Migrator {
 
 				$value = trim( (string) $settings[ $key ] );
 
-				// Only carry across what the site actually changed. Copying a
-				// value identical to the old default would freeze the site on
-				// wording this release improves.
-				if ( '' === $value || ( isset( $shipped[ $field ] ) && $value === $shipped[ $field ] ) ) {
+				// Only carry across what the site actually changed. A value
+				// equal to either the new default or the one 1.0-1.5 shipped
+				// is not a choice the site made.
+				$is_default = ( isset( $shipped[ $field ] ) && $value === $shipped[ $field ] )
+					|| ( isset( $legacy[ $field ] ) && $value === $legacy[ $field ] );
+
+				if ( '' === $value || $is_default ) {
 					continue;
 				}
 
@@ -161,6 +167,72 @@ class Piensa_Cookie_Consent_Migrator {
 		}
 
 		$settings['banner_text'] = $text;
+		update_option( 'piensa_cookie_consent_settings', $settings, false );
+	}
+
+	/**
+	 * The defaults releases 1.0 to 1.5 shipped.
+	 *
+	 * Those releases set English as the source language, so the values sitting
+	 * in the Spanish keys of an untouched install are English. The migration
+	 * has to recognise them, or it treats them as wording the site chose and
+	 * carries them into the Spanish block — which is how a site ended up with
+	 * a Spanish tab full of English.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function get_legacy_defaults() {
+		return [
+			'banner_title'             => 'Cookie preferences',
+			'banner_description'       => 'We use cookies to improve the experience and measure performance.',
+			'banner_accept_all'        => 'Accept all',
+			'banner_reject_all'        => 'Reject non-essential',
+			'banner_manage_prefs'      => 'Manage preferences',
+			'banner_save_prefs'        => 'Save preferences',
+			'banner_preferences_title' => 'Cookie preferences',
+			'necessary_label'          => 'Necessary cookies',
+			'necessary_description'    => 'Required for the basic functioning of the site.',
+			'necessary_legal_note'     => 'You can disable them, but some essential features may stop working.',
+			'analytics_label'          => 'Analytics cookies',
+			'analytics_description'    => 'Help us improve by measuring site usage.',
+			'marketing_label'          => 'Marketing cookies',
+			'marketing_description'    => 'Enable external content and personalized ads.',
+		];
+	}
+
+	/**
+	 * Schema version 4: clear English left in the Spanish block.
+	 *
+	 * Version 3 ran before it knew about the defaults above, so sites that had
+	 * already migrated carry English text in their Spanish fields. Only values
+	 * matching a shipped default exactly are removed; anything genuinely
+	 * written by the site stays.
+	 *
+	 * @return void
+	 */
+	private static function migrate_to_4() {
+		$settings = get_option( 'piensa_cookie_consent_settings', [] );
+
+		if ( ! is_array( $settings ) || empty( $settings['banner_text']['es'] ) ) {
+			return;
+		}
+
+		$legacy  = self::get_legacy_defaults();
+		$spanish = $settings['banner_text']['es'];
+		$changed = false;
+
+		foreach ( $legacy as $field => $english ) {
+			if ( isset( $spanish[ $field ] ) && trim( (string) $spanish[ $field ] ) === $english ) {
+				unset( $spanish[ $field ] );
+				$changed = true;
+			}
+		}
+
+		if ( ! $changed ) {
+			return;
+		}
+
+		$settings['banner_text']['es'] = $spanish;
 		update_option( 'piensa_cookie_consent_settings', $settings, false );
 	}
 
