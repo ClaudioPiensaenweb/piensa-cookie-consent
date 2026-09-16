@@ -183,6 +183,17 @@ class Piensa_Cookie_Consent_Blocker {
 			return $full_tag;
 		}
 
+		// Never block this plugin's own configuration. It declares the cookie
+		// names and domains of the services it knows about — Hotjar's _hj*,
+		// googletagmanager.com — which is exactly what the rules below match
+		// on, so the plugin was neutralising the script that tells the banner
+		// which categories to offer. The visible result was a preferences
+		// dialog with only the necessary category and none of the site's own
+		// text or colours.
+		if ( $this->is_own_script( $content ) ) {
+			return $full_tag;
+		}
+
 		if ( preg_match( '/\\btype=([\"\\\'])([^\"\\\']+)\\1/i', $attrs, $type_match ) ) {
 			$type = strtolower( $type_match[2] );
 			if ( ! in_array( $type, [ 'text/javascript', 'application/javascript', 'module' ], true ) ) {
@@ -205,6 +216,23 @@ class Piensa_Cookie_Consent_Blocker {
 		}
 
 		return $full_tag;
+	}
+
+	/**
+	 * Whether an inline script belongs to this plugin.
+	 *
+	 * @param string $content Script body.
+	 *
+	 * @return bool
+	 */
+	private function is_own_script( $content ) {
+		foreach ( [ 'PiensaCookieConsentConfig', 'PiensaCookieConsentAdminConfig', 'PiensaCookieConsentAudit' ] as $marker ) {
+			if ( strpos( $content, $marker ) !== false ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private function get_inline_script_rules() {

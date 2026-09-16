@@ -4,6 +4,29 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-09-16
+
+Found by reading `window.PiensaCookieConsentConfig` on a live site and finding
+it absent, while the blocker was plainly working.
+
+### Fixed
+- **The plugin was blocking its own configuration.** `wp_localize_script()`
+  emits the settings as an inline script. That script declares the cookie
+  names and domains of every service the plugin knows about — `_hj*`,
+  `googletagmanager.com`, `connect.facebook.net` — because it has to, in order
+  to describe them in the policy. Those are exactly the patterns the inline
+  rules match on, so the blocker neutralised it.
+
+  With no configuration, the front-end script fell back to its defaults: the
+  preferences dialog offered only the necessary category, with none of the
+  site's text, colours or policy links. Everything else worked, which is why
+  this read as the banner being unconfigured rather than as a bug.
+
+### Added
+- Forget a single domain or a single cookie, rather than only clearing the
+  whole list. Forgetting a domain also drops the cookies recorded against it
+  and any manual category override, so nothing survives to reappear.
+
 ## [1.4.2] - 2026-09-16
 
 ### Fixed

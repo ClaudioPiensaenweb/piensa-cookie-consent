@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.2
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,10 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.5.0 =
+* **The plugin was blocking its own configuration.** Its settings script declares the cookie names and domains of the services it knows about — Hotjar's `_hj*`, `googletagmanager.com` — which is exactly what the inline-script rules match on. The script that tells the banner which categories to offer was therefore neutralised on every page, and the preferences dialog fell back to its defaults: one category, none of the site's own text, colours or policy links. Fixed; the plugin now recognises its own scripts.
+* Domains and cookies can be forgotten one at a time. Forgetting a domain also drops the cookies recorded against it and any manual category override, so nothing reappears later.
+
 = 1.4.2 =
 * The release package is now reproducible: identical code produces identical bytes. It previously embedded file timestamps, so any rebuild changed the checksum and invalidated the update manifest, leaving the updater refusing a download that was perfectly good.
 
@@ -142,6 +146,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.5.0 =
+Fixes the banner showing only the necessary category with none of your own text or colours. Clear any page cache after updating.
 
 = 1.4.2 =
 Release infrastructure only.
