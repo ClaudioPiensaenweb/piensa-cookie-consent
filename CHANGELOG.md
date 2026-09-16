@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2026-09-16
+
+### Fixed
+- **The release package is now reproducible.** It embedded file modification
+  times, so two builds of identical code produced different bytes and
+  different checksums. Since the update manifest publishes a checksum of the
+  package, any rebuild invalidated a manifest that was otherwise still
+  correct — and the updater then refused a download that was perfectly good.
+  Caught by actually downloading the published package and checking it against
+  the published manifest, which did not match. CI now builds twice and fails
+  if the results differ.
+
 ## [1.4.1] - 2026-09-16
 
 ### Added

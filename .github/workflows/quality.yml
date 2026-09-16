@@ -101,3 +101,23 @@ jobs:
             exit 1
           fi
           echo "Package contents verified: $zip"
+
+      # The update manifest publishes a checksum of the package, so identical
+      # code has to produce identical bytes. Otherwise a rebuild invalidates a
+      # manifest that is still correct and the updater refuses a good download.
+      - name: Assert the build is reproducible
+        run: |
+          first="$(sha256sum build/*.zip | cut -d' ' -f1)"
+          rm -rf build
+          sleep 2
+          bash scripts/build-release.sh --output-dir=build
+          second="$(sha256sum build/*.zip | cut -d' ' -f1)"
+
+          if [ "$first" != "$second" ]; then
+            echo "::error::two builds of the same code produced different packages"
+            echo "  $first"
+            echo "  $second"
+            exit 1
+          fi
+
+          echo "Reproducible: $first"

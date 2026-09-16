@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.4.2 =
+* The release package is now reproducible: identical code produces identical bytes. It previously embedded file timestamps, so any rebuild changed the checksum and invalidated the update manifest, leaving the updater refusing a download that was perfectly good.
+
 = 1.4.1 =
 * The agency build can now update itself from GitHub. Each release publishes a static update manifest, so there is no update server to run.
 
@@ -139,6 +142,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.4.2 =
+Release infrastructure only.
 
 = 1.4.1 =
 Release infrastructure only; no change to how the plugin behaves on a site.

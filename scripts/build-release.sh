@@ -77,6 +77,18 @@ if command -v msgfmt >/dev/null 2>&1; then
     done
 fi
 
+# Make the archive reproducible. Without this, two builds of identical code
+# produce different bytes — the file modification times go into the ZIP — and
+# so different checksums. The update manifest publishes a checksum of the
+# package, so a rebuild would invalidate a manifest that is otherwise still
+# correct, and the updater would refuse a download that is perfectly good.
+SOURCE_EPOCH="${SOURCE_DATE_EPOCH:-}"
+if [ -z "$SOURCE_EPOCH" ]; then
+    SOURCE_EPOCH="$(git -C "$ROOT" log -1 --format=%ct 2>/dev/null || echo 1700000000)"
+fi
+
+find "$DEST" -exec touch -d "@${SOURCE_EPOCH}" {} + 2>/dev/null || true
+
 mkdir -p "$OUTPUT_DIR"
 
 # Resolve to an absolute path: the zip(1) branch below runs from the staging
@@ -91,14 +103,21 @@ rm -f "$ZIP"
 # zip(1) is absent from Git Bash, so fall back to Python's zipfile, which is
 # available wherever the rest of the toolchain is.
 if command -v zip >/dev/null 2>&1; then
-    ( cd "$STAGING" && zip -rq "$ZIP" "$SLUG" -x '*.DS_Store' )
+    ( cd "$STAGING" && TZ=UTC zip -rqX "$ZIP" "$SLUG" -x '*.DS_Store' )
 else
-    python - "$STAGING" "$SLUG" "$ZIP" <<'PYTHON'
+    SOURCE_EPOCH="$SOURCE_EPOCH" python - "$STAGING" "$SLUG" "$ZIP" <<'PYTHON'
 import os
 import sys
 import zipfile
 
 staging, slug, target = sys.argv[1:4]
+
+import time
+
+# A fixed timestamp for every entry, so the archive depends only on its
+# contents. zipfile stores whatever mtime it finds otherwise.
+epoch = int(os.environ.get("SOURCE_EPOCH", "1700000000"))
+stamp = time.gmtime(epoch)[:6]
 
 with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as archive:
     for root, dirs, files in os.walk(os.path.join(staging, slug)):
@@ -107,7 +126,14 @@ with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as archive:
             if name == ".DS_Store":
                 continue
             path = os.path.join(root, name)
-            archive.write(path, os.path.relpath(path, staging).replace(os.sep, "/"))
+            arcname = os.path.relpath(path, staging).replace(os.sep, "/")
+
+            info = zipfile.ZipInfo(arcname, date_time=stamp)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o644 << 16
+
+            with open(path, "rb") as handle:
+                archive.writestr(info, handle.read())
 PYTHON
 fi
 
