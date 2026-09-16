@@ -137,6 +137,8 @@ class Piensa_Cookie_Consent_Migrator {
 		$fields = array_keys( Piensa_Cookie_Consent_Banner_Text::get_fields() );
 		$text   = [];
 
+		$legacy = self::get_legacy_defaults();
+
 		foreach ( [
 			'es' => '',
 			'en' => '_en',
