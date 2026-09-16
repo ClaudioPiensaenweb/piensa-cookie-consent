@@ -166,57 +166,9 @@ class Piensa_Cookie_Consent_Admin {
 		);
 
 		add_settings_field(
-			'piensa_cookie_consent_banner_title',
-			esc_html__( 'Banner title', 'piensa-cookie-consent' ),
-			[ $this, 'render_banner_title_field' ],
-			'piensa-cookie-consent',
-			'piensa_cookie_consent_banner'
-		);
-
-		add_settings_field(
-			'piensa_cookie_consent_banner_description',
-			esc_html__( 'Banner description', 'piensa-cookie-consent' ),
-			[ $this, 'render_banner_description_field' ],
-			'piensa-cookie-consent',
-			'piensa_cookie_consent_banner'
-		);
-
-		add_settings_field(
-			'piensa_cookie_consent_banner_accept_all',
-			esc_html__( 'Accept all label', 'piensa-cookie-consent' ),
-			[ $this, 'render_banner_accept_all_field' ],
-			'piensa-cookie-consent',
-			'piensa_cookie_consent_banner'
-		);
-
-		add_settings_field(
-			'piensa_cookie_consent_banner_reject_all',
-			esc_html__( 'Reject non-essential label', 'piensa-cookie-consent' ),
-			[ $this, 'render_banner_reject_all_field' ],
-			'piensa-cookie-consent',
-			'piensa_cookie_consent_banner'
-		);
-
-		add_settings_field(
-			'piensa_cookie_consent_banner_manage',
-			esc_html__( 'Manage preferences label', 'piensa-cookie-consent' ),
-			[ $this, 'render_banner_manage_field' ],
-			'piensa-cookie-consent',
-			'piensa_cookie_consent_banner'
-		);
-
-		add_settings_field(
-			'piensa_cookie_consent_banner_save',
-			esc_html__( 'Save preferences label', 'piensa-cookie-consent' ),
-			[ $this, 'render_banner_save_field' ],
-			'piensa-cookie-consent',
-			'piensa_cookie_consent_banner'
-		);
-
-		add_settings_field(
-			'piensa_cookie_consent_banner_preferences_title',
-			esc_html__( 'Modal title', 'piensa-cookie-consent' ),
-			[ $this, 'render_banner_preferences_title_field' ],
+			'piensa_cookie_consent_banner_text_pointer',
+			esc_html__( 'Banner text', 'piensa-cookie-consent' ),
+			[ $this, 'render_banner_text_pointer_field' ],
 			'piensa-cookie-consent',
 			'piensa_cookie_consent_banner'
 		);
@@ -254,13 +206,6 @@ class Piensa_Cookie_Consent_Admin {
 			'piensa_cookie_consent_categories'
 		);
 
-		add_settings_field(
-			'piensa_cookie_consent_category_labels',
-			esc_html__( 'Labels and text', 'piensa-cookie-consent' ),
-			[ $this, 'render_category_labels_field' ],
-			'piensa-cookie-consent',
-			'piensa_cookie_consent_categories'
-		);
 
 		add_settings_section(
 			'piensa_cookie_consent_appearance',
@@ -340,15 +285,15 @@ class Piensa_Cookie_Consent_Admin {
 			'piensa_cookie_consent_languages',
 			esc_html__( 'Multilingual text', 'piensa-cookie-consent' ),
 			function () {
-				echo '<p>' . esc_html__( 'Set the Spanish and English text.', 'piensa-cookie-consent' ) . '</p>';
+				echo '<p>' . esc_html__( 'The text visitors read, in each language the banner ships with. Every field already carries a translation; change one only if you want different wording. Leave a field empty to go back to the shipped text.', 'piensa-cookie-consent' ) . '</p>';
 			},
 			'piensa-cookie-consent'
 		);
 
 		add_settings_field(
-			'piensa_cookie_consent_texts_en',
-			esc_html__( 'English text', 'piensa-cookie-consent' ),
-			[ $this, 'render_texts_en_field' ],
+			'piensa_cookie_consent_banner_text',
+			esc_html__( 'Banner text', 'piensa-cookie-consent' ),
+			[ $this, 'render_banner_text_field' ],
 			'piensa-cookie-consent',
 			'piensa_cookie_consent_languages'
 		);
@@ -696,47 +641,12 @@ class Piensa_Cookie_Consent_Admin {
 		echo '</div>';
 	}
 
-	public function render_banner_title_field() {
-		$settings = self::get_settings();
-		$value    = $settings['banner_title'];
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_title]" value="' . esc_attr( $value ) . '" />';
-	}
 
-	public function render_banner_description_field() {
-		$settings = self::get_settings();
-		$value    = esc_textarea( $settings['banner_description'] );
-		echo '<textarea class="large-text" rows="3" name="' . esc_attr( $this->option_name ) . '[banner_description]">' . esc_attr( $value ) . '</textarea>';
-	}
 
-	public function render_banner_accept_all_field() {
-		$settings = self::get_settings();
-		$value    = $settings['banner_accept_all'];
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_accept_all]" value="' . esc_attr( $value ) . '" />';
-	}
 
-	public function render_banner_reject_all_field() {
-		$settings = self::get_settings();
-		$value    = $settings['banner_reject_all'];
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_reject_all]" value="' . esc_attr( $value ) . '" />';
-	}
 
-	public function render_banner_manage_field() {
-		$settings = self::get_settings();
-		$value    = $settings['banner_manage_prefs'];
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_manage_prefs]" value="' . esc_attr( $value ) . '" />';
-	}
 
-	public function render_banner_save_field() {
-		$settings = self::get_settings();
-		$value    = $settings['banner_save_prefs'];
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_save_prefs]" value="' . esc_attr( $value ) . '" />';
-	}
 
-	public function render_banner_preferences_title_field() {
-		$settings = self::get_settings();
-		$value    = $settings['banner_preferences_title'];
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_preferences_title]" value="' . esc_attr( $value ) . '" />';
-	}
 
 	public function render_category_mode_field() {
 		$settings = self::get_settings();
@@ -763,25 +673,6 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<label style="display:block;"><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[marketing_enabled]" value="1" ' . esc_attr( $marketing ) . '> Marketing</label>';
 	}
 
-	public function render_category_labels_field() {
-		$settings = self::get_settings();
-		echo '<div class="ag-field-group">';
-		echo '<strong>' . esc_html__( 'Necessary', 'piensa-cookie-consent' ) . '</strong>';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[necessary_label]" value="' . esc_attr( $settings['necessary_label'] ) . '" />';
-		echo '<textarea class="large-text" rows="2" name="' . esc_attr( $this->option_name ) . '[necessary_description]">' . esc_textarea( $settings['necessary_description'] ) . '</textarea>';
-		echo '<textarea class="large-text" rows="2" name="' . esc_attr( $this->option_name ) . '[necessary_legal_note]" placeholder="' . esc_attr__( 'Legal note (optional)', 'piensa-cookie-consent' ) . '">' . esc_textarea( $settings['necessary_legal_note'] ) . '</textarea>';
-		echo '</div>';
-		echo '<div class="ag-field-group">';
-		echo '<strong>' . esc_html__( 'Analytics', 'piensa-cookie-consent' ) . '</strong>';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[analytics_label]" value="' . esc_attr( $settings['analytics_label'] ) . '" />';
-		echo '<textarea class="large-text" rows="2" name="' . esc_attr( $this->option_name ) . '[analytics_description]">' . esc_textarea( $settings['analytics_description'] ) . '</textarea>';
-		echo '</div>';
-		echo '<div class="ag-field-group">';
-		echo '<strong>Marketing</strong>';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[marketing_label]" value="' . esc_attr( $settings['marketing_label'] ) . '" />';
-		echo '<textarea class="large-text" rows="2" name="' . esc_attr( $this->option_name ) . '[marketing_description]">' . esc_textarea( $settings['marketing_description'] ) . '</textarea>';
-		echo '</div>';
-	}
 
 	public function render_layout_position_field() {
 		$settings             = self::get_settings();
@@ -969,8 +860,9 @@ class Piensa_Cookie_Consent_Admin {
 		echo '</div>';
 		echo '<div class="ag-field-group">';
 		echo '<select name="' . esc_attr( $this->option_name ) . '[default_language]">';
-		echo '<option value="es"' . selected( $default, 'es', false ) . '>Espanol</option>';
-		echo '<option value="en"' . selected( $default, 'en', false ) . '>English</option>';
+		foreach ( Piensa_Cookie_Consent_Banner_Text::get_languages() as $code => $label ) {
+			echo '<option value="' . esc_attr( $code ) . '"' . selected( $default, $code, false ) . '>' . esc_html( $label ) . '</option>';
+		}
 		echo '</select>';
 		echo '<p class="description">' . esc_html__( 'Used when detection fails.', 'piensa-cookie-consent' ) . '</p>';
 		echo '</div>';
@@ -983,30 +875,68 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<a class="button" href="' . esc_url( $json_url ) . '">' . esc_html__( 'Download the JSON report', 'piensa-cookie-consent' ) . '</a>';
 	}
 
-	public function render_texts_en_field() {
-		$settings = self::get_settings();
-		echo '<div class="ag-field-group">';
-		echo '<strong>' . esc_html__( 'Banner', 'piensa-cookie-consent' ) . '</strong>';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_title_en]" value="' . esc_attr( $settings['banner_title_en'] ) . '" placeholder="Title" />';
-		echo '<textarea class="large-text" rows="2" name="' . esc_attr( $this->option_name ) . '[banner_description_en]">' . esc_textarea( $settings['banner_description_en'] ) . '</textarea>';
-		echo '<div class="ag-field-row">';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_accept_all_en]" value="' . esc_attr( $settings['banner_accept_all_en'] ) . '" placeholder="Accept all" />';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_reject_all_en]" value="' . esc_attr( $settings['banner_reject_all_en'] ) . '" placeholder="Reject" />';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_manage_prefs_en]" value="' . esc_attr( $settings['banner_manage_prefs_en'] ) . '" placeholder="Manage preferences" />';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_save_prefs_en]" value="' . esc_attr( $settings['banner_save_prefs_en'] ) . '" placeholder="Save preferences" />';
-		echo '</div>';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[banner_preferences_title_en]" value="' . esc_attr( $settings['banner_preferences_title_en'] ) . '" placeholder="Preferences title" />';
-		echo '</div>';
-		echo '<div class="ag-field-group">';
-		echo '<strong>Categories</strong>';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[necessary_label_en]" value="' . esc_attr( $settings['necessary_label_en'] ) . '" placeholder="Necessary" />';
-		echo '<textarea class="large-text" rows="2" name="' . esc_attr( $this->option_name ) . '[necessary_description_en]">' . esc_textarea( $settings['necessary_description_en'] ) . '</textarea>';
-		echo '<textarea class="large-text" rows="2" name="' . esc_attr( $this->option_name ) . '[necessary_legal_note_en]" placeholder="Legal note (optional)">' . esc_textarea( $settings['necessary_legal_note_en'] ) . '</textarea>';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[analytics_label_en]" value="' . esc_attr( $settings['analytics_label_en'] ) . '" placeholder="Analytics" />';
-		echo '<textarea class="large-text" rows="2" name="' . esc_attr( $this->option_name ) . '[analytics_description_en]">' . esc_textarea( $settings['analytics_description_en'] ) . '</textarea>';
-		echo '<input class="regular-text" type="text" name="' . esc_attr( $this->option_name ) . '[marketing_label_en]" value="' . esc_attr( $settings['marketing_label_en'] ) . '" placeholder="Marketing" />';
-		echo '<textarea class="large-text" rows="2" name="' . esc_attr( $this->option_name ) . '[marketing_description_en]">' . esc_textarea( $settings['marketing_description_en'] ) . '</textarea>';
-		echo '</div>';
+	/**
+	 * Render the banner text, one block per shipped language.
+	 *
+	 * Spanish first and open by default: on these sites it is what nearly every
+	 * visitor sees. The others are collapsed so the screen stays readable.
+	 *
+	 * @return void
+	 */
+	/**
+	 * Point at where the banner text is edited now.
+	 *
+	 * It used to be here, in Spanish only, with English on a separate screen.
+	 * Keeping a second copy of the same fields would mean two places to change
+	 * one string and no way to tell which had won.
+	 *
+	 * @return void
+	 */
+	public function render_banner_text_pointer_field() {
+		echo '<p class="description">';
+		echo esc_html__( 'The banner and category text is edited under Languages, in every language the plugin ships with.', 'piensa-cookie-consent' );
+		echo '</p>';
+		echo '<p><button type="button" class="button" data-ag-goto-tab="idiomas">' . esc_html__( 'Go to Languages', 'piensa-cookie-consent' ) . '</button></p>';
+	}
+
+	public function render_banner_text_field() {
+		$settings  = self::get_settings();
+		$languages = Piensa_Cookie_Consent_Banner_Text::get_languages();
+		$fields    = Piensa_Cookie_Consent_Banner_Text::get_fields();
+		$long      = Piensa_Cookie_Consent_Banner_Text::get_long_fields();
+		$first     = true;
+
+		foreach ( $languages as $code => $label ) {
+			$text = Piensa_Cookie_Consent_Banner_Text::get_text( $code, $settings );
+
+			echo '<details class="ag-lang-block" style="margin-bottom:14px;border:1px solid #dcdcde;border-radius:8px;background:#fff;"' . ( $first ? ' open' : '' ) . '>';
+			echo '<summary style="cursor:pointer;padding:12px 14px;font-weight:600;">';
+			echo esc_html( $label ) . ' <code style="font-weight:400;">' . esc_html( $code ) . '</code>';
+			echo '</summary>';
+			echo '<div style="padding:0 14px 14px;">';
+
+			foreach ( $fields as $field => $field_label ) {
+				$name  = sprintf(
+					'%s[%s][%s][%s]',
+					$this->option_name,
+					Piensa_Cookie_Consent_Banner_Text::OPTION_KEY,
+					$code,
+					$field
+				);
+				$value = isset( $text[ $field ] ) ? $text[ $field ] : '';
+
+				echo '<p style="margin:10px 0 4px;"><label for="' . esc_attr( $code . '-' . $field ) . '"><strong>' . esc_html( $field_label ) . '</strong></label></p>';
+
+				if ( in_array( $field, $long, true ) ) {
+					echo '<textarea id="' . esc_attr( $code . '-' . $field ) . '" class="large-text" rows="2" name="' . esc_attr( $name ) . '">' . esc_textarea( $value ) . '</textarea>';
+				} else {
+					echo '<input id="' . esc_attr( $code . '-' . $field ) . '" class="regular-text" type="text" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" />';
+				}
+			}
+
+			echo '</div></details>';
+			$first = false;
+		}
 	}
 
 	public function render_branding_field() {
@@ -1577,20 +1507,27 @@ class Piensa_Cookie_Consent_Admin {
 	}
 
 	private function build_preview_config( $settings ) {
+		// Labels come from the language blocks; the preview applies them
+		// through the translations, so the definitions only need the shape.
+		$text = Piensa_Cookie_Consent_Banner_Text::get_text(
+			! empty( $settings['default_language'] ) ? $settings['default_language'] : 'es',
+			$settings
+		);
+
 		$definitions = [
 			'necessary' => [
-				'label'       => $settings['necessary_label'],
-				'description' => $settings['necessary_description'],
+				'label'       => $text['necessary_label'],
+				'description' => $text['necessary_description'],
 				'cookies'     => [],
 			],
 			'analytics' => [
-				'label'       => $settings['analytics_label'],
-				'description' => $settings['analytics_description'],
+				'label'       => $text['analytics_label'],
+				'description' => $text['analytics_description'],
 				'cookies'     => [],
 			],
 			'marketing' => [
-				'label'       => $settings['marketing_label'],
-				'description' => $settings['marketing_description'],
+				'label'       => $text['marketing_label'],
+				'description' => $text['marketing_description'],
 				'cookies'     => [],
 			],
 		];
@@ -1633,40 +1570,7 @@ class Piensa_Cookie_Consent_Admin {
 				'mode'    => 'custom',
 				'default' => $site_lang,
 				'site'    => $site_lang,
-				'texts'   => [
-					'es' => [
-						'banner_title'             => $settings['banner_title'],
-						'banner_description'       => $settings['banner_description'],
-						'banner_accept_all'        => $settings['banner_accept_all'],
-						'banner_reject_all'        => $settings['banner_reject_all'],
-						'banner_manage_prefs'      => $settings['banner_manage_prefs'],
-						'banner_save_prefs'        => $settings['banner_save_prefs'],
-						'banner_preferences_title' => $settings['banner_preferences_title'],
-						'necessary_label'          => $settings['necessary_label'],
-						'necessary_description'    => $settings['necessary_description'],
-						'necessary_legal_note'     => $settings['necessary_legal_note'],
-						'analytics_label'          => $settings['analytics_label'],
-						'analytics_description'    => $settings['analytics_description'],
-						'marketing_label'          => $settings['marketing_label'],
-						'marketing_description'    => $settings['marketing_description'],
-					],
-					'en' => [
-						'banner_title'             => $settings['banner_title_en'],
-						'banner_description'       => $settings['banner_description_en'],
-						'banner_accept_all'        => $settings['banner_accept_all_en'],
-						'banner_reject_all'        => $settings['banner_reject_all_en'],
-						'banner_manage_prefs'      => $settings['banner_manage_prefs_en'],
-						'banner_save_prefs'        => $settings['banner_save_prefs_en'],
-						'banner_preferences_title' => $settings['banner_preferences_title_en'],
-						'necessary_label'          => $settings['necessary_label_en'],
-						'necessary_description'    => $settings['necessary_description_en'],
-						'necessary_legal_note'     => $settings['necessary_legal_note_en'],
-						'analytics_label'          => $settings['analytics_label_en'],
-						'analytics_description'    => $settings['analytics_description_en'],
-						'marketing_label'          => $settings['marketing_label_en'],
-						'marketing_description'    => $settings['marketing_description_en'],
-					],
-				],
+				'texts'   => Piensa_Cookie_Consent_Banner_Text::get_all( $settings ),
 			],
 			'brand'             => [
 				'name' => $settings['brand_name'],
@@ -1681,13 +1585,13 @@ class Piensa_Cookie_Consent_Admin {
 				'ajaxUrl'          => admin_url( 'admin-ajax.php' ),
 				'nonce'            => wp_create_nonce( 'piensa_cookie_consent_log' ),
 				'banner'           => [
-					'title'            => $settings['banner_title'],
-					'description'      => $settings['banner_description'],
-					'acceptAll'        => $settings['banner_accept_all'],
-					'rejectAll'        => $settings['banner_reject_all'],
-					'managePrefs'      => $settings['banner_manage_prefs'],
-					'savePrefs'        => $settings['banner_save_prefs'],
-					'preferencesTitle' => $settings['banner_preferences_title'],
+					'title'            => $text['banner_title'],
+					'description'      => $text['banner_description'],
+					'acceptAll'        => $text['banner_accept_all'],
+					'rejectAll'        => $text['banner_reject_all'],
+					'managePrefs'      => $text['banner_manage_prefs'],
+					'savePrefs'        => $text['banner_save_prefs'],
+					'preferencesTitle' => $text['banner_preferences_title'],
 				],
 			],
 		];
@@ -1725,6 +1629,11 @@ class Piensa_Cookie_Consent_Admin {
 
 		$enable_blocker            = ! empty( $value['enable_blocker'] ) ? true : false;
 		$block_unknown_third_party = ! empty( $value['block_unknown_third_party'] ) ? true : false;
+		$banner_text               = Piensa_Cookie_Consent_Banner_Text::sanitize(
+			isset( $value[ Piensa_Cookie_Consent_Banner_Text::OPTION_KEY ] )
+				? $value[ Piensa_Cookie_Consent_Banner_Text::OPTION_KEY ]
+				: []
+		);
 		$log_retention_days        = isset( $value['log_retention_days'] ) ? max( 0, min( 3650, (int) $value['log_retention_days'] ) ) : 0;
 		$allowed_domains           = isset( $value['allowed_domains'] ) ? (string) $value['allowed_domains'] : '';
 
@@ -1755,13 +1664,6 @@ class Piensa_Cookie_Consent_Admin {
 		$update_public_key        = isset( $value['update_public_key'] ) ? trim( (string) $value['update_public_key'] ) : '';
 		$update_require_signature = ! empty( $value['update_require_signature'] ) ? true : false;
 
-		$banner_title             = isset( $value['banner_title'] ) ? wp_strip_all_tags( (string) $value['banner_title'] ) : '';
-		$banner_description       = isset( $value['banner_description'] ) ? sanitize_textarea_field( (string) $value['banner_description'] ) : '';
-		$banner_accept_all        = isset( $value['banner_accept_all'] ) ? wp_strip_all_tags( (string) $value['banner_accept_all'] ) : '';
-		$banner_reject_all        = isset( $value['banner_reject_all'] ) ? wp_strip_all_tags( (string) $value['banner_reject_all'] ) : '';
-		$banner_manage_prefs      = isset( $value['banner_manage_prefs'] ) ? wp_strip_all_tags( (string) $value['banner_manage_prefs'] ) : '';
-		$banner_save_prefs        = isset( $value['banner_save_prefs'] ) ? wp_strip_all_tags( (string) $value['banner_save_prefs'] ) : '';
-		$banner_preferences_title = isset( $value['banner_preferences_title'] ) ? wp_strip_all_tags( (string) $value['banner_preferences_title'] ) : '';
 
 		$banner_show_icon  = ! empty( $value['banner_show_icon'] ) ? true : false;
 		$banner_icon_style = isset( $value['banner_icon_style'] ) && in_array( $value['banner_icon_style'], [ 'cookie', 'cookie-bite', 'shield', 'lock', 'fingerprint' ], true )
@@ -1777,12 +1679,6 @@ class Piensa_Cookie_Consent_Admin {
 		$allow_necessary_toggle = ! empty( $value['allow_necessary_toggle'] ) ? true : false;
 		$analytics_enabled      = ! empty( $value['analytics_enabled'] ) ? true : false;
 		$marketing_enabled      = ! empty( $value['marketing_enabled'] ) ? true : false;
-		$necessary_label        = isset( $value['necessary_label'] ) ? wp_strip_all_tags( (string) $value['necessary_label'] ) : '';
-		$necessary_description  = isset( $value['necessary_description'] ) ? wp_strip_all_tags( (string) $value['necessary_description'] ) : '';
-		$analytics_label        = isset( $value['analytics_label'] ) ? wp_strip_all_tags( (string) $value['analytics_label'] ) : '';
-		$analytics_description  = isset( $value['analytics_description'] ) ? wp_strip_all_tags( (string) $value['analytics_description'] ) : '';
-		$marketing_label        = isset( $value['marketing_label'] ) ? wp_strip_all_tags( (string) $value['marketing_label'] ) : '';
-		$marketing_description  = isset( $value['marketing_description'] ) ? wp_strip_all_tags( (string) $value['marketing_description'] ) : '';
 
 		$consent_layout       = isset( $value['consent_layout'] ) ? sanitize_text_field( (string) $value['consent_layout'] ) : $defaults['consent_layout'];
 		$consent_position     = isset( $value['consent_position'] ) ? sanitize_text_field( (string) $value['consent_position'] ) : $defaults['consent_position'];
@@ -1808,26 +1704,12 @@ class Piensa_Cookie_Consent_Admin {
 		$language_mode    = isset( $value['language_mode'] ) && in_array( $value['language_mode'], [ 'auto', 'site', 'browser', 'custom' ], true )
 			? $value['language_mode']
 			: $defaults['language_mode'];
-		$default_language = isset( $value['default_language'] ) && in_array( $value['default_language'], [ 'es', 'en' ], true )
+		$shipped_languages = array_keys( Piensa_Cookie_Consent_Banner_Text::get_languages() );
+		$default_language  = isset( $value['default_language'] ) && in_array( $value['default_language'], $shipped_languages, true )
 			? $value['default_language']
 			: $defaults['default_language'];
 
-		$banner_title_en             = isset( $value['banner_title_en'] ) ? wp_strip_all_tags( (string) $value['banner_title_en'] ) : '';
-		$banner_description_en       = isset( $value['banner_description_en'] ) ? sanitize_textarea_field( (string) $value['banner_description_en'] ) : '';
-		$banner_accept_all_en        = isset( $value['banner_accept_all_en'] ) ? wp_strip_all_tags( (string) $value['banner_accept_all_en'] ) : '';
-		$banner_reject_all_en        = isset( $value['banner_reject_all_en'] ) ? wp_strip_all_tags( (string) $value['banner_reject_all_en'] ) : '';
-		$banner_manage_prefs_en      = isset( $value['banner_manage_prefs_en'] ) ? wp_strip_all_tags( (string) $value['banner_manage_prefs_en'] ) : '';
-		$banner_save_prefs_en        = isset( $value['banner_save_prefs_en'] ) ? wp_strip_all_tags( (string) $value['banner_save_prefs_en'] ) : '';
-		$banner_preferences_title_en = isset( $value['banner_preferences_title_en'] ) ? wp_strip_all_tags( (string) $value['banner_preferences_title_en'] ) : '';
 
-		$necessary_label_en       = isset( $value['necessary_label_en'] ) ? wp_strip_all_tags( (string) $value['necessary_label_en'] ) : '';
-		$necessary_description_en = isset( $value['necessary_description_en'] ) ? wp_strip_all_tags( (string) $value['necessary_description_en'] ) : '';
-		$necessary_legal_note     = isset( $value['necessary_legal_note'] ) ? sanitize_textarea_field( (string) $value['necessary_legal_note'] ) : '';
-		$necessary_legal_note_en  = isset( $value['necessary_legal_note_en'] ) ? sanitize_textarea_field( (string) $value['necessary_legal_note_en'] ) : '';
-		$analytics_label_en       = isset( $value['analytics_label_en'] ) ? wp_strip_all_tags( (string) $value['analytics_label_en'] ) : '';
-		$analytics_description_en = isset( $value['analytics_description_en'] ) ? wp_strip_all_tags( (string) $value['analytics_description_en'] ) : '';
-		$marketing_label_en       = isset( $value['marketing_label_en'] ) ? wp_strip_all_tags( (string) $value['marketing_label_en'] ) : '';
-		$marketing_description_en = isset( $value['marketing_description_en'] ) ? wp_strip_all_tags( (string) $value['marketing_description_en'] ) : '';
 
 		$brand_name     = isset( $value['brand_name'] ) ? wp_strip_all_tags( (string) $value['brand_name'] ) : '';
 		$brand_logo_url = isset( $value['brand_logo_url'] ) ? esc_url_raw( (string) $value['brand_logo_url'] ) : '';
@@ -1849,6 +1731,7 @@ class Piensa_Cookie_Consent_Admin {
 			'enable_blocker'              => $enable_blocker,
 			'block_unknown_third_party'   => $block_unknown_third_party,
 			'log_retention_days'          => $log_retention_days,
+			'banner_text'                 => $banner_text,
 			'allowed_domains'             => $allowed_domains !== '' ? $allowed_domains : $defaults['allowed_domains'],
 			'blocked_domains'             => $blocked_domains !== '' ? $blocked_domains : $defaults['blocked_domains'],
 			'placeholder_title'           => $placeholder_title !== '' ? $placeholder_title : $defaults['placeholder_title'],
@@ -1865,13 +1748,6 @@ class Piensa_Cookie_Consent_Admin {
 			'update_token'                => $update_token !== '' ? $update_token : $defaults['update_token'],
 			'update_public_key'           => $update_public_key !== '' ? $update_public_key : $defaults['update_public_key'],
 			'update_require_signature'    => $update_require_signature,
-			'banner_title'                => $banner_title !== '' ? $banner_title : $defaults['banner_title'],
-			'banner_description'          => $banner_description !== '' ? $banner_description : $defaults['banner_description'],
-			'banner_accept_all'           => $banner_accept_all !== '' ? $banner_accept_all : $defaults['banner_accept_all'],
-			'banner_reject_all'           => $banner_reject_all !== '' ? $banner_reject_all : $defaults['banner_reject_all'],
-			'banner_manage_prefs'         => $banner_manage_prefs !== '' ? $banner_manage_prefs : $defaults['banner_manage_prefs'],
-			'banner_save_prefs'           => $banner_save_prefs !== '' ? $banner_save_prefs : $defaults['banner_save_prefs'],
-			'banner_preferences_title'    => $banner_preferences_title !== '' ? $banner_preferences_title : $defaults['banner_preferences_title'],
 			'banner_show_icon'            => $banner_show_icon,
 			'banner_icon_style'           => $banner_icon_style,
 			'custom_cookies'              => $custom_cookies !== '' ? $custom_cookies : $defaults['custom_cookies'],
@@ -1880,13 +1756,6 @@ class Piensa_Cookie_Consent_Admin {
 			'allow_necessary_toggle'      => $allow_necessary_toggle,
 			'analytics_enabled'           => $analytics_enabled,
 			'marketing_enabled'           => $marketing_enabled,
-			'necessary_label'             => $necessary_label !== '' ? $necessary_label : $defaults['necessary_label'],
-			'necessary_description'       => $necessary_description !== '' ? $necessary_description : $defaults['necessary_description'],
-			'necessary_legal_note'        => $necessary_legal_note !== '' ? $necessary_legal_note : $defaults['necessary_legal_note'],
-			'analytics_label'             => $analytics_label !== '' ? $analytics_label : $defaults['analytics_label'],
-			'analytics_description'       => $analytics_description !== '' ? $analytics_description : $defaults['analytics_description'],
-			'marketing_label'             => $marketing_label !== '' ? $marketing_label : $defaults['marketing_label'],
-			'marketing_description'       => $marketing_description !== '' ? $marketing_description : $defaults['marketing_description'],
 			'consent_layout'              => $consent_layout ?: $defaults['consent_layout'],
 			'consent_position'            => $consent_position ?: $defaults['consent_position'],
 			'preferences_layout'          => $preferences_layout ?: $defaults['preferences_layout'],
@@ -1905,20 +1774,6 @@ class Piensa_Cookie_Consent_Admin {
 			'geo_header'                  => $geo_header,
 			'language_mode'               => $language_mode,
 			'default_language'            => $default_language,
-			'banner_title_en'             => $banner_title_en !== '' ? $banner_title_en : $defaults['banner_title_en'],
-			'banner_description_en'       => $banner_description_en !== '' ? $banner_description_en : $defaults['banner_description_en'],
-			'banner_accept_all_en'        => $banner_accept_all_en !== '' ? $banner_accept_all_en : $defaults['banner_accept_all_en'],
-			'banner_reject_all_en'        => $banner_reject_all_en !== '' ? $banner_reject_all_en : $defaults['banner_reject_all_en'],
-			'banner_manage_prefs_en'      => $banner_manage_prefs_en !== '' ? $banner_manage_prefs_en : $defaults['banner_manage_prefs_en'],
-			'banner_save_prefs_en'        => $banner_save_prefs_en !== '' ? $banner_save_prefs_en : $defaults['banner_save_prefs_en'],
-			'banner_preferences_title_en' => $banner_preferences_title_en !== '' ? $banner_preferences_title_en : $defaults['banner_preferences_title_en'],
-			'necessary_label_en'          => $necessary_label_en !== '' ? $necessary_label_en : $defaults['necessary_label_en'],
-			'necessary_description_en'    => $necessary_description_en !== '' ? $necessary_description_en : $defaults['necessary_description_en'],
-			'necessary_legal_note_en'     => $necessary_legal_note_en !== '' ? $necessary_legal_note_en : $defaults['necessary_legal_note_en'],
-			'analytics_label_en'          => $analytics_label_en !== '' ? $analytics_label_en : $defaults['analytics_label_en'],
-			'analytics_description_en'    => $analytics_description_en !== '' ? $analytics_description_en : $defaults['analytics_description_en'],
-			'marketing_label_en'          => $marketing_label_en !== '' ? $marketing_label_en : $defaults['marketing_label_en'],
-			'marketing_description_en'    => $marketing_description_en !== '' ? $marketing_description_en : $defaults['marketing_description_en'],
 			'brand_name'                  => $brand_name !== '' ? $brand_name : $defaults['brand_name'],
 			'brand_logo_url'              => $brand_logo_url !== '' ? $brand_logo_url : $defaults['brand_logo_url'],
 			'hide_branding'               => $hide_branding,
@@ -2027,6 +1882,9 @@ class Piensa_Cookie_Consent_Admin {
 			// Two years: long enough to answer a challenge about a consent
 			// given, short enough not to be a store of records nobody needs.
 			'log_retention_days'          => 730,
+			// Empty: every language falls back to the text shipped in
+			// includes/data/banner-text.json until a site overrides it.
+			'banner_text'                 => [],
 			'allowed_domains'             => self::get_default_allowed_domains(),
 			'blocked_domains'             => implode(
 				"\n",
@@ -2056,13 +1914,6 @@ class Piensa_Cookie_Consent_Admin {
 			'update_token'                => '',
 			'update_public_key'           => '',
 			'update_require_signature'    => true,
-			'banner_title'                => __( 'Cookie preferences', 'piensa-cookie-consent' ),
-			'banner_description'          => __( 'We use cookies to improve the experience and measure performance.', 'piensa-cookie-consent' ),
-			'banner_accept_all'           => __( 'Accept all', 'piensa-cookie-consent' ),
-			'banner_reject_all'           => __( 'Reject non-essential', 'piensa-cookie-consent' ),
-			'banner_manage_prefs'         => __( 'Manage preferences', 'piensa-cookie-consent' ),
-			'banner_save_prefs'           => __( 'Save preferences', 'piensa-cookie-consent' ),
-			'banner_preferences_title'    => __( 'Cookie preferences', 'piensa-cookie-consent' ),
 			'banner_show_icon'            => true,
 			'banner_icon_style'           => 'cookie',
 			'custom_cookies'              => '',
@@ -2071,13 +1922,6 @@ class Piensa_Cookie_Consent_Admin {
 			'allow_necessary_toggle'      => false,
 			'analytics_enabled'           => true,
 			'marketing_enabled'           => true,
-			'necessary_label'             => __( 'Necessary cookies', 'piensa-cookie-consent' ),
-			'necessary_description'       => __( 'Required for the basic functioning of the site.', 'piensa-cookie-consent' ),
-			'necessary_legal_note'        => __( 'You can disable them, but some essential features may stop working.', 'piensa-cookie-consent' ),
-			'analytics_label'             => __( 'Analytics cookies', 'piensa-cookie-consent' ),
-			'analytics_description'       => __( 'Help us improve by measuring site usage.', 'piensa-cookie-consent' ),
-			'marketing_label'             => __( 'Marketing cookies', 'piensa-cookie-consent' ),
-			'marketing_description'       => __( 'Enable external content and personalized ads.', 'piensa-cookie-consent' ),
 			'consent_layout'              => 'box',
 			'consent_position'            => 'bottom right',
 			'preferences_layout'          => 'box',
@@ -2096,20 +1940,6 @@ class Piensa_Cookie_Consent_Admin {
 			'geo_header'                  => 'auto',
 			'language_mode'               => 'auto',
 			'default_language'            => 'es',
-			'banner_title_en'             => 'Cookie preferences',
-			'banner_description_en'       => 'We use cookies to improve the experience and measure performance.',
-			'banner_accept_all_en'        => 'Accept all',
-			'banner_reject_all_en'        => 'Reject non-essential',
-			'banner_manage_prefs_en'      => 'Manage preferences',
-			'banner_save_prefs_en'        => 'Save preferences',
-			'banner_preferences_title_en' => 'Cookie preferences',
-			'necessary_label_en'          => 'Necessary cookies',
-			'necessary_description_en'    => 'Required for the basic functioning of the site.',
-			'necessary_legal_note_en'     => 'You can disable them, but some essential features may stop working.',
-			'analytics_label_en'          => 'Analytics cookies',
-			'analytics_description_en'    => 'Help us improve by measuring site usage.',
-			'marketing_label_en'          => 'Marketing cookies',
-			'marketing_description_en'    => 'Enable external content and personalized ads.',
 			'brand_name'                  => '',
 			'brand_logo_url'              => '',
 			'hide_branding'               => false,

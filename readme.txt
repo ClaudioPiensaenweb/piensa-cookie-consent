@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,8 @@ Everything runs on your own server. The plugin makes no calls to third-party ser
 * **Consent log.** Every choice is recorded with a hashed IP, never the address itself, and can be exported to CSV as evidence of compliance.
 * **Geo-targeting.** Show the banner across the EEA, the UK and Switzerland, in a country list of your own, or everywhere.
 * **WP Consent API.** Registers as the site's consent manager so other plugins can ask whether they are allowed to set a cookie.
-* **Appearance.** Layout, position, colours, radii and icons, with a live preview in the admin. One button reads your theme's own palette and fills the colours in for you.
+* **Appearance.** Layout, position, colours, radii and icons, with a live preview in the admin. One button reads your theme's own palette and fills the colours in for you, keeping a tinted background and a brand accent rather than flattening everything to black and white.
+* **Four languages out of the box.** Spanish, English, German and French, all pre-translated and editable in one place.
 
 = Shortcodes =
 
@@ -84,6 +85,12 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 4. The banner on the front end.
 
 == Changelog ==
+
+= 1.6.0 =
+* **Spanish, English, German and French, all pre-translated.** The banner text now ships in four languages and is edited in one place, with Spanish first. It was previously Spanish on one screen and English on another, and adding a third language would have meant a third set of fields.
+* Leaving a field empty restores the shipped translation, so you only override the wording you actually want to change.
+* **The theme colours are read less rigidly.** A theme with a tinted light tone — a warm off-white, a pale brand wash — now gets it instead of flat white, and a brand colour reaches the button instead of being flattened to black. Contrast is still checked throughout: the tint only wins if body text clears WCAG AAA on it.
+* Your existing text is carried over. Anything left at its old default is dropped, so the site picks up the improved translations.
 
 = 1.5.0 =
 * **The plugin was blocking its own configuration.** Its settings script declares the cookie names and domains of the services it knows about — Hotjar's `_hj*`, `googletagmanager.com` — which is exactly what the inline-script rules match on. The script that tells the banner which categories to offer was therefore neutralised on every page, and the preferences dialog fell back to its defaults: one category, none of the site's own text, colours or policy links. Fixed; the plugin now recognises its own scripts.
@@ -146,6 +153,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.6.0 =
+Banner text now ships in four languages, edited in one place. Your customised text is carried over.
 
 = 1.5.0 =
 Fixes the banner showing only the necessary category with none of your own text or colours. Clear any page cache after updating.

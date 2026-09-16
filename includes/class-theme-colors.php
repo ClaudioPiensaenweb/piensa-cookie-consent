@@ -85,6 +85,12 @@ class Piensa_Cookie_Consent_Theme_Colors {
 			return [];
 		}
 
+		// A theme that has a tinted light tone — a warm off-white, a pale
+		// brand wash — usually wants the banner to sit in it rather than on
+		// flat white. Taken only when the body text still clears AAA on it, so
+		// flexibility never costs legibility.
+		$background = self::prefer_tinted( $palette, $background, $text );
+
 		// An accent that is neither the background nor the text, and that
 		// stands out against the background. A theme can call a pale tint
 		// "accent-1"; used on a button over a near-white panel it reads as no
@@ -101,7 +107,7 @@ class Piensa_Cookie_Consent_Theme_Colors {
 			'theme_primary_color'       => $text,
 			'theme_secondary_color'     => self::blend( $text, $background, 0.35 ),
 			'theme_btn_primary_bg'      => $accent,
-			'theme_btn_primary_color'   => self::readable_on( $accent ),
+			'theme_btn_primary_color'   => self::readable_on( $accent, $palette ),
 			'theme_btn_secondary_bg'    => self::blend( $accent, $background, 0.85 ),
 			'theme_btn_secondary_color' => $text,
 		];
@@ -227,8 +233,73 @@ class Piensa_Cookie_Consent_Theme_Colors {
 	 *
 	 * @return string
 	 */
-	public static function readable_on( $hex ) {
-		return self::luminance( $hex ) > 0.179 ? '#111111' : '#ffffff';
+	public static function readable_on( $hex, array $palette = [] ) {
+		$fallback = self::luminance( $hex ) > 0.179 ? '#111111' : '#ffffff';
+
+		if ( ! $palette ) {
+			return $fallback;
+		}
+
+		// Prefer a colour the theme actually uses. A brand's near-black or
+		// off-white reads as part of the design where pure black or white
+		// reads as a default, and the contrast check keeps it legible either
+		// way. Among those that qualify, take the one furthest from the
+		// button colour.
+		$best  = '';
+		$score = 0.0;
+
+		foreach ( $palette as $entry ) {
+			$contrast = self::contrast( $entry['color'], $hex );
+
+			if ( $contrast >= 4.5 && $contrast > $score ) {
+				$score = $contrast;
+				$best  = $entry['color'];
+			}
+		}
+
+		return $best ? $best : $fallback;
+	}
+
+	/**
+	 * Swap a flat background for a tinted one the theme also offers.
+	 *
+	 * @param array  $palette    Palette entries.
+	 * @param string $background Background chosen so far.
+	 * @param string $text       Chosen text colour.
+	 *
+	 * @return string
+	 */
+	private static function prefer_tinted( array $palette, $background, $text ) {
+		// Only worth doing when the current pick is essentially colourless.
+		if ( self::saturation( $background ) > 0.12 ) {
+			return $background;
+		}
+
+		$best  = $background;
+		$score = 0.0;
+
+		foreach ( $palette as $entry ) {
+			$color = $entry['color'];
+
+			if ( $color === $background || $color === $text ) {
+				continue;
+			}
+
+			$saturation = self::saturation( $color );
+
+			// 7:1 is WCAG AAA for body text. Insisting on it here means the
+			// tint can only ever be a subtle one, which is the point.
+			if ( $saturation <= 0.12 || self::contrast( $text, $color ) < 7.0 ) {
+				continue;
+			}
+
+			if ( $saturation > $score ) {
+				$score = $saturation;
+				$best  = $color;
+			}
+		}
+
+		return $best;
 	}
 
 	/**

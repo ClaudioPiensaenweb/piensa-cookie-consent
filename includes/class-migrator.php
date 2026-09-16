@@ -23,7 +23,7 @@ class Piensa_Cookie_Consent_Migrator {
 	/**
 	 * Schema version this release expects.
 	 */
-	const CURRENT_VERSION = 2;
+	const CURRENT_VERSION = 3;
 
 	/**
 	 * Options renamed in schema version 2, old key => new key.
@@ -75,6 +75,9 @@ class Piensa_Cookie_Consent_Migrator {
 			2 => static function () {
 				self::migrate_to_2();
 			},
+			3 => static function () {
+				self::migrate_to_3();
+			},
 		];
 	}
 
@@ -107,6 +110,55 @@ class Piensa_Cookie_Consent_Migrator {
 		self::rename_consent_log_table();
 
 		delete_transient( 'agency_shield_cmp_scan_notice' );
+	}
+
+	/**
+	 * Schema version 3: banner text moves under one key, per language.
+	 *
+	 * Up to 1.5.0 the Spanish text lived in flat keys (`banner_title`) and the
+	 * English in the same keys with an `_en` suffix, edited on two different
+	 * screens. Adding a third language would have meant a third suffix, so the
+	 * text now lives in `banner_text[<code>]`. Anything a site had customised
+	 * is carried across; anything left at its default is dropped, so the site
+	 * picks up the shipped translations from then on.
+	 *
+	 * @return void
+	 */
+	private static function migrate_to_3() {
+		$settings = get_option( 'piensa_cookie_consent_settings', [] );
+
+		if ( ! is_array( $settings ) || isset( $settings['banner_text'] ) ) {
+			return;
+		}
+
+		$fields = array_keys( Piensa_Cookie_Consent_Banner_Text::get_fields() );
+		$text   = [];
+
+		foreach ( [ 'es' => '', 'en' => '_en' ] as $code => $suffix ) {
+			$shipped = Piensa_Cookie_Consent_Banner_Text::get_defaults_for( $code );
+
+			foreach ( $fields as $field ) {
+				$key = $field . $suffix;
+
+				if ( ! isset( $settings[ $key ] ) ) {
+					continue;
+				}
+
+				$value = trim( (string) $settings[ $key ] );
+
+				// Only carry across what the site actually changed. Copying a
+				// value identical to the old default would freeze the site on
+				// wording this release improves.
+				if ( '' === $value || ( isset( $shipped[ $field ] ) && $value === $shipped[ $field ] ) ) {
+					continue;
+				}
+
+				$text[ $code ][ $field ] = $value;
+			}
+		}
+
+		$settings['banner_text'] = $text;
+		update_option( 'piensa_cookie_consent_settings', $settings, false );
 	}
 
 	/**

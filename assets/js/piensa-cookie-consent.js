@@ -79,9 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const theme = config.theme || {};
         const languageConfig = config.language || {};
         const activeLang = resolveLanguage(languageConfig);
-        const texts = languageConfig.texts || {};
-        const sectionsEs = buildPreferenceSections(definitions, enabledFlags, texts.es || {});
-        const sectionsEn = buildPreferenceSections(definitions, enabledFlags, texts.en || {});
         const autoClear = buildAutoClear(definitions, enabledFlags);
         const servicesConfig = buildServicesConfig(config.services || {}, enabledFlags);
         const allowNecessaryToggle = !!ui.allowNecessaryToggle;
@@ -107,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
             language: {
                 default: activeLang,
                 autoDetect: resolveAutoDetect(languageConfig),
-                translations: buildTranslations(languageConfig, sectionsEs, sectionsEn, policy, config.brand),
+                translations: buildTranslations(languageConfig, definitions, enabledFlags, policy, config.brand),
             },
             categories: {
                 necessary: { enabled: true, readOnly: !allowNecessaryToggle },
@@ -374,12 +371,19 @@ function resolveAutoDetect(languageConfig) {
     return 'document';
 }
 
+function availableLanguages() {
+    const config = window.PiensaCookieConsentConfig || {};
+    const texts = (config.language || {}).texts || {};
+    const codes = Object.keys(texts);
+    return codes.length ? codes : ['es'];
+}
+
 function sanitizeLang(value, fallback) {
+    // Checked against the languages actually shipped rather than a pair
+    // hardcoded here, so a visitor whose browser is set to German gets German
+    // once German is in the data file.
     const lang = String(value || '').toLowerCase().slice(0, 2);
-    if (lang === 'en' || lang === 'es') {
-        return lang;
-    }
-    return fallback || 'es';
+    return availableLanguages().indexOf(lang) !== -1 ? lang : (fallback || 'es');
 }
 
 // The banner has to link to the cookie policy: informing the visitor before
@@ -413,57 +417,47 @@ function escapeAttribute(value) {
     return escapeText(value).replace(/"/g, '&quot;');
 }
 
-function buildTranslations(languageConfig, sectionsEs, sectionsEn, policy, brand) {
+// Labels for the policy links, per language. The banner is read by visitors,
+// so these follow the banner's language rather than the dashboard's.
+const POLICY_LABELS = {
+    es: { cookiePolicy: 'Política de cookies', privacyPolicy: 'Política de privacidad' },
+    en: { cookiePolicy: 'Cookie policy', privacyPolicy: 'Privacy policy' },
+    de: { cookiePolicy: 'Cookie-Richtlinie', privacyPolicy: 'Datenschutzerklärung' },
+    fr: { cookiePolicy: 'Politique de cookies', privacyPolicy: 'Politique de confidentialité' },
+};
+
+function buildTranslations(languageConfig, definitions, enabledFlags, policy, brand) {
     const texts = (languageConfig && languageConfig.texts) || {};
-    const es = texts.es || {};
-    const en = texts.en || {};
-    const i18n = (window.PiensaCookieConsentConfig || {}).i18n || {};
+    const translations = {};
 
-    const footerEs = buildFooter(policy, brand, {
-        cookiePolicy: i18n.cookiePolicyEs || 'Politica de cookies',
-        privacyPolicy: i18n.privacyPolicyEs || 'Politica de privacidad',
-    });
-    const footerEn = buildFooter(policy, brand, {
-        cookiePolicy: i18n.cookiePolicyEn || 'Cookie policy',
-        privacyPolicy: i18n.privacyPolicyEn || 'Privacy policy',
-    });
+    // Built from whatever languages the server sent rather than from a fixed
+    // pair, so adding one is a data change and not a code change.
+    Object.keys(texts).forEach(function(code) {
+        const t = texts[code] || {};
+        const labels = POLICY_LABELS[code] || POLICY_LABELS.en;
+        const footer = buildFooter(policy, brand, labels);
+        const sections = buildPreferenceSections(definitions, enabledFlags, t);
 
-    return {
-        es: {
+        translations[code] = {
             consentModal: {
-                title: es.banner_title || 'Preferencias de cookies',
-                description: es.banner_description || 'Usamos cookies para mejorar la experiencia y medir el rendimiento.',
-                acceptAllBtn: es.banner_accept_all || 'Aceptar todas',
-                acceptNecessaryBtn: es.banner_reject_all || 'Rechazar no necesarias',
-                showPreferencesBtn: es.banner_manage_prefs || 'Gestionar preferencias',
-                footer: footerEs,
+                title: t.banner_title,
+                description: t.banner_description,
+                acceptAllBtn: t.banner_accept_all,
+                acceptNecessaryBtn: t.banner_reject_all,
+                showPreferencesBtn: t.banner_manage_prefs,
+                footer: footer,
             },
             preferencesModal: {
-                title: es.banner_preferences_title || 'Preferencias de cookies',
-                acceptAllBtn: es.banner_accept_all || 'Aceptar todas',
-                acceptNecessaryBtn: es.banner_reject_all || 'Rechazar no necesarias',
-                savePreferencesBtn: es.banner_save_prefs || 'Guardar preferencias',
-                sections: sectionsEs,
+                title: t.banner_preferences_title || t.banner_title,
+                acceptAllBtn: t.banner_accept_all,
+                acceptNecessaryBtn: t.banner_reject_all,
+                savePreferencesBtn: t.banner_save_prefs,
+                sections: sections,
             },
-        },
-        en: {
-            consentModal: {
-                title: en.banner_title || 'Cookie preferences',
-                description: en.banner_description || 'We use cookies to improve the experience and measure performance.',
-                acceptAllBtn: en.banner_accept_all || 'Accept all',
-                acceptNecessaryBtn: en.banner_reject_all || 'Reject non-essential',
-                showPreferencesBtn: en.banner_manage_prefs || 'Manage preferences',
-                footer: footerEn,
-            },
-            preferencesModal: {
-                title: en.banner_preferences_title || 'Cookie preferences',
-                acceptAllBtn: en.banner_accept_all || 'Accept all',
-                acceptNecessaryBtn: en.banner_reject_all || 'Reject non-essential',
-                savePreferencesBtn: en.banner_save_prefs || 'Save preferences',
-                sections: sectionsEn,
-            },
-        },
-    };
+        };
+    });
+
+    return translations;
 }
 
 function buildServicesConfig(servicesData, enabledFlags) {

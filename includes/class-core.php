@@ -16,6 +16,7 @@ require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-blocker.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-log.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-geo.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-icons.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-banner-text.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-theme-colors.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-diagnostics.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent.php';
@@ -206,40 +207,10 @@ class Piensa_Cookie_Consent_Core {
 					'mode'    => $settings['language_mode'],
 					'default' => $settings['default_language'],
 					'site'    => $site_lang,
-					'texts'   => [
-						'es' => [
-							'banner_title'             => $settings['banner_title'],
-							'banner_description'       => $settings['banner_description'],
-							'banner_accept_all'        => $settings['banner_accept_all'],
-							'banner_reject_all'        => $settings['banner_reject_all'],
-							'banner_manage_prefs'      => $settings['banner_manage_prefs'],
-							'banner_save_prefs'        => $settings['banner_save_prefs'],
-							'banner_preferences_title' => $settings['banner_preferences_title'],
-							'necessary_label'          => $settings['necessary_label'],
-							'necessary_description'    => $settings['necessary_description'],
-							'necessary_legal_note'     => $settings['necessary_legal_note'],
-							'analytics_label'          => $settings['analytics_label'],
-							'analytics_description'    => $settings['analytics_description'],
-							'marketing_label'          => $settings['marketing_label'],
-							'marketing_description'    => $settings['marketing_description'],
-						],
-						'en' => [
-							'banner_title'             => $settings['banner_title_en'],
-							'banner_description'       => $settings['banner_description_en'],
-							'banner_accept_all'        => $settings['banner_accept_all_en'],
-							'banner_reject_all'        => $settings['banner_reject_all_en'],
-							'banner_manage_prefs'      => $settings['banner_manage_prefs_en'],
-							'banner_save_prefs'        => $settings['banner_save_prefs_en'],
-							'banner_preferences_title' => $settings['banner_preferences_title_en'],
-							'necessary_label'          => $settings['necessary_label_en'],
-							'necessary_description'    => $settings['necessary_description_en'],
-							'necessary_legal_note'     => $settings['necessary_legal_note_en'],
-							'analytics_label'          => $settings['analytics_label_en'],
-							'analytics_description'    => $settings['analytics_description_en'],
-							'marketing_label'          => $settings['marketing_label_en'],
-							'marketing_description'    => $settings['marketing_description_en'],
-						],
-					],
+					// Every shipped language, defaults merged with the site's
+					// overrides. Previously only Spanish and English were sent,
+					// each assembled from its own flat set of option keys.
+					'texts'   => Piensa_Cookie_Consent_Banner_Text::get_all( $settings ),
 				],
 				'services'          => [
 					'registry' => $services,

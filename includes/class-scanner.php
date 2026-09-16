@@ -239,11 +239,19 @@ class Piensa_Cookie_Consent_Scanner {
 	}
 
 	public function get_cookie_definitions() {
-		$settings    = Piensa_Cookie_Consent_Admin::get_settings();
+		$settings = Piensa_Cookie_Consent_Admin::get_settings();
+
+		// The policy is rendered server-side in one language, so it uses the
+		// configured default rather than the per-visitor banner language.
+		$text = Piensa_Cookie_Consent_Banner_Text::get_text(
+			! empty( $settings['default_language'] ) ? $settings['default_language'] : 'es',
+			$settings
+		);
+
 		$definitions = [
 			'necessary' => [
-				'label'       => $settings['necessary_label'],
-				'description' => $settings['necessary_description'],
+				'label'       => $text['necessary_label'],
+				'description' => $text['necessary_description'],
 				'cookies'     => [
 					[
 						// The plugin's own consent record. Declaring it is not
@@ -274,13 +282,13 @@ class Piensa_Cookie_Consent_Scanner {
 				],
 			],
 			'analytics' => [
-				'label'       => $settings['analytics_label'],
-				'description' => $settings['analytics_description'],
+				'label'       => $text['analytics_label'],
+				'description' => $text['analytics_description'],
 				'cookies'     => [],
 			],
 			'marketing' => [
-				'label'       => $settings['marketing_label'],
-				'description' => $settings['marketing_description'],
+				'label'       => $text['marketing_label'],
+				'description' => $text['marketing_description'],
 				'cookies'     => [],
 			],
 		];

@@ -4,6 +4,27 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-09-16
+
+### Changed
+- **Banner text is one thing now, in four languages.** Spanish lived in flat
+  option keys edited on the Banner and Categories screens; English lived in the
+  same keys with an `_en` suffix on a screen of its own. Two places to edit one
+  string, and adding a third language meant a third suffix. Text now lives
+  under `banner_text[<code>]` and is edited in one place, Spanish first,
+  shipping pre-translated in Spanish, English, German and French. An empty
+  field falls back to the shipped translation rather than rendering blank.
+
+  Customised text is migrated across. Anything still at its old default is
+  dropped, so those sites pick up the better wording.
+- **The colour heuristic is less rigid.** It reduced any theme to its lightest
+  and darkest colours, which on a palette built around a tinted surface and a
+  brand accent produced a flat white banner with a black button — technically
+  correct, and nothing like the site. A tinted light tone is now preferred when
+  the theme has one, and the button label can be a palette colour rather than
+  always pure black or white. The contrast floors are unchanged: the tint has
+  to clear AAA for body text, the label AA on its button.
+
 ## [1.5.0] - 2026-09-16
 
 Found by reading `window.PiensaCookieConsentConfig` on a live site and finding

@@ -99,6 +99,28 @@ function piensa_test_palettes() {
 				'color' => '#4f8cff',
 			],
 		],
+		'tinted-brand'      => [
+			[
+				'slug'  => 'base',
+				'name'  => 'Base',
+				'color' => '#ffffff',
+			],
+			[
+				'slug'  => 'surface',
+				'name'  => 'Surface',
+				'color' => '#fdeee8',
+			],
+			[
+				'slug'  => 'contrast',
+				'name'  => 'Contrast',
+				'color' => '#1b2a4a',
+			],
+			[
+				'slug'  => 'primary',
+				'name'  => 'Primary',
+				'color' => '#ee5a24',
+			],
+		],
 		'unusual-slugs-rgb' => [
 			[
 				'slug'  => 'lienzo',
@@ -197,6 +219,16 @@ return function ( $assert ) {
 			"$name: primary button stands out from the background"
 		);
 	}
+
+	// A theme with a tinted light tone should get it, not flat white, and the
+	// brand colour should survive onto the button rather than being flattened
+	// to black. Both were happening before the heuristic was loosened.
+	$GLOBALS['piensa_test_palette'] = piensa_test_palettes()['tinted-brand'];
+	$tinted                         = Piensa_Cookie_Consent_Theme_Colors::suggest();
+
+	$assert( '#fdeee8' === $tinted['theme_bg'], 'tinted background is preferred over flat white' );
+	$assert( '#ee5a24' === $tinted['theme_btn_primary_bg'], 'the brand colour reaches the button' );
+	$assert( '#ffffff' !== $tinted['theme_primary_color'], 'body text is not the background' );
 
 	// A palette with nothing to work from must decline rather than guess.
 	$GLOBALS['piensa_test_palette'] = [

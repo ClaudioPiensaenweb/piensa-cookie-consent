@@ -74,6 +74,48 @@
             return Number.isFinite(parsed) ? parsed : fallback;
         };
 
+        const TEXT_FIELDS = [
+            'banner_title',
+            'banner_description',
+            'banner_accept_all',
+            'banner_reject_all',
+            'banner_manage_prefs',
+            'banner_save_prefs',
+            'banner_preferences_title',
+            'necessary_label',
+            'necessary_description',
+            'necessary_legal_note',
+            'analytics_label',
+            'analytics_description',
+            'marketing_label',
+            'marketing_description',
+        ];
+
+        function readBannerText(data) {
+            const texts = {};
+            const prefix = 'piensa_cookie_consent_settings[banner_text][';
+
+            for (const key of data.keys()) {
+                if (key.indexOf(prefix) !== 0) {
+                    continue;
+                }
+                const code = key.slice(prefix.length).split(']')[0];
+                if (!code || texts[code]) {
+                    continue;
+                }
+
+                texts[code] = {};
+                TEXT_FIELDS.forEach(function(field) {
+                    const value = data.get(prefix + code + '][' + field + ']');
+                    if (value) {
+                        texts[code][field] = value;
+                    }
+                });
+            }
+
+            return texts;
+        }
+
         function buildConfig(data) {
             const defaultLanguage = getValue(data, 'default_language', 'es') || 'es';
 
@@ -83,22 +125,12 @@
                     analytics: getBool(data, 'analytics_enabled'),
                     marketing: getBool(data, 'marketing_enabled'),
                 },
+                // Labels come from the language blocks now; the preview only
+                // needs the shape, since the text is applied from translations.
                 cookieDefinitions: {
-                    necessary: {
-                        label: getValue(data, 'necessary_label', 'Cookies necesarias'),
-                        description: getValue(data, 'necessary_description', ''),
-                        cookies: [],
-                    },
-                    analytics: {
-                        label: getValue(data, 'analytics_label', 'Cookies de analitica'),
-                        description: getValue(data, 'analytics_description', ''),
-                        cookies: [],
-                    },
-                    marketing: {
-                        label: getValue(data, 'marketing_label', 'Cookies de marketing'),
-                        description: getValue(data, 'marketing_description', ''),
-                        cookies: [],
-                    },
+                    necessary: { label: '', description: '', cookies: [] },
+                    analytics: { label: '', description: '', cookies: [] },
+                    marketing: { label: '', description: '', cookies: [] },
                 },
                 ui: {
                     floatingButton: false,
@@ -127,40 +159,10 @@
                     mode: 'custom',
                     default: defaultLanguage,
                     site: defaultLanguage,
-                    texts: {
-                        es: {
-                            banner_title: getValue(data, 'banner_title', ''),
-                            banner_description: getValue(data, 'banner_description', ''),
-                            banner_accept_all: getValue(data, 'banner_accept_all', ''),
-                            banner_reject_all: getValue(data, 'banner_reject_all', ''),
-                            banner_manage_prefs: getValue(data, 'banner_manage_prefs', ''),
-                            banner_save_prefs: getValue(data, 'banner_save_prefs', ''),
-                            banner_preferences_title: getValue(data, 'banner_preferences_title', ''),
-                            necessary_label: getValue(data, 'necessary_label', ''),
-                            necessary_description: getValue(data, 'necessary_description', ''),
-                            necessary_legal_note: getValue(data, 'necessary_legal_note', ''),
-                            analytics_label: getValue(data, 'analytics_label', ''),
-                            analytics_description: getValue(data, 'analytics_description', ''),
-                            marketing_label: getValue(data, 'marketing_label', ''),
-                            marketing_description: getValue(data, 'marketing_description', ''),
-                        },
-                        en: {
-                            banner_title: getValue(data, 'banner_title_en', ''),
-                            banner_description: getValue(data, 'banner_description_en', ''),
-                            banner_accept_all: getValue(data, 'banner_accept_all_en', ''),
-                            banner_reject_all: getValue(data, 'banner_reject_all_en', ''),
-                            banner_manage_prefs: getValue(data, 'banner_manage_prefs_en', ''),
-                            banner_save_prefs: getValue(data, 'banner_save_prefs_en', ''),
-                            banner_preferences_title: getValue(data, 'banner_preferences_title_en', ''),
-                            necessary_label: getValue(data, 'necessary_label_en', ''),
-                            necessary_description: getValue(data, 'necessary_description_en', ''),
-                            necessary_legal_note: getValue(data, 'necessary_legal_note_en', ''),
-                            analytics_label: getValue(data, 'analytics_label_en', ''),
-                            analytics_description: getValue(data, 'analytics_description_en', ''),
-                            marketing_label: getValue(data, 'marketing_label_en', ''),
-                            marketing_description: getValue(data, 'marketing_description_en', ''),
-                        },
-                    },
+                    // Read straight from the form, which now holds one block
+                    // per language rather than a flat set of keys with an _en
+                    // suffix on half of them.
+                    texts: readBannerText(data),
                 },
                 brand: {
                     name: getValue(data, 'brand_name', ''),
@@ -275,6 +277,20 @@
         input.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
+    // The Banner screen points at Languages rather than repeating its fields.
+    function initTabLinks() {
+        document.querySelectorAll('[data-ag-goto-tab]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const target = btn.getAttribute('data-ag-goto-tab');
+                const tab = document.querySelector('.ag-tab-btn[data-tab="' + target + '"]');
+                if (tab) {
+                    tab.click();
+                    tab.scrollIntoView({ block: 'center' });
+                }
+            });
+        });
+    }
+
     function initThemeColors() {
         const button = document.querySelector('[data-ag-use-theme-colors]');
         if (!button || !window.PiensaCookieConsentAdminConfig) {
@@ -333,6 +349,7 @@
         initColorEditor();
         initPresets();
         initThemeColors();
+        initTabLinks();
     }
 
     if (document.readyState === 'loading') {
