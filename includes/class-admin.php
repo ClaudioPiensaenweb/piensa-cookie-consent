@@ -206,7 +206,6 @@ class Piensa_Cookie_Consent_Admin {
 			'piensa_cookie_consent_categories'
 		);
 
-
 		add_settings_section(
 			'piensa_cookie_consent_appearance',
 			esc_html__( 'Appearance and position', 'piensa-cookie-consent' ),
@@ -1664,7 +1663,6 @@ class Piensa_Cookie_Consent_Admin {
 		$update_public_key        = isset( $value['update_public_key'] ) ? trim( (string) $value['update_public_key'] ) : '';
 		$update_require_signature = ! empty( $value['update_require_signature'] ) ? true : false;
 
-
 		$banner_show_icon  = ! empty( $value['banner_show_icon'] ) ? true : false;
 		$banner_icon_style = isset( $value['banner_icon_style'] ) && in_array( $value['banner_icon_style'], [ 'cookie', 'cookie-bite', 'shield', 'lock', 'fingerprint' ], true )
 			? $value['banner_icon_style']
@@ -1701,15 +1699,13 @@ class Piensa_Cookie_Consent_Admin {
 		$geo_countries = isset( $value['geo_countries'] ) ? sanitize_text_field( (string) $value['geo_countries'] ) : $defaults['geo_countries'];
 		$geo_header    = isset( $value['geo_header'] ) ? sanitize_text_field( (string) $value['geo_header'] ) : $defaults['geo_header'];
 
-		$language_mode    = isset( $value['language_mode'] ) && in_array( $value['language_mode'], [ 'auto', 'site', 'browser', 'custom' ], true )
+		$language_mode     = isset( $value['language_mode'] ) && in_array( $value['language_mode'], [ 'auto', 'site', 'browser', 'custom' ], true )
 			? $value['language_mode']
 			: $defaults['language_mode'];
 		$shipped_languages = array_keys( Piensa_Cookie_Consent_Banner_Text::get_languages() );
 		$default_language  = isset( $value['default_language'] ) && in_array( $value['default_language'], $shipped_languages, true )
 			? $value['default_language']
 			: $defaults['default_language'];
-
-
 
 		$brand_name     = isset( $value['brand_name'] ) ? wp_strip_all_tags( (string) $value['brand_name'] ) : '';
 		$brand_logo_url = isset( $value['brand_logo_url'] ) ? esc_url_raw( (string) $value['brand_logo_url'] ) : '';
@@ -1728,55 +1724,55 @@ class Piensa_Cookie_Consent_Admin {
 		}
 
 		return [
-			'enable_blocker'              => $enable_blocker,
-			'block_unknown_third_party'   => $block_unknown_third_party,
-			'log_retention_days'          => $log_retention_days,
-			'banner_text'                 => $banner_text,
-			'allowed_domains'             => $allowed_domains !== '' ? $allowed_domains : $defaults['allowed_domains'],
-			'blocked_domains'             => $blocked_domains !== '' ? $blocked_domains : $defaults['blocked_domains'],
-			'placeholder_title'           => $placeholder_title !== '' ? $placeholder_title : $defaults['placeholder_title'],
-			'placeholder_button'          => $placeholder_button !== '' ? $placeholder_button : $defaults['placeholder_button'],
-			'show_floating_button'        => $show_floating_button,
-			'floating_button_text'        => $floating_button_text !== '' ? $floating_button_text : $defaults['floating_button_text'],
-			'floating_button_style'       => $floating_button_style,
-			'enable_consent_log'          => $enable_consent_log,
-			'policy_revision'             => $policy_revision,
-			'cookie_policy_url'           => $cookie_policy_url !== '' ? $cookie_policy_url : $defaults['cookie_policy_url'],
-			'privacy_policy_url'          => $privacy_policy_url !== '' ? $privacy_policy_url : $defaults['privacy_policy_url'],
-			'update_server_url'           => $update_server_url !== '' ? $update_server_url : $defaults['update_server_url'],
-			'update_channel'              => $update_channel,
-			'update_token'                => $update_token !== '' ? $update_token : $defaults['update_token'],
-			'update_public_key'           => $update_public_key !== '' ? $update_public_key : $defaults['update_public_key'],
-			'update_require_signature'    => $update_require_signature,
-			'banner_show_icon'            => $banner_show_icon,
-			'banner_icon_style'           => $banner_icon_style,
-			'custom_cookies'              => $custom_cookies !== '' ? $custom_cookies : $defaults['custom_cookies'],
-			'domain_overrides'            => $domain_overrides,
-			'category_mode'               => $category_mode,
-			'allow_necessary_toggle'      => $allow_necessary_toggle,
-			'analytics_enabled'           => $analytics_enabled,
-			'marketing_enabled'           => $marketing_enabled,
-			'consent_layout'              => $consent_layout ?: $defaults['consent_layout'],
-			'consent_position'            => $consent_position ?: $defaults['consent_position'],
-			'preferences_layout'          => $preferences_layout ?: $defaults['preferences_layout'],
-			'preferences_position'        => $preferences_position ?: $defaults['preferences_position'],
-			'theme_bg'                    => $theme_bg ?: $defaults['theme_bg'],
-			'theme_primary_color'         => $theme_primary_color ?: $defaults['theme_primary_color'],
-			'theme_secondary_color'       => $theme_secondary_color ?: $defaults['theme_secondary_color'],
-			'theme_btn_primary_bg'        => $theme_btn_primary_bg ?: $defaults['theme_btn_primary_bg'],
-			'theme_btn_primary_color'     => $theme_btn_primary_color ?: $defaults['theme_btn_primary_color'],
-			'theme_btn_secondary_bg'      => $theme_btn_secondary_bg ?: $defaults['theme_btn_secondary_bg'],
-			'theme_btn_secondary_color'   => $theme_btn_secondary_color ?: $defaults['theme_btn_secondary_color'],
-			'theme_modal_radius'          => $theme_modal_radius,
-			'theme_button_radius'         => $theme_button_radius,
-			'geo_mode'                    => $geo_mode,
-			'geo_countries'               => $geo_countries,
-			'geo_header'                  => $geo_header,
-			'language_mode'               => $language_mode,
-			'default_language'            => $default_language,
-			'brand_name'                  => $brand_name !== '' ? $brand_name : $defaults['brand_name'],
-			'brand_logo_url'              => $brand_logo_url !== '' ? $brand_logo_url : $defaults['brand_logo_url'],
-			'hide_branding'               => $hide_branding,
+			'enable_blocker'            => $enable_blocker,
+			'block_unknown_third_party' => $block_unknown_third_party,
+			'log_retention_days'        => $log_retention_days,
+			'banner_text'               => $banner_text,
+			'allowed_domains'           => $allowed_domains !== '' ? $allowed_domains : $defaults['allowed_domains'],
+			'blocked_domains'           => $blocked_domains !== '' ? $blocked_domains : $defaults['blocked_domains'],
+			'placeholder_title'         => $placeholder_title !== '' ? $placeholder_title : $defaults['placeholder_title'],
+			'placeholder_button'        => $placeholder_button !== '' ? $placeholder_button : $defaults['placeholder_button'],
+			'show_floating_button'      => $show_floating_button,
+			'floating_button_text'      => $floating_button_text !== '' ? $floating_button_text : $defaults['floating_button_text'],
+			'floating_button_style'     => $floating_button_style,
+			'enable_consent_log'        => $enable_consent_log,
+			'policy_revision'           => $policy_revision,
+			'cookie_policy_url'         => $cookie_policy_url !== '' ? $cookie_policy_url : $defaults['cookie_policy_url'],
+			'privacy_policy_url'        => $privacy_policy_url !== '' ? $privacy_policy_url : $defaults['privacy_policy_url'],
+			'update_server_url'         => $update_server_url !== '' ? $update_server_url : $defaults['update_server_url'],
+			'update_channel'            => $update_channel,
+			'update_token'              => $update_token !== '' ? $update_token : $defaults['update_token'],
+			'update_public_key'         => $update_public_key !== '' ? $update_public_key : $defaults['update_public_key'],
+			'update_require_signature'  => $update_require_signature,
+			'banner_show_icon'          => $banner_show_icon,
+			'banner_icon_style'         => $banner_icon_style,
+			'custom_cookies'            => $custom_cookies !== '' ? $custom_cookies : $defaults['custom_cookies'],
+			'domain_overrides'          => $domain_overrides,
+			'category_mode'             => $category_mode,
+			'allow_necessary_toggle'    => $allow_necessary_toggle,
+			'analytics_enabled'         => $analytics_enabled,
+			'marketing_enabled'         => $marketing_enabled,
+			'consent_layout'            => $consent_layout ?: $defaults['consent_layout'],
+			'consent_position'          => $consent_position ?: $defaults['consent_position'],
+			'preferences_layout'        => $preferences_layout ?: $defaults['preferences_layout'],
+			'preferences_position'      => $preferences_position ?: $defaults['preferences_position'],
+			'theme_bg'                  => $theme_bg ?: $defaults['theme_bg'],
+			'theme_primary_color'       => $theme_primary_color ?: $defaults['theme_primary_color'],
+			'theme_secondary_color'     => $theme_secondary_color ?: $defaults['theme_secondary_color'],
+			'theme_btn_primary_bg'      => $theme_btn_primary_bg ?: $defaults['theme_btn_primary_bg'],
+			'theme_btn_primary_color'   => $theme_btn_primary_color ?: $defaults['theme_btn_primary_color'],
+			'theme_btn_secondary_bg'    => $theme_btn_secondary_bg ?: $defaults['theme_btn_secondary_bg'],
+			'theme_btn_secondary_color' => $theme_btn_secondary_color ?: $defaults['theme_btn_secondary_color'],
+			'theme_modal_radius'        => $theme_modal_radius,
+			'theme_button_radius'       => $theme_button_radius,
+			'geo_mode'                  => $geo_mode,
+			'geo_countries'             => $geo_countries,
+			'geo_header'                => $geo_header,
+			'language_mode'             => $language_mode,
+			'default_language'          => $default_language,
+			'brand_name'                => $brand_name !== '' ? $brand_name : $defaults['brand_name'],
+			'brand_logo_url'            => $brand_logo_url !== '' ? $brand_logo_url : $defaults['brand_logo_url'],
+			'hide_branding'             => $hide_branding,
 		];
 	}
 
@@ -1877,16 +1873,16 @@ class Piensa_Cookie_Consent_Admin {
 
 	private static function get_default_settings() {
 		return [
-			'enable_blocker'              => true,
-			'block_unknown_third_party'   => true,
+			'enable_blocker'            => true,
+			'block_unknown_third_party' => true,
 			// Two years: long enough to answer a challenge about a consent
 			// given, short enough not to be a store of records nobody needs.
-			'log_retention_days'          => 730,
+			'log_retention_days'        => 730,
 			// Empty: every language falls back to the text shipped in
 			// includes/data/banner-text.json until a site overrides it.
-			'banner_text'                 => [],
-			'allowed_domains'             => self::get_default_allowed_domains(),
-			'blocked_domains'             => implode(
+			'banner_text'               => [],
+			'allowed_domains'           => self::get_default_allowed_domains(),
+			'blocked_domains'           => implode(
 				"\n",
 				[
 					'youtube.com',
@@ -1900,49 +1896,49 @@ class Piensa_Cookie_Consent_Admin {
 					'platform.twitter.com',
 				]
 			),
-			'placeholder_title'           => __( 'External content blocked (privacy)', 'piensa-cookie-consent' ),
-			'placeholder_button'          => __( 'Accept cookies to view', 'piensa-cookie-consent' ),
-			'show_floating_button'        => true,
-			'floating_button_text'        => __( 'Review consent', 'piensa-cookie-consent' ),
-			'floating_button_style'       => 'icon',
-			'enable_consent_log'          => true,
-			'policy_revision'             => 1,
-			'cookie_policy_url'           => '',
-			'privacy_policy_url'          => '',
-			'update_server_url'           => '',
-			'update_channel'              => 'stable',
-			'update_token'                => '',
-			'update_public_key'           => '',
-			'update_require_signature'    => true,
-			'banner_show_icon'            => true,
-			'banner_icon_style'           => 'cookie',
-			'custom_cookies'              => '',
-			'domain_overrides'            => [],
-			'category_mode'               => 'auto',
-			'allow_necessary_toggle'      => false,
-			'analytics_enabled'           => true,
-			'marketing_enabled'           => true,
-			'consent_layout'              => 'box',
-			'consent_position'            => 'bottom right',
-			'preferences_layout'          => 'box',
-			'preferences_position'        => 'right',
-			'theme_bg'                    => '#ffffff',
-			'theme_primary_color'         => '#2c2f31',
-			'theme_secondary_color'       => '#5e6266',
-			'theme_btn_primary_bg'        => '#30363c',
-			'theme_btn_primary_color'     => '#ffffff',
-			'theme_btn_secondary_bg'      => '#eaeff2',
-			'theme_btn_secondary_color'   => '#2c2f31',
-			'theme_modal_radius'          => 8,
-			'theme_button_radius'         => 6,
-			'geo_mode'                    => 'all',
-			'geo_countries'               => 'ES,FR,DE,IT,PT,NL,BE,LU,IE,AT,PL,SE,NO,FI,DK,GR,CZ,SK,HU,RO,BG,HR,SI,LV,LT,EE,IS,LI,CH,GB',
-			'geo_header'                  => 'auto',
-			'language_mode'               => 'auto',
-			'default_language'            => 'es',
-			'brand_name'                  => '',
-			'brand_logo_url'              => '',
-			'hide_branding'               => false,
+			'placeholder_title'         => __( 'External content blocked (privacy)', 'piensa-cookie-consent' ),
+			'placeholder_button'        => __( 'Accept cookies to view', 'piensa-cookie-consent' ),
+			'show_floating_button'      => true,
+			'floating_button_text'      => __( 'Review consent', 'piensa-cookie-consent' ),
+			'floating_button_style'     => 'icon',
+			'enable_consent_log'        => true,
+			'policy_revision'           => 1,
+			'cookie_policy_url'         => '',
+			'privacy_policy_url'        => '',
+			'update_server_url'         => '',
+			'update_channel'            => 'stable',
+			'update_token'              => '',
+			'update_public_key'         => '',
+			'update_require_signature'  => true,
+			'banner_show_icon'          => true,
+			'banner_icon_style'         => 'cookie',
+			'custom_cookies'            => '',
+			'domain_overrides'          => [],
+			'category_mode'             => 'auto',
+			'allow_necessary_toggle'    => false,
+			'analytics_enabled'         => true,
+			'marketing_enabled'         => true,
+			'consent_layout'            => 'box',
+			'consent_position'          => 'bottom right',
+			'preferences_layout'        => 'box',
+			'preferences_position'      => 'right',
+			'theme_bg'                  => '#ffffff',
+			'theme_primary_color'       => '#2c2f31',
+			'theme_secondary_color'     => '#5e6266',
+			'theme_btn_primary_bg'      => '#30363c',
+			'theme_btn_primary_color'   => '#ffffff',
+			'theme_btn_secondary_bg'    => '#eaeff2',
+			'theme_btn_secondary_color' => '#2c2f31',
+			'theme_modal_radius'        => 8,
+			'theme_button_radius'       => 6,
+			'geo_mode'                  => 'all',
+			'geo_countries'             => 'ES,FR,DE,IT,PT,NL,BE,LU,IE,AT,PL,SE,NO,FI,DK,GR,CZ,SK,HU,RO,BG,HR,SI,LV,LT,EE,IS,LI,CH,GB',
+			'geo_header'                => 'auto',
+			'language_mode'             => 'auto',
+			'default_language'          => 'es',
+			'brand_name'                => '',
+			'brand_logo_url'            => '',
+			'hide_branding'             => false,
 		];
 	}
 
