@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-09-16
+
+### Added
+- **Updates from GitHub for the agency build.** Each release now publishes a
+  static JSON manifest to GitHub Pages describing the newest version, where its
+  ZIP is and its SHA-256 checksum. The updater already polled a URL of exactly
+  that shape, so this needed no plugin code: point a client site at the
+  manifest and it updates itself. Signing is wired up too, and used when the
+  repository holds a signing key.
+- Releases carry **both packages** under distinct names. Only the agency one
+  has the updater, and a site that updated to the wp.org package would have
+  silently stopped receiving updates.
+
 ## [1.4.0] - 2026-09-15
 
 Prompted by a question the plugin could not answer: a domain appeared in the

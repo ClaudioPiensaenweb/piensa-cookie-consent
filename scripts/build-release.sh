@@ -8,6 +8,7 @@
 #
 # Usage:
 #   scripts/build-release.sh [--version=X.Y.Z] [--output-dir=DIR] [--keep-updater]
+#                            [--suffix=NAME]
 
 set -euo pipefail
 
@@ -16,12 +17,14 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUTPUT_DIR="${ROOT}/build"
 VERSION=""
 KEEP_UPDATER=0
+SUFFIX=""
 
 for arg in "$@"; do
     case "$arg" in
         --version=*)    VERSION="${arg#*=}" ;;
         --output-dir=*) OUTPUT_DIR="${arg#*=}" ;;
         --keep-updater) KEEP_UPDATER=1 ;;
+        --suffix=*)     SUFFIX="-${arg#*=}" ;;
         *) echo "Unknown argument: $arg" >&2; exit 1 ;;
     esac
 done
@@ -79,7 +82,10 @@ mkdir -p "$OUTPUT_DIR"
 # Resolve to an absolute path: the zip(1) branch below runs from the staging
 # directory, where a relative output path would point somewhere else entirely.
 OUTPUT_DIR="$(cd "$OUTPUT_DIR" && pwd)"
-ZIP="${OUTPUT_DIR}/${SLUG}-${VERSION}.zip"
+# The suffix keeps the two builds apart when both are published to the
+# same release: a client updating with the wp.org ZIP would lose the
+# updater and stop receiving updates altogether.
+ZIP="${OUTPUT_DIR}/${SLUG}-${VERSION}${SUFFIX}.zip"
 rm -f "$ZIP"
 
 # zip(1) is absent from Git Bash, so fall back to Python's zipfile, which is

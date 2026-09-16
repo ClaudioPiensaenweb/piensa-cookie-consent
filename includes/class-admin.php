@@ -1226,7 +1226,7 @@ class Piensa_Cookie_Consent_Admin {
 	public function render_update_server_field() {
 		$settings = self::get_settings();
 		$value    = $settings['update_server_url'];
-		echo '<input class="regular-text" type="url" name="' . esc_attr( $this->option_name ) . '[update_server_url]" value="' . esc_attr( $value ) . '" placeholder="https://updates.tu-dominio.com/cmp.json" />';
+		echo '<input class="regular-text" type="url" name="' . esc_attr( $this->option_name ) . '[update_server_url]" value="' . esc_attr( $value ) . '" placeholder="https://claudiopiensaenweb.github.io/piensa-cookie-consent/update.json" />';
 		echo '<p class="description">' . esc_html__( 'Supports the {slug}, {channel} and {site} variables. Left out, they are appended as query arguments.', 'piensa-cookie-consent' ) . '</p>';
 	}
 

@@ -86,14 +86,51 @@ site that cannot use them. A site can also opt out explicitly:
 define( 'PIENSA_COOKIE_CONSENT_DISABLE_UPDATER', true );
 ```
 
+## Updates for the agency build
+
+The agency package carries a self-hosted updater. It polls a static JSON
+manifest, so there is no update server to run: the release workflow builds the
+manifest and publishes it to GitHub Pages.
+
+Point the client site at it under **Tools → Secure updates**:
+
+```
+https://claudiopiensaenweb.github.io/piensa-cookie-consent/update.json
+```
+
+The manifest names the **agency** ZIP, not the wp.org one. A site updating to
+the wp.org package would lose the updater and stop receiving updates
+altogether, which is why both are published to every release under distinct
+names.
+
+### Signing
+
+The updater verifies an RSA signature over `version|package|checksum` when the
+site requires one. Add the private key as the `UPDATE_SIGNING_KEY` repository
+secret and the workflow signs each manifest:
+
+```bash
+openssl genrsa -out update-signing.key 4096
+openssl rsa -in update-signing.key -pubout -out update-signing.pub
+```
+
+Paste the private key into the secret and the public key into the plugin's
+**Public key** field on each client site.
+
+Without the secret the manifest ships unsigned, and those sites have to turn
+off *Require a valid signature*. The checksum is verified either way, so a
+corrupted or swapped download is still rejected; the signature is what protects
+against the manifest itself being tampered with.
+
 ## Releasing
 
 1. Update the version in `piensa-cookie-consent.php` (header and constant),
    `readme.txt` (`Stable tag`) and `package.json`.
 2. Add the changelog entries to `readme.txt` and `CHANGELOG.md`.
 3. Verify they agree: `bash scripts/check-version.sh`.
-4. Tag and publish a GitHub release. The `deploy` workflow builds the package
-   and pushes it to the plugin directory over SVN.
+4. Tag and publish a GitHub release. The `deploy` workflow builds both
+   packages, attaches them to the release, publishes the update manifest, and
+   pushes to the plugin directory over SVN.
 
 The deploy workflow needs two repository secrets, `SVN_USERNAME` and
 `SVN_PASSWORD`, holding the WordPress.org account that owns the plugin.

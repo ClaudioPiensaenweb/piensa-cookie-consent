@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.4.1 =
+* The agency build can now update itself from GitHub. Each release publishes a static update manifest, so there is no update server to run.
+
 = 1.4.0 =
 * **The scanner now records which page each domain was found on**, shown as a new column. A domain nobody recognises was previously a dead end: there was no way to tell a real third party from a leftover of an earlier scan.
 * **A button to clear the discovered list.** It only ever grew, so a domain that appeared once stayed for good, even after the page that introduced it was gone.
@@ -136,6 +139,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.4.1 =
+Release infrastructure only; no change to how the plugin behaves on a site.
 
 = 1.4.0 =
 The scanner now records where each domain was found. Clear the list and scan again to see only what your site loads today.
