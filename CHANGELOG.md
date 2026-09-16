@@ -4,6 +4,26 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.2] - 2026-09-16
+
+Found by accepting the banner on a live site and reading the dataLayer: there
+was a `consent default: denied` and no `consent update` at all, and the
+Analytics hit carried `gcs=G100` — measured as denied — after accepting
+everything.
+
+### Fixed
+- **Consent Mode never sent its update.** `update_consent_mode()` guarded on
+  `window.gtag`, and that function is defined by a tag which is itself blocked
+  until consent is given. At the moment the visitor accepts, it does not exist,
+  so the guard returned and the update was skipped for the rest of the page.
+  Analytics went on measuring as denied — conservative, and wrong: the visitor
+  had agreed. Now pushed onto the dataLayer, which is a plain array and works
+  whichever of the two loads first.
+- **The plugin blocked its own Consent Mode script**, for the same reason the
+  configuration script was blocked in 1.5.0: it contains a `gtag()` call, and
+  that is what the analytics rule matches on. So the denied default never ran
+  either. Marked as the plugin's own, like the configuration script.
+
 ## [1.6.1] - 2026-09-16
 
 ### Fixed

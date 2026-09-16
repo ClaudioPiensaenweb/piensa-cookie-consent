@@ -54,7 +54,12 @@ class Piensa_Cookie_Consent_Consent_Mode {
 			'ad_personalization' => 'denied',
 		];
 
-		$script  = 'window.dataLayer = window.dataLayer || [];';
+		// Marks the script as the plugin's own. Without it the blocker
+		// neutralises this very script — it contains a gtag() call, which is
+		// exactly what the analytics rule matches on — and the denied default
+		// never runs.
+		$script  = 'window.piensaCookieConsentMode=1;';
+		$script .= 'window.dataLayer = window.dataLayer || [];';
 		$script .= 'function gtag(){dataLayer.push(arguments);}';
 		// wp_json_encode() produces the object literal, so no value is
 		// interpolated into the script by hand.

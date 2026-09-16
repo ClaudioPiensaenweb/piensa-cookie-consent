@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,10 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.6.2 =
+* **Google Analytics kept measuring as denied after the visitor accepted.** The Consent Mode update was sent through `window.gtag`, but the tag that defines it is blocked until consent is given, so at the moment someone accepted it did not exist yet and the update was skipped. Analytics received consent-denied hits for the rest of the page. It is now pushed onto the dataLayer, which works whichever loads first.
+* The plugin's own Consent Mode script was being blocked by the plugin, for the same reason as the configuration script in 1.5.0: it contains a `gtag()` call, which is what the analytics rule matches on.
+
 = 1.6.1 =
 * **The Spanish tab was showing English.** Releases 1.0 to 1.5 used English as their source language, so an untouched install had English sitting in the Spanish settings. The migration read that as wording the site had chosen and carried it into the Spanish block. It now recognises those values and clears them, on sites that already migrated too, restoring the shipped Spanish.
 * The Languages tab still carried its old subtitle saying Spanish was managed elsewhere.
@@ -157,6 +161,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.6.2 =
+Fixes Google Analytics recording consent as denied even after visitors accept. Recommended for any site using Analytics or Ads.
 
 = 1.6.1 =
 Fixes the Spanish tab showing English text. Recommended for anyone who installed 1.6.0.

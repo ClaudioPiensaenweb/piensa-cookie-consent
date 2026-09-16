@@ -226,7 +226,7 @@ class Piensa_Cookie_Consent_Blocker {
 	 * @return bool
 	 */
 	private function is_own_script( $content ) {
-		foreach ( [ 'PiensaCookieConsentConfig', 'PiensaCookieConsentAdminConfig', 'PiensaCookieConsentAudit' ] as $marker ) {
+		foreach ( [ 'PiensaCookieConsentConfig', 'PiensaCookieConsentAdminConfig', 'PiensaCookieConsentAudit', 'piensaCookieConsentMode' ] as $marker ) {
 			if ( strpos( $content, $marker ) !== false ) {
 				return true;
 			}

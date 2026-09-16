@@ -228,19 +228,26 @@ function logNecessaryDisabled(cookie) {
 }
 
 function update_consent_mode(cookie) {
-    if (!window.gtag || !cookie || !cookie.categories) {
+    if (!cookie || !cookie.categories) {
         return;
     }
 
     const analytics = cookie.categories.includes('analytics') ? 'granted' : 'denied';
     const marketing = cookie.categories.includes('marketing') ? 'granted' : 'denied';
 
-    window.gtag('consent', 'update', {
+    // Pushed onto the dataLayer rather than called through window.gtag. The
+    // tag that defines gtag is itself blocked until consent is given, so at
+    // the moment the visitor accepts it does not exist yet — the update was
+    // silently skipped and Analytics kept measuring as denied for the rest of
+    // the page. The dataLayer is a plain array: whatever is queued on it is
+    // processed when the tag loads, whichever arrives first.
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(['consent', 'update', {
         analytics_storage: analytics,
         ad_storage: marketing,
         ad_user_data: marketing,
         ad_personalization: marketing,
-    });
+    }]);
 }
 
 function buildPreferenceSections(definitions, enabledFlags, texts) {
