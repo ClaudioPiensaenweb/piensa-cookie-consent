@@ -122,6 +122,23 @@ off *Require a valid signature*. The checksum is verified either way, so a
 corrupted or swapped download is still rejected; the signature is what protects
 against the manifest itself being tampered with.
 
+## Directory assets
+
+`.wordpress-org/` holds the artwork the plugin directory shows. It is generated
+rather than drawn by hand, so the sizes stay in step:
+
+```bash
+python scripts/build-directory-assets.py
+```
+
+The mark is a plain geometric biscuit, deliberately generic. The artwork this
+replaced was the Sesame Street character — the trademark that forced the
+rename — and something that merely resembled it would put the submission back
+where it started.
+
+Screenshots are not generated: they have to come from a real install, named
+`screenshot-1.png` upward to match the order in `readme.txt`.
+
 ## Releasing
 
 1. Update the version in `piensa-cookie-consent.php` (header and constant),
