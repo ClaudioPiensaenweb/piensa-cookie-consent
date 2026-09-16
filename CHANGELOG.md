@@ -4,6 +4,37 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.3] - 2026-09-16
+
+1.6.2 did not fix what it said it fixed. Checked properly this time, by
+accepting on a live site and watching for the cookies: `_ga` and `_ga_…` were
+still never written, because Analytics was still running in consent-denied
+mode.
+
+### Fixed
+- **Every consent callback was reading the wrong argument.** The consent
+  library hands `onConsent`, `onFirstConsent` and `onChange` a detail object —
+  `{ cookie }` — and the plugin took that object for the cookie itself.
+  `cookie.categories` was therefore undefined, and the four steps behind it all
+  returned without doing anything: the Consent Mode update was never sent,
+  blocked embeds were never released from behind their placeholder, the consent
+  status shown on the page was never refreshed, and the consent log stored rows
+  with no consent id, no categories and no timestamp — the three things that
+  make it evidence.
+- **The Consent Mode update was queued in a shape the Google tag ignores.**
+  1.6.2 pushed a plain array onto the dataLayer. The tag recognises consent
+  commands by the `arguments` object that `gtag()` pushes, and reads an array as
+  an ordinary event: the update was accepted onto the queue and then discarded.
+  It is queued as an `arguments` object now, which is what makes `_ga` appear on
+  acceptance.
+
+### Added
+- A JavaScript test suite, `npm run test:js`, which loads the front-end script
+  into a sandbox and inspects the command it queues. Both bugs above fail in
+  silence — nothing throws, the banner behaves normally, and the only symptom is
+  an Analytics report weeks later — so reading the queued command is the only way
+  to catch them. It runs in CI, and it fails against 1.6.2.
+
 ## [1.6.2] - 2026-09-16
 
 Found by accepting the banner on a live site and reading the dataLayer: there

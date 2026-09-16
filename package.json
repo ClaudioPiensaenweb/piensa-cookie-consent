@@ -1,6 +1,6 @@
 {
   "name": "piensa-cookie-consent",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "GDPR cookie consent banner for WordPress.",
   "license": "GPL-2.0-or-later",
   "private": true,
@@ -11,6 +11,7 @@
   "scripts": {
     "lint:js": "eslint assets/js",
     "lint:js:fix": "eslint assets/js --fix",
+    "test:js": "node --test tests/*.mjs",
     "i18n:pot": "wp i18n make-pot . languages/piensa-cookie-consent.pot --domain=piensa-cookie-consent --exclude=node_modules,vendor,build,scripts,tests",
     "i18n:mo": "wp i18n make-mo languages languages",
     "i18n:json": "wp i18n make-json languages --no-purge",

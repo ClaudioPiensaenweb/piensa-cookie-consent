@@ -127,24 +127,14 @@ document.addEventListener('DOMContentLoaded', function() {
                       }
                     : {}),
             },
-            onFirstConsent: function(cookie) {
-                update_consent_mode(cookie);
-                activate_blocked_content(cookie);
-                updateConsentStatus(cookie);
-                logConsent(cookie, 'first');
+            onFirstConsent: function(detail) {
+                handleConsentEvent(detail, 'first');
             },
-            onConsent: function(cookie) {
-                update_consent_mode(cookie);
-                activate_blocked_content(cookie);
-                updateConsentStatus(cookie);
-                logConsent(cookie, 'consent');
+            onConsent: function(detail) {
+                handleConsentEvent(detail, 'consent');
             },
-            onChange: function(cookie) {
-                update_consent_mode(cookie);
-                activate_blocked_content(cookie);
-                updateConsentStatus(cookie);
-                logConsent(cookie, 'change');
-                logNecessaryDisabled(cookie);
+            onChange: function(detail) {
+                handleConsentEvent(detail, 'change');
             },
             preferencesModal: {},
         });
@@ -227,6 +217,25 @@ function logNecessaryDisabled(cookie) {
     logConsent(cookie, 'necessary_disabled');
 }
 
+// The library hands these callbacks one detail object — { cookie } on consent,
+// plus the changed categories on a change — and not the cookie itself. Reading
+// `categories` straight off the argument found nothing, so every step below was
+// skipped without a sound: Consent Mode kept reporting denied after the visitor
+// had accepted, blocked embeds stayed behind their placeholder and the consent
+// log recorded nothing.
+function handleConsentEvent(detail, actionType) {
+    const cookie = detail && detail.cookie ? detail.cookie : detail;
+
+    update_consent_mode(cookie);
+    activate_blocked_content(cookie);
+    updateConsentStatus(cookie);
+    logConsent(cookie, actionType);
+
+    if (actionType === 'change') {
+        logNecessaryDisabled(cookie);
+    }
+}
+
 function update_consent_mode(cookie) {
     if (!cookie || !cookie.categories) {
         return;
@@ -235,19 +244,23 @@ function update_consent_mode(cookie) {
     const analytics = cookie.categories.includes('analytics') ? 'granted' : 'denied';
     const marketing = cookie.categories.includes('marketing') ? 'granted' : 'denied';
 
-    // Pushed onto the dataLayer rather than called through window.gtag. The
-    // tag that defines gtag is itself blocked until consent is given, so at
-    // the moment the visitor accepts it does not exist yet — the update was
-    // silently skipped and Analytics kept measuring as denied for the rest of
-    // the page. The dataLayer is a plain array: whatever is queued on it is
-    // processed when the tag loads, whichever arrives first.
+    // Queued on the dataLayer rather than called through window.gtag, because
+    // the Google tag is what defines gtag and it is still blocked at the moment
+    // the visitor accepts. What gets queued has to be an `arguments` object:
+    // the tag recognises consent commands by that exact type and reads a plain
+    // array as an ordinary event, so an array is accepted and then discarded.
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(['consent', 'update', {
+
+    function queueCommand() {
+        window.dataLayer.push(arguments);
+    }
+
+    queueCommand('consent', 'update', {
         analytics_storage: analytics,
         ad_storage: marketing,
         ad_user_data: marketing,
         ad_personalization: marketing,
-    }]);
+    });
 }
 
 function buildPreferenceSections(definitions, enabledFlags, texts) {

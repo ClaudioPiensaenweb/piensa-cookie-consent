@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,11 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.6.3 =
+* **Google Analytics still measured as denied after accepting — 1.6.2 did not fix it.** The consent library passes its callbacks a wrapper object containing the cookie, and the plugin treated that wrapper as the cookie. Nothing inside those callbacks ran: Consent Mode was never told about the acceptance, blocked embeds such as maps or booking widgets were never released from behind their placeholder, and the consent log stored rows with no id, categories or timestamp.
+* The Consent Mode update was also being queued in a shape the Google tag ignores. It now appears as a real gtag command, which is what makes the `_ga` cookies appear when someone accepts.
+* Added a JavaScript test suite that checks the consent signal directly, because both faults were silent in the browser.
+
 = 1.6.2 =
 * **Google Analytics kept measuring as denied after the visitor accepted.** The Consent Mode update was sent through `window.gtag`, but the tag that defines it is blocked until consent is given, so at the moment someone accepted it did not exist yet and the update was skipped. Analytics received consent-denied hits for the rest of the page. It is now pushed onto the dataLayer, which works whichever loads first.
 * The plugin's own Consent Mode script was being blocked by the plugin, for the same reason as the configuration script in 1.5.0: it contains a `gtag()` call, which is what the analytics rule matches on.
@@ -161,6 +166,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.6.3 =
+Fixes Google Analytics still recording consent as denied after visitors accept, which 1.6.2 did not. Also restores blocked embeds being released on acceptance. Recommended for every site.
 
 = 1.6.2 =
 Fixes Google Analytics recording consent as denied even after visitors accept. Recommended for any site using Analytics or Ads.

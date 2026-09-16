@@ -72,6 +72,7 @@ jobs:
 
       - run: npm ci
       - run: npm run lint:js
+      - run: npm run test:js
 
   release-package:
     name: Release package builds
