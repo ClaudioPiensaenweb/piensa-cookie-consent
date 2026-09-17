@@ -12,6 +12,12 @@
     <!-- Bundled third-party library, shipped as upstream releases it. -->
     <exclude-pattern>*/assets/js/cookieconsent.js</exclude-pattern>
 
+    <!-- Test fixtures hold script and iframe markup as plain strings: it is
+         input to the patterns under test, never output to a page. -->
+    <rule ref="WordPress.WP.EnqueuedResources">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
     <arg name="extensions" value="php"/>
     <arg name="basepath" value="./"/>
     <arg name="parallel" value="8"/>

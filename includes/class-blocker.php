@@ -171,9 +171,9 @@ class Piensa_Cookie_Consent_Blocker {
 	/**
 	 * Rewrite the response, or hand back exactly what came in.
 	 *
-	 * preg_replace_callback() returns null when PCRE gives up, and it gives up
-	 * on long pages: roughly a megabyte of markup after an unclosed iframe is
-	 * enough to reach the backtrack limit. That null was returned straight out
+	 * PCRE gives up on long pages, and preg_replace_callback() returns null when
+	 * it does: roughly a megabyte of markup after an unclosed iframe is enough
+	 * to reach the backtrack limit. That null was returned straight out
 	 * of here as the page body, so the site rendered blank — a cookie plugin
 	 * taking a site down being far worse than one script going unblocked. Every
 	 * pass is checked now, and a failure keeps the HTML as it stands.
