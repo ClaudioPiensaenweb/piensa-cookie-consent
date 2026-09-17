@@ -224,6 +224,13 @@ function piensa_test_updater( $settings = [] ) {
 return function ( $assert ) {
 	$slug = 'piensa-cookie-consent/piensa-cookie-consent.php';
 
+	/**
+	 * Change one field of the manifest the stubbed server returns.
+	 */
+	$manifest = function ( $key, $value ) {
+		$GLOBALS['piensa_test_updater']['manifest'][ $key ] = $value;
+	};
+
 	// The bug: nothing configured, which is every install, because the address
 	// was only ever shown as the field's placeholder.
 	$updater  = piensa_test_updater( [] );
@@ -263,26 +270,26 @@ return function ( $assert ) {
 
 	// Equal or older versions must not be offered, or the site would loop
 	// reinstalling what it already has.
-	$GLOBALS['piensa_test_updater']['manifest']['version'] = PIENSA_COOKIE_CONSENT_VERSION;
-	$updater                                              = piensa_test_updater( [] );
-	$response                                             = $updater->check_updates( new stdClass() );
+	$manifest( 'version', PIENSA_COOKIE_CONSENT_VERSION );
+	$updater  = piensa_test_updater( [] );
+	$response = $updater->check_updates( new stdClass() );
 	$assert( ! isset( $response->response[ $slug ] ), 'the installed version is not offered to itself' );
 
-	$GLOBALS['piensa_test_updater']['manifest']['version'] = '1.0.0';
-	$updater                                              = piensa_test_updater( [] );
-	$response                                             = $updater->check_updates( new stdClass() );
+	$manifest( 'version', '1.0.0' );
+	$updater  = piensa_test_updater( [] );
+	$response = $updater->check_updates( new stdClass() );
 	$assert( ! isset( $response->response[ $slug ] ), 'an older version is not offered' );
 
-	$GLOBALS['piensa_test_updater']['manifest']['version'] = '1.7.0';
+	$manifest( 'version', '1.7.0' );
 
 	// A manifest with no package is not actionable, and offering it would give
 	// the site an update button that fails.
-	$GLOBALS['piensa_test_updater']['manifest']['package'] = '';
-	$updater                                              = piensa_test_updater( [] );
-	$response                                             = $updater->check_updates( new stdClass() );
+	$manifest( 'package', '' );
+	$updater  = piensa_test_updater( [] );
+	$response = $updater->check_updates( new stdClass() );
 	$assert( ! isset( $response->response[ $slug ] ), 'a manifest with no package is ignored' );
 
-	$GLOBALS['piensa_test_updater']['manifest']['package'] = 'https://example.test/piensa-cookie-consent-1.7.0-agency.zip';
+	$manifest( 'package', 'https://example.test/piensa-cookie-consent-1.7.0-agency.zip' );
 
 	// The manifest is read once and cached, so a dashboard load does not mean
 	// a request to the update server every time.
