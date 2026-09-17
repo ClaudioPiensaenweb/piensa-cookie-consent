@@ -57,8 +57,44 @@ class Piensa_Cookie_Consent_Diagnostics {
 			__( 'Build', 'piensa-cookie-consent' )         => Piensa_Cookie_Consent_Core::has_self_hosted_updater()
 				? __( 'agency (self-hosted updates)', 'piensa-cookie-consent' )
 				: __( 'WordPress.org', 'piensa-cookie-consent' ),
+			__( 'Update channel', 'piensa-cookie-consent' ) => self::update_channel(),
 			__( 'Site language', 'piensa-cookie-consent' ) => get_locale(),
 		];
+	}
+
+	/**
+	 * Where updates would come from, and what was last seen there.
+	 *
+	 * Worth reporting because the failure is silent: an update channel that is
+	 * never consulted looks exactly like a plugin that is already up to date.
+	 *
+	 * @return string
+	 */
+	private static function update_channel() {
+		if ( ! Piensa_Cookie_Consent_Core::has_self_hosted_updater() ) {
+			return __( 'WordPress.org', 'piensa-cookie-consent' );
+		}
+
+		$settings = Piensa_Cookie_Consent_Admin::get_settings();
+		$url      = isset( $settings['update_server_url'] ) ? trim( (string) $settings['update_server_url'] ) : '';
+		$source   = $url !== '' ? $url : Piensa_Cookie_Consent_Updater::DEFAULT_MANIFEST;
+
+		$cached = get_site_transient( Piensa_Cookie_Consent_Updater::CACHE_KEY );
+
+		if ( is_array( $cached ) && ! empty( $cached['version'] ) ) {
+			return sprintf(
+				/* translators: 1: manifest address, 2: the version found there. */
+				__( '%1$s (last seen: %2$s)', 'piensa-cookie-consent' ),
+				$source,
+				$cached['version']
+			);
+		}
+
+		return sprintf(
+			/* translators: %s: manifest address. */
+			__( '%s (not checked yet)', 'piensa-cookie-consent' ),
+			$source
+		);
 	}
 
 	/**

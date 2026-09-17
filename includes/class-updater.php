@@ -10,8 +10,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Piensa_Cookie_Consent_Updater {
+
+	/**
+	 * Where this build looks for its manifest when nothing else is set.
+	 *
+	 * The setting used to default to an empty string, with this address shown
+	 * only as the field's placeholder — grey text that reads exactly like a
+	 * filled-in value. Nobody typed it, so get_update_url() returned nothing
+	 * and no site ever checked for an update. Living here rather than in the
+	 * shared defaults keeps it out of the wordpress.org package, which strips
+	 * this file and must not look like it serves its own updates.
+	 */
+	const DEFAULT_MANIFEST = 'https://claudiopiensaenweb.github.io/piensa-cookie-consent/update.json';
+
+	/**
+	 * Site transient holding the last manifest read.
+	 */
+	const CACHE_KEY = 'piensa_cookie_consent_update';
+
 	private $plugin_slug;
-	private $cache_key = 'piensa_cookie_consent_update';
+	private $cache_key = self::CACHE_KEY;
 
 	public function __construct( $plugin_file ) {
 		$this->plugin_slug = plugin_basename( $plugin_file );
@@ -141,11 +159,19 @@ class Piensa_Cookie_Consent_Updater {
 	}
 
 	private function get_update_url( $settings ) {
-		if ( empty( $settings['update_server_url'] ) ) {
-			return '';
+		$url = isset( $settings['update_server_url'] ) ? trim( (string) $settings['update_server_url'] ) : '';
+
+		if ( $url === '' ) {
+			$url = self::DEFAULT_MANIFEST;
 		}
 
-		$url = trim( (string) $settings['update_server_url'] );
+		/**
+		 * Filters the manifest this site reads its updates from.
+		 *
+		 * @param string $url The manifest address.
+		 */
+		$url = (string) apply_filters( 'piensa_cookie_consent_update_url', $url );
+
 		if ( $url === '' ) {
 			return '';
 		}

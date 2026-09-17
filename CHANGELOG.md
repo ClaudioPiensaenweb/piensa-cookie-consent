@@ -4,6 +4,34 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2026-09-17
+
+The agency build has never checked for an update on any site.
+
+### Fixed
+- **The update channel was empty on every install.** The address of the manifest
+  appeared only as the settings field's placeholder — grey text that reads
+  exactly like a value already in use — while the stored setting defaulted to an
+  empty string. `get_update_url()` returned nothing, `check_updates()` returned
+  before making a request, and the site went on reporting itself up to date.
+  A channel that is never consulted is indistinguishable from one with nothing
+  to report, which is why this survived several releases. The build now falls
+  back to the published manifest, and the field explains that leaving it empty
+  is what uses the official channel.
+
+### Added
+- `piensa_cookie_consent_update_url`, a filter over the manifest address, so a
+  managed install can point somewhere else or opt out entirely.
+- The update channel and the version last seen on it are reported in
+  Diagnostics, so "no update available" can be told apart from "never asked".
+- Tests covering the update check, including the unconfigured install that was
+  the whole of this bug.
+
+### Upgrading
+Sites already running an earlier version have to be updated by hand once: the
+code that knows where to look is the code being installed. From this version on
+they will see new releases on their own.
+
 ## [1.7.0] - 2026-09-17
 
 A hardening release. The blocker could take a whole site down, and did so on

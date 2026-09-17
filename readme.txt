@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,12 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 4. The banner on the front end.
 
 == Changelog ==
+
+= 1.7.1 =
+* **Automatic updates never ran.** The address of the update manifest was shown only as a placeholder in the settings field, so the setting itself was empty on every install and the plugin never asked whether a newer version existed — it simply looked up to date. It now uses the official channel unless you enter a different one.
+* The update channel, and the version last seen there, are shown in Diagnostics.
+* Added a `piensa_cookie_consent_update_url` filter for installs that manage updates themselves.
+* Note: this one update has to be installed by hand, since the fix is in the version being installed.
 
 = 1.7.0 =
 * **The blocker could leave a page completely blank.** On a long page — an ordinary size for one built with a visual builder — the pattern matching gave up, and the failure was served to the visitor as an empty page. Any failure now serves the page unchanged.
@@ -174,6 +180,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.7.1 =
+Fixes automatic updates never running. Install this one by hand; later versions will be offered automatically.
 
 = 1.7.0 =
 Important if your site uses a visual builder such as Bricks or Elementor, or Google Analytics 4. Fixes the blocker blanking long pages and breaking builder editors, and declares and clears the GA4 session cookie.
