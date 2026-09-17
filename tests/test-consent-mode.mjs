@@ -189,3 +189,37 @@ test('a callback with no cookie is ignored instead of throwing', () => {
 
     assert.equal((sandbox.dataLayer || []).length, 0, 'nothing was queued');
 });
+
+test('a wildcard cookie name is cleared by pattern, not by its literal name', () => {
+    const { sandbox } = loadScript();
+
+    // GA4 names its session cookie after the measurement id, so the plugin
+    // declares the family as `_ga_*`. Handed to the library as a literal
+    // string it matched nothing: withdrawing consent cleared `_ga` and left
+    // `_ga_G1AB2CD3EF` behind, still identifying the visitor.
+    const matcher = sandbox.cookieMatcher({ name: '_ga_*', is_pattern: true });
+
+    // Built inside the sandbox, so it belongs to that realm and `instanceof`
+    // against this one would say no to a perfectly good regular expression.
+    assert.equal(Object.prototype.toString.call(matcher), '[object RegExp]', 'a pattern becomes a regular expression');
+    assert.ok(matcher.test('_ga_G1AB2CD3EF'), 'it matches a real GA4 session cookie');
+    assert.ok(matcher.test('_ga_8TD9SVBD6Z'), 'it matches another property');
+    assert.ok(!matcher.test('_gali'), 'it does not match an unrelated cookie that merely starts alike');
+    assert.ok(!matcher.test('x_ga_1'), 'it is anchored at the start');
+});
+
+test('a plain cookie name is left as an exact name', () => {
+    const { sandbox } = loadScript();
+
+    assert.equal(sandbox.cookieMatcher({ name: '_ga' }), '_ga');
+    assert.equal(sandbox.cookieMatcher({ name: 'cc_cookie', is_pattern: false }), 'cc_cookie');
+});
+
+test('the throttling cookie family covers both tag versions', () => {
+    const { sandbox } = loadScript();
+
+    const matcher = sandbox.cookieMatcher({ name: '_gat*', is_pattern: true });
+
+    assert.ok(matcher.test('_gat'), 'the classic tag name');
+    assert.ok(matcher.test('_gat_gtag_UA_1_1'), 'the gtag.js name');
+});

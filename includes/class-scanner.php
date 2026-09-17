@@ -302,19 +302,33 @@ class Piensa_Cookie_Consent_Scanner {
 				'name'        => '_ga',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: user identifier.', 'piensa-cookie-consent' ),
-				'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
+				'duration'    => __( '2 years', 'piensa-cookie-consent' ),
+			];
+			// GA4 writes one of these per property, named after the measurement
+			// id, so the exact name is only known at runtime. Declared as a
+			// pattern because a literal name matches nothing: the cookie was
+			// missing from the declaration the visitor reads, and it survived
+			// the visitor withdrawing consent while _ga was cleared correctly.
+			$definitions['analytics']['cookies'][] = [
+				'name'        => '_ga_*',
+				'is_pattern'  => true,
+				'domain'      => $this->get_cookie_domain(),
+				'description' => __( 'Google Analytics 4: session state, one per property.', 'piensa-cookie-consent' ),
+				'duration'    => __( '2 years', 'piensa-cookie-consent' ),
 			];
 			$definitions['analytics']['cookies'][] = [
 				'name'        => '_gid',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: session identifier.', 'piensa-cookie-consent' ),
-				'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
+				'duration'    => __( '24 hours', 'piensa-cookie-consent' ),
 			];
+			// Plain _gat with the classic tag, _gat_gtag_<id> with gtag.js.
 			$definitions['analytics']['cookies'][] = [
-				'name'        => '_gat',
+				'name'        => '_gat*',
+				'is_pattern'  => true,
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: request throttling.', 'piensa-cookie-consent' ),
-				'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
+				'duration'    => __( '1 minute', 'piensa-cookie-consent' ),
 			];
 		}
 

@@ -4,6 +4,50 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-09-17
+
+A hardening release. The blocker could take a whole site down, and did so on
+sites built with Bricks; separately, the Google Analytics 4 session cookie was
+neither declared to the visitor nor cleared when they withdrew consent.
+
+### Fixed
+- **The blocker could serve a completely blank page.** `preg_replace_callback()`
+  returns null when PCRE reaches its backtrack limit, and that null was returned
+  straight out of `process_html()` as the page body. Roughly a megabyte of
+  markup after an unclosed iframe is enough to trigger it, which is an ordinary
+  size for a page built with a visual builder. Every pass is checked now, and
+  any failure serves the HTML unchanged: one unblocked script is a far smaller
+  problem than a site that does not render.
+- **The patterns that span an element body no longer backtrack.** They use an
+  unrolled loop with possessive quantifiers, so the work is proportional to the
+  number of tags rather than the number of characters, and the limit above is
+  not approached on any realistic page.
+- **The blocker rewrote visual builders' own editing screens.** Builders render
+  the site on the front end, where `is_admin()` is false, so the buffer
+  neutralised the editor's scripts and the builder would not load — with nothing
+  to suggest the cookie plugin was responsible. Bricks, Elementor, Divi, Oxygen,
+  Beaver Builder, Brizy, Breakdance, WPBakery, Visual Composer, Thrive, Zion and
+  SiteOrigin are all recognised and left alone, as are feeds, REST responses,
+  AJAX, WP-CLI, embeds and the customizer preview.
+- **Tags written with single quotes were never blocked.** The patterns accepted
+  double quotes only, so `<script src='https://…'>` reached the visitor
+  untouched while the plugin reported it was blocking.
+- **The GA4 session cookie was neither declared nor cleared.** GA4 names it
+  after the measurement id — `_ga_G1AB2CD3EF` — so no literal name can match it.
+  It was missing from the declaration the visitor reads, and withdrawing consent
+  cleared `_ga` while leaving it in place, still identifying the visitor.
+  Declared as a pattern now, and cleared as one.
+- **Retention periods are the real ones.** `_ga` and `_ga_*` two years, `_gid`
+  24 hours, `_gat*` one minute, instead of "not declared by the provider" for
+  cookies whose duration Google documents. The AEPD asks for the retention
+  period explicitly.
+
+### Added
+- `piensa_cookie_consent_should_block`, a filter to switch the buffer off for a
+  single request, for builders and template engines this plugin has not heard of.
+- Tests for the blocker's patterns, including a two-megabyte page, and for the
+  wildcard cookie clearing.
+
 ## [1.6.3] - 2026-09-16
 
 1.6.2 did not fix what it said it fixed. Checked properly this time, by

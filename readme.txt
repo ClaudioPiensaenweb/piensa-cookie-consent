@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.3
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,14 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 
 == Changelog ==
 
+= 1.7.0 =
+* **The blocker could leave a page completely blank.** On a long page — an ordinary size for one built with a visual builder — the pattern matching gave up, and the failure was served to the visitor as an empty page. Any failure now serves the page unchanged.
+* **Visual builders no longer break.** Bricks, Elementor, Divi, Oxygen, Beaver Builder, Brizy, Breakdance, WPBakery, Visual Composer, Thrive, Zion and SiteOrigin render their editor on the front end, where the blocker was rewriting their own scripts and stopping the editor from loading. They are recognised and left alone, along with feeds, REST responses, AJAX and the customizer preview.
+* **Scripts written with single quotes were never blocked**, only those with double quotes. They are blocked now.
+* **The Google Analytics 4 session cookie is declared and cleared.** GA4 names it after the measurement id, so no fixed name could match: it was missing from the cookie list the visitor reads, and withdrawing consent left it behind.
+* Retention periods now show the real values Google documents rather than "not declared by the provider".
+* Added a `piensa_cookie_consent_should_block` filter to switch blocking off for a single request.
+
 = 1.6.3 =
 * **Google Analytics still measured as denied after accepting — 1.6.2 did not fix it.** The consent library passes its callbacks a wrapper object containing the cookie, and the plugin treated that wrapper as the cookie. Nothing inside those callbacks ran: Consent Mode was never told about the acceptance, blocked embeds such as maps or booking widgets were never released from behind their placeholder, and the consent log stored rows with no id, categories or timestamp.
 * The Consent Mode update was also being queued in a shape the Google tag ignores. It now appears as a real gtag command, which is what makes the `_ga` cookies appear when someone accepts.
@@ -166,6 +174,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.7.0 =
+Important if your site uses a visual builder such as Bricks or Elementor, or Google Analytics 4. Fixes the blocker blanking long pages and breaking builder editors, and declares and clears the GA4 session cookie.
 
 = 1.6.3 =
 Fixes Google Analytics still recording consent as denied after visitors accept, which 1.6.2 did not. Also restores blocked embeds being released on acceptance. Recommended for every site.

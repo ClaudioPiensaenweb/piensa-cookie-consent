@@ -21,6 +21,27 @@ class Piensa_Cookie_Consent_Blocker {
 	 */
 	const MAX_DISCOVERED = 500;
 
+	/*
+	 * The patterns each pass runs.
+	 *
+	 * Two things they have in common, both learnt the hard way. They accept
+	 * either quote style: the earlier ones accepted double quotes only, so a
+	 * tag written with single quotes — which plenty of builders and plugins
+	 * emit — went through unblocked. And the ones that span an element body use
+	 * an unrolled loop instead of a lazy `.*?`, which on a long page exhausts
+	 * PCRE's backtrack limit; see process_html() for what that used to cost.
+	 */
+
+	const SCRIPT_PATTERN = '/<script\\s+(?![^>]*\\bdata-category\\b)[^>]*\\bsrc\\s*=\\s*["\']([^"\']+)["\'][^>]*>\\s*<\\/script>/is';
+
+	const INLINE_SCRIPT_PATTERN = '/<script\\b([^>]*)>([^<]*+(?:<(?!\\/script\\b)[^<]*+)*+)<\\/script>/is';
+
+	const IMG_PATTERN = '/<img\\s+(?![^>]*\\bdata-cookie-category\\b)[^>]*\\bsrc\\s*=\\s*["\']([^"\']+)["\'][^>]*>/is';
+
+	const LINK_PATTERN = '/<link\\s+(?![^>]*\\bdata-cookie-category\\b)[^>]*\\bhref\\s*=\\s*["\']([^"\']+)["\'][^>]*>/is';
+
+	const IFRAME_PATTERN = '/<iframe\\s+[^>]*\\bsrc\\s*=\\s*["\']([^"\']+)["\'][^>]*>[^<]*+(?:<(?!\\/iframe\\b)[^<]*+)*+<\\/iframe>/is';
+
 	private $blocked_domains    = [];
 	private $placeholder_title  = '';
 	private $placeholder_button = '';
@@ -53,28 +74,140 @@ class Piensa_Cookie_Consent_Blocker {
 			return;
 		}
 
-		if ( ! $this->enabled ) {
+		if ( ! $this->enabled || ! $this->should_process() ) {
 			return;
 		}
 
 		ob_start( [ $this, 'process_html' ] );
 	}
 
+	/**
+	 * Request contexts the buffer stays out of.
+	 *
+	 * Visual builders render the site inside their own editor on the front end,
+	 * where is_admin() is false, so the buffer rewrote the editor's own scripts
+	 * and took the builder down with it. What the site owner sees then is a
+	 * builder that will not load, with nothing to suggest the cookie plugin is
+	 * responsible. Feeds, REST responses and the customizer preview are not
+	 * pages anyone consents on either.
+	 *
+	 * @return bool
+	 */
+	private function should_process() {
+		if ( is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
+			return false;
+		}
+
+		if ( ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+			return false;
+		}
+
+		if ( function_exists( 'wp_is_json_request' ) && wp_is_json_request() ) {
+			return false;
+		}
+
+		if ( is_feed() || is_embed() || is_customize_preview() ) {
+			return false;
+		}
+
+		if ( self::is_builder_request() ) {
+			return false;
+		}
+
+		/**
+		 * Filters whether the blocker rewrites this response.
+		 *
+		 * A site running a builder or a template engine this plugin has not
+		 * heard of can switch the buffer off for that request, rather than
+		 * having to disable blocking everywhere.
+		 *
+		 * @param bool $should_process Whether to rewrite the response.
+		 */
+		return (bool) apply_filters( 'piensa_cookie_consent_should_block', true );
+	}
+
+	/**
+	 * Whether this request belongs to a visual builder's editing screen.
+	 *
+	 * Each builder is recognised by the parameter it puts on the URL when it
+	 * opens its editor over the front end. Only the presence of the parameter
+	 * is checked: the values differ between builders and between versions of
+	 * the same one, and guessing at them is how a guard like this goes quietly
+	 * out of date.
+	 *
+	 * @return bool
+	 */
+	private static function is_builder_request() {
+		$flags = [
+			'bricks',                        // Bricks.
+			'elementor-preview',             // Elementor.
+			'et_fb',                         // Divi.
+			'et_bfb',                        // Divi, block layout.
+			'ct_builder',                    // Oxygen.
+			'fl_builder',                    // Beaver Builder.
+			'brizy-edit',                    // Brizy.
+			'brizy-edit-iframe',
+			'breakdance',                    // Breakdance.
+			'vc_editable',                   // WPBakery.
+			'vcv-editable',                  // Visual Composer.
+			'tve',                           // Thrive Architect.
+			'zion_builder_active',           // Zion Builder.
+			'siteorigin_panels_live_editor', // SiteOrigin.
+		];
+
+		foreach ( $flags as $flag ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading the URL only to decide whether to stay out of the way.
+			if ( isset( $_GET[ $flag ] ) ) {
+				return true;
+			}
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- As above.
+		$action = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
+
+		return in_array( $action, [ 'elementor', 'elementor_ajax', 'et_fb_retrieve_builder_data' ], true );
+	}
+
+	/**
+	 * Rewrite the response, or hand back exactly what came in.
+	 *
+	 * preg_replace_callback() returns null when PCRE gives up, and it gives up
+	 * on long pages: roughly a megabyte of markup after an unclosed iframe is
+	 * enough to reach the backtrack limit. That null was returned straight out
+	 * of here as the page body, so the site rendered blank — a cookie plugin
+	 * taking a site down being far worse than one script going unblocked. Every
+	 * pass is checked now, and a failure keeps the HTML as it stands.
+	 *
+	 * @param string $html Buffered response.
+	 *
+	 * @return string
+	 */
 	public function process_html( $html ) {
 		$this->discover_third_party_sources( $html );
 		$this->allowed_categories = $this->get_allowed_categories();
 
-		$pattern               = '/<iframe\s+(?![^>]*\bclass\s*=\s*["\"][^"\"]*\bexcluded-class\b)[^>]*\bsrc\s*=\s*["\"]([^"\"]+)["\"][^>]*>.*?<\/iframe>/is';
-		$script_pattern        = '/<script\s+(?![^>]*\bdata-category\b)[^>]*\bsrc\s*=\s*["\"]([^"\"]+)["\"][^>]*>\s*<\/script>/is';
-		$inline_script_pattern = '/<script\b([^>]*)>(.*?)<\/script>/is';
-		$img_pattern           = '/<img\s+(?![^>]*\bdata-cookie-category\b)[^>]*\bsrc\s*=\s*["\"]([^"\"]+)["\"][^>]*>/is';
-		$link_pattern          = '/<link\s+(?![^>]*\bdata-cookie-category\b)[^>]*\bhref\s*=\s*["\"]([^"\"]+)["\"][^>]*>/is';
+		$passes = [
+			[ self::SCRIPT_PATTERN, 'replace_script_callback' ],
+			[ self::INLINE_SCRIPT_PATTERN, 'replace_inline_script_callback' ],
+			[ self::IMG_PATTERN, 'replace_img_callback' ],
+			[ self::LINK_PATTERN, 'replace_link_callback' ],
+			[ self::IFRAME_PATTERN, 'replace_iframe_callback' ],
+		];
 
-		$html = preg_replace_callback( $script_pattern, [ $this, 'replace_script_callback' ], $html );
-		$html = preg_replace_callback( $inline_script_pattern, [ $this, 'replace_inline_script_callback' ], $html );
-		$html = preg_replace_callback( $img_pattern, [ $this, 'replace_img_callback' ], $html );
-		$html = preg_replace_callback( $link_pattern, [ $this, 'replace_link_callback' ], $html );
-		return preg_replace_callback( $pattern, [ $this, 'replace_iframe_callback' ], $html );
+		foreach ( $passes as $pass ) {
+			$result = preg_replace_callback( $pass[0], [ $this, $pass[1] ], $html );
+
+			if ( null === $result ) {
+				// Whatever defeated this pass is still in the document, so the
+				// remaining ones would meet it too. Stop here and serve what we
+				// have, which is valid HTML either way.
+				return $html;
+			}
+
+			$html = $result;
+		}
+
+		return $html;
 	}
 
 	public function replace_iframe_callback( $matches ) {

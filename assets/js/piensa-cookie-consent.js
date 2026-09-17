@@ -329,6 +329,26 @@ function buildCookieTable(cookies) {
     };
 }
 
+/**
+ * Turn a declared cookie name into what the consent library clears by.
+ *
+ * A name such as `_ga_*` stands for a family whose exact member is only known
+ * at runtime: GA4 names its session cookie after the measurement id. The
+ * library clears by regular expression when it is given one and by exact name
+ * otherwise, so passing the literal string `_ga_*` cleared nothing at all —
+ * `_ga` disappeared when consent was withdrawn and `_ga_G1AB2CD3EF` stayed
+ * behind.
+ */
+function cookieMatcher(cookie) {
+    if (!cookie.is_pattern) {
+        return cookie.name;
+    }
+
+    const escaped = String(cookie.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    return new RegExp('^' + escaped.replace(/\\\*/g, '.*') + '$');
+}
+
 function buildAutoClear(definitions, enabledFlags) {
     const buildList = (cookies) => {
         if (!cookies || !cookies.length) {
@@ -336,7 +356,7 @@ function buildAutoClear(definitions, enabledFlags) {
         }
         return {
             cookies: cookies.map(cookie => ({
-                name: cookie.name,
+                name: cookieMatcher(cookie),
                 domain: cookie.domain || '',
                 path: '/',
             })),
