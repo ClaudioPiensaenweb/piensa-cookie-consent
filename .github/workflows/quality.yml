@@ -48,6 +48,11 @@ jobs:
         run: composer test
 
       # The coding standard and static analysis only need to run once.
+      # A known vulnerability in a dependency is a vulnerability in the
+      # plugin, and nothing surfaces one unless something asks.
+      - name: Audit PHP dependencies
+        run: composer audit
+
       - name: Coding standards
         if: matrix.php == '8.3'
         run: composer lint
@@ -73,6 +78,15 @@ jobs:
       - run: npm ci
       - run: npm run lint:js
       - run: npm run test:js
+      - run: npm audit --audit-level=high
+
+      # A minified file that no longer matches its source is served to every
+      # visitor while the repository shows something else, so the build is run
+      # again here and any difference fails.
+      - name: Assert the minified assets are current
+        run: |
+          npm run build:assets
+          git diff --exit-code -- assets/             || { echo "::error::assets/*.min.* are stale. Run npm run build:assets and commit."; exit 1; }
 
   release-package:
     name: Release package builds

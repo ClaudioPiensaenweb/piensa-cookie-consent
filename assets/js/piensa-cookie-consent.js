@@ -229,11 +229,79 @@ function handleConsentEvent(detail, actionType) {
     update_consent_mode(cookie);
     activate_blocked_content(cookie);
     updateConsentStatus(cookie);
-    logConsent(cookie, actionType);
+    maybeLogConsent(cookie, actionType);
 
     if (actionType === 'change') {
         logNecessaryDisabled(cookie);
     }
+}
+
+/**
+ * Key identifying a decision, so the same one is not recorded twice.
+ */
+function consentFingerprint(cookie) {
+    return [
+        cookie.consentId || '',
+        cookie.revision || 0,
+        (cookie.categories || []).slice().sort().join(','),
+    ].join('|');
+}
+
+/**
+ * Remember which decision has already reached the server.
+ *
+ * Wrapped because storage throws rather than returning null when the browser
+ * refuses it — Safari in private browsing, or a visitor who has blocked
+ * storage for the site. Failing to remember only costs a repeated request.
+ */
+function rememberLoggedConsent(value) {
+    try {
+        window.localStorage.setItem('piensa_cc_logged', value);
+    } catch {
+        // Nothing to do: the decision is still recorded server-side.
+    }
+}
+
+function lastLoggedConsent() {
+    try {
+        return window.localStorage.getItem('piensa_cc_logged');
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Record a decision, once.
+ *
+ * `onConsent` fires on every page load once consent exists, and logging from
+ * there put a POST to admin-ajax.php on every page view of every visitor who
+ * had accepted — an uncached request that loads the whole of WordPress, and a
+ * row in the consent log per page view rather than per decision. Evidence of
+ * compliance is the decision, not the reading of it.
+ *
+ * It is not simply skipped, though: if the request that recorded the decision
+ * failed — offline, rate-limited, a plugin in the way — nothing would ever
+ * record it. So the decision that reached the server is remembered, and a page
+ * load only sends anything when what is stored does not match.
+ */
+function maybeLogConsent(cookie, actionType) {
+    if (!cookie) {
+        return;
+    }
+
+    const fingerprint = consentFingerprint(cookie);
+
+    // A first consent or a change is always a new decision.
+    if (actionType !== 'consent') {
+        logConsent(cookie, actionType, fingerprint);
+        return;
+    }
+
+    if (lastLoggedConsent() === fingerprint) {
+        return;
+    }
+
+    logConsent(cookie, actionType, fingerprint);
 }
 
 function update_consent_mode(cookie) {
@@ -713,7 +781,7 @@ function applyThemeVars(theme) {
     }
 }
 
-function logConsent(cookie, actionType) {
+function logConsent(cookie, actionType, fingerprint) {
     const config = window.PiensaCookieConsentConfig || {};
     const policy = config.policy || {};
     if (!policy.logConsent || !policy.ajaxUrl || !policy.nonce || !cookie) {
@@ -740,6 +808,14 @@ function logConsent(cookie, actionType) {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         },
         body: payload.toString(),
+    }).then(response => {
+        // Only a decision the server accepted is marked as recorded, so a
+        // failure is retried on the next page load rather than lost.
+        if (response.ok && fingerprint) {
+            rememberLoggedConsent(fingerprint);
+        }
+    }).catch(() => {
+        // Left unmarked, so the next page load tries again.
     });
 }
 

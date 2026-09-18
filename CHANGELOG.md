@@ -4,6 +4,52 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-09-18
+
+Weight, requests and languages.
+
+### Fixed
+- **A request to admin-ajax.php on every page view.** The consent log was
+  written from the callback that fires on every page load once consent exists,
+  not only when a decision was made. Every visitor who had accepted sent an
+  uncached POST — which loads the whole of WordPress — on every page they
+  opened, and the log filled with a row per page view rather than per decision.
+  Decisions are recorded once now; a decision the server never acknowledged is
+  retried on the next page load, so nothing is lost to a failed request.
+- **The retention periods were shown in English on Spanish sites.** `2 years`,
+  `24 hours` and `1 minute` went into the cookie declaration in 1.7.0 without
+  reaching the catalogues. There is a test now that fails when a string the
+  visitor reads has no translation.
+- A Spanish string still described the plugin by its previous name.
+
+### Changed
+- **The plugin's own CSS and JavaScript are minified**, halving the JavaScript
+  (28.4 KB to 14.0 KB) and taking about 30 KB off a page load in total. The
+  readable source ships alongside and is what `SCRIPT_DEBUG` serves, and CI
+  rebuilds the minified copies and fails if they are stale.
+- **Both scripts are deferred**, so they no longer block the parser where they
+  sit. They still run before `DOMContentLoaded`, which is what the front-end
+  script waits for.
+- **Third-party discovery respects its own throttle.** It ran three more passes
+  over the whole document on every request so a new host could be recorded
+  immediately, charging every visitor for the administrator's convenience. It
+  runs once an hour, like the write it feeds.
+
+### Added
+- German and French catalogues covering everything the visitor reads. The
+  administration screens stay in English in those two languages; Spanish is
+  complete.
+- Tests for the geographic gate, the upgrade path and which copy of an asset is
+  served — 307 assertions in PHP and 12 in JavaScript, up from 172 and 8. Each
+  test file now runs in its own process, so one file's stubs cannot collide with
+  another's.
+- `composer audit` and `npm audit` run in CI.
+
+### Removed
+- The readme announced four screenshots that were never in the package, which
+  left an empty tab on the directory listing. They will come back with real
+  ones taken from an install.
+
 ## [1.7.1] - 2026-09-17
 
 The agency build has never checked for an update on any site.

@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.1
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,14 +77,14 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
-== Screenshots ==
-
-1. Dashboard with consent metrics.
-2. Appearance editor with live preview.
-3. Scanner results and detected cookies.
-4. The banner on the front end.
-
 == Changelog ==
+
+= 1.8.0 =
+* **One less request on every page view.** The consent log was being written on every page load rather than when a decision was made, so every visitor who had accepted sent an uncached request to the server on every page they opened. Decisions are recorded once now, and retried if the first attempt fails.
+* **About 30 KB lighter.** The plugin's CSS and JavaScript are minified, and both scripts are deferred so they no longer block the page from rendering.
+* **Less work per request.** Third-party discovery was scanning the whole page on every request; it now runs once an hour, like the record it updates.
+* **The retention periods appeared in English on Spanish sites.** Fixed, along with the addition of German and French for everything a visitor reads.
+* More tests: the geographic gate, the upgrade path from older versions, and the assets that get served.
 
 = 1.7.1 =
 * **Automatic updates never ran.** The address of the update manifest was shown only as a placeholder in the settings field, so the setting itself was empty on every install and the plugin never asked whether a newer version existed — it simply looked up to date. It now uses the official channel unless you enter a different one.
@@ -180,6 +180,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.8.0 =
+Removes a server request on every page view, cuts about 30 KB from every page, and fixes the cookie retention periods showing in English on Spanish sites.
 
 = 1.7.1 =
 Fixes automatic updates never running. Install this one by hand; later versions will be offered automatically.

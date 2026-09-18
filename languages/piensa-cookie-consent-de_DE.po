@@ -3,12 +3,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Piensa Cookie Consent 1.8.0\n"
-"Report-Msgid-Bugs-To: https://github.com/ClaudioPiensaenweb/piensa-cookie-consent/issues\n"
+"Report-Msgid-Bugs-To: https://github.com/ClaudioPiensaenweb/piensa-cookie-"
+"consent/issues\n"
 "POT-Creation-Date: 2026-09-18 09:20+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: piensa-cookie-consent\n"
+"PO-Revision-Date: 2026-09-18 09:20+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: piensa-cookie-consent.php:38
 msgid ""
@@ -1193,76 +1199,76 @@ msgstr ""
 
 #: includes/class-scanner.php:261
 msgid "Stores the cookie choices you have made on this site."
-msgstr ""
+msgstr "Speichert die von Ihnen auf dieser Website getroffene Cookie-Auswahl."
 
 #: includes/class-scanner.php:262
 msgid "6 months"
-msgstr ""
+msgstr "6 Monate"
 
 #: includes/class-scanner.php:267
 msgid "Keeps you signed in to WordPress."
-msgstr ""
+msgstr "Hält Ihre Anmeldung bei WordPress aufrecht."
 
 #: includes/class-scanner.php:268
 msgid "Session, or 14 days if you choose to be remembered"
-msgstr ""
+msgstr "Sitzung, oder 14 Tage bei aktivierter Anmeldung merken"
 
 #: includes/class-scanner.php:273
 msgid "Remembers your WordPress interface preferences."
-msgstr ""
+msgstr "Merkt sich Ihre Einstellungen für die WordPress-Oberfläche."
 
 #: includes/class-scanner.php:274 includes/class-scanner.php:280
 msgid "1 year"
-msgstr ""
+msgstr "1 Jahr"
 
 #: includes/class-scanner.php:279
 msgid "Records when your WordPress preferences were set."
-msgstr ""
+msgstr "Hält fest, wann Ihre WordPress-Einstellungen gesetzt wurden."
 
 #: includes/class-scanner.php:304
 msgid "Google Analytics: user identifier."
-msgstr ""
+msgstr "Google Analytics: Nutzerkennung."
 
 #: includes/class-scanner.php:305 includes/class-scanner.php:317
 msgid "2 years"
-msgstr ""
+msgstr "2 Jahre"
 
 #: includes/class-scanner.php:316
 msgid "Google Analytics 4: session state, one per property."
-msgstr ""
+msgstr "Google Analytics 4: Sitzungsstatus, einer pro Property."
 
 #: includes/class-scanner.php:322
 msgid "Google Analytics: session identifier."
-msgstr ""
+msgstr "Google Analytics: Sitzungskennung."
 
 #: includes/class-scanner.php:323
 msgid "24 hours"
-msgstr ""
+msgstr "24 Stunden"
 
 #: includes/class-scanner.php:330
 msgid "Google Analytics: request throttling."
-msgstr ""
+msgstr "Google Analytics: Begrenzung der Anfragerate."
 
 #: includes/class-scanner.php:331
 msgid "1 minute"
-msgstr ""
+msgstr "1 Minute"
 
 #: includes/class-scanner.php:345
 msgid "Meta Pixel: browser identifier."
-msgstr ""
+msgstr "Meta-Pixel: Browserkennung."
 
 #: includes/class-scanner.php:346 includes/class-scanner.php:352
 #: includes/class-scanner.php:363
 msgid "Not declared by the provider"
-msgstr ""
+msgstr "Vom Anbieter nicht angegeben"
 
 #: includes/class-scanner.php:351
 msgid "Meta Pixel: advertising and measurement."
-msgstr ""
+msgstr "Meta-Pixel: Werbung und Messung."
 
 #: includes/class-scanner.php:362
 msgid "Google Analytics (via GTM)."
-msgstr ""
+msgstr "Google Analytics (über GTM)."
 
 #: includes/class-updater.php:130
 msgid "Updates are managed from the central server."

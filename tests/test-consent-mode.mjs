@@ -57,8 +57,17 @@ function loadScript() {
         navigator: { language: 'es-ES' },
         location: { href: 'https://example.test/' },
         sessionStorage: { getItem() { return null; }, setItem() {}, removeItem() {} },
-        fetch() { return Promise.resolve(); },
+        localStorage: (() => {
+            const store = new Map();
+
+            return {
+                getItem: key => (store.has(key) ? store.get(key) : null),
+                setItem: (key, value) => store.set(key, String(value)),
+                removeItem: key => store.delete(key),
+            };
+        })(),
         MutationObserver: class { observe() {} disconnect() {} },
+        URLSearchParams,
         setTimeout,
         clearTimeout,
         document: {
@@ -73,6 +82,13 @@ function loadScript() {
     };
 
     sandbox.window = sandbox;
+    sandbox.sent = [];
+    sandbox.fetch = (url, options) => {
+        sandbox.sent.push({ url, body: options && options.body });
+
+        return Promise.resolve({ ok: sandbox.serverAccepts !== false });
+    };
+    sandbox.serverAccepts = true;
 
     let runConfig = null;
 
@@ -86,7 +102,7 @@ function loadScript() {
     sandbox.PiensaCookieConsentConfig = {
         categories: { analytics: true, marketing: true },
         cookieDefinitions: {},
-        policy: {},
+        policy: { logConsent: true, ajaxUrl: 'https://sitio.test/wp-admin/admin-ajax.php', nonce: 'n' },
         ui: {},
         theme: {},
         language: { active: 'es', texts: { es: {} } },
@@ -222,4 +238,75 @@ test('the throttling cookie family covers both tag versions', () => {
 
     assert.ok(matcher.test('_gat'), 'the classic tag name');
     assert.ok(matcher.test('_gat_gtag_UA_1_1'), 'the gtag.js name');
+});
+
+/**
+ * Let the queued fetch callbacks settle before asserting on them.
+ */
+const settle = () => new Promise(resolve => setImmediate(resolve));
+
+test('a first consent is recorded', async () => {
+    const { sandbox, runConfig } = loadScript();
+
+    runConfig.onFirstConsent({ cookie: { categories: ['necessary', 'analytics'], consentId: 'abc', revision: 1 } });
+    await settle();
+
+    assert.equal(sandbox.sent.length, 1, 'the decision reached the server');
+    assert.ok(sandbox.sent[0].body.includes('consent_action=first'));
+    assert.ok(sandbox.sent[0].body.includes('consent_id=abc'));
+});
+
+test('an ordinary page view records nothing', async () => {
+    const { sandbox, runConfig } = loadScript();
+    const cookie = { categories: ['necessary', 'analytics'], consentId: 'abc', revision: 1 };
+
+    // The visitor decides once.
+    runConfig.onFirstConsent({ cookie });
+    await settle();
+    assert.equal(sandbox.sent.length, 1);
+
+    // Then browses. onConsent fires on every page load, and logging from there
+    // put an uncached POST to admin-ajax.php on every page view of every
+    // visitor who had accepted.
+    runConfig.onConsent({ cookie });
+    await settle();
+    runConfig.onConsent({ cookie });
+    await settle();
+
+    assert.equal(sandbox.sent.length, 1, 'browsing on sends no further requests');
+});
+
+test('a decision the server never accepted is retried', async () => {
+    const { sandbox, runConfig } = loadScript();
+    const cookie = { categories: ['necessary'], consentId: 'abc', revision: 1 };
+
+    sandbox.serverAccepts = false;
+    runConfig.onFirstConsent({ cookie });
+    await settle();
+    assert.equal(sandbox.sent.length, 1, 'the first attempt was made');
+
+    // The next page load finds nothing recorded and tries again, so a decision
+    // is not lost to one failed request.
+    sandbox.serverAccepts = true;
+    runConfig.onConsent({ cookie });
+    await settle();
+    assert.equal(sandbox.sent.length, 2, 'the failed decision was retried');
+
+    // And once it lands, browsing is quiet again.
+    runConfig.onConsent({ cookie });
+    await settle();
+    assert.equal(sandbox.sent.length, 2, 'the retry is not repeated forever');
+});
+
+test('changing your mind is recorded even from the same visitor', async () => {
+    const { sandbox, runConfig } = loadScript();
+
+    runConfig.onFirstConsent({ cookie: { categories: ['necessary', 'analytics'], consentId: 'abc', revision: 1 } });
+    await settle();
+
+    runConfig.onChange({ cookie: { categories: ['necessary'], consentId: 'abc', revision: 1 }, changedCategories: ['analytics'] });
+    await settle();
+
+    assert.equal(sandbox.sent.length, 2, 'the withdrawal is its own record');
+    assert.ok(sandbox.sent[1].body.includes('consent_action=change'));
 });

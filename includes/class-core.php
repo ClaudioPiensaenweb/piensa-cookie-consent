@@ -51,6 +51,7 @@ class Piensa_Cookie_Consent_Core {
 		$this->maybe_init_updater();
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		add_filter( 'script_loader_tag', [ $this, 'defer_own_scripts' ], 10, 2 );
 		add_shortcode( 'piensa_cookie_consent_review', [ $this, 'render_consent_review_shortcode' ] );
 		add_shortcode( 'piensa_cookie_consent_policy', [ $this, 'render_cookie_policy_shortcode' ] );
 		add_action( 'wp_footer', [ $this, 'maybe_inject_cookie_audit' ], 99 );
@@ -87,6 +88,31 @@ class Piensa_Cookie_Consent_Core {
 	 *
 	 * @return bool
 	 */
+	/**
+	 * URL of an asset, minified where there is a minified copy.
+	 *
+	 * The readable source stays in the package — it is what the plugin is
+	 * reviewed on — and is what gets served when SCRIPT_DEBUG is on, so a site
+	 * debugging a problem reads the same code this repository holds.
+	 *
+	 * @param string $relative Path under the plugin directory.
+	 *
+	 * @return string
+	 */
+	public static function asset_url( $relative ) {
+		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+			return PIENSA_COOKIE_CONSENT_URL . $relative;
+		}
+
+		$minified = preg_replace( '/\\.(js|css)$/', '.min.$1', $relative );
+
+		if ( $minified !== $relative && file_exists( PIENSA_COOKIE_CONSENT_PATH . $minified ) ) {
+			return PIENSA_COOKIE_CONSENT_URL . $minified;
+		}
+
+		return PIENSA_COOKIE_CONSENT_URL . $relative;
+	}
+
 	public static function has_self_hosted_updater() {
 		if ( defined( 'PIENSA_COOKIE_CONSENT_DISABLE_UPDATER' ) && PIENSA_COOKIE_CONSENT_DISABLE_UPDATER ) {
 			return false;
@@ -116,22 +142,55 @@ class Piensa_Cookie_Consent_Core {
 		$this->updater->init();
 	}
 
+	/**
+	 * Add defer to the plugin's own scripts.
+	 *
+	 * Written as a tag filter rather than with the 'strategy' argument of
+	 * wp_enqueue_script(), which only arrived in WordPress 6.3 while this
+	 * plugin supports 6.0.
+	 *
+	 * @param string $tag    The script tag.
+	 * @param string $handle Script handle.
+	 *
+	 * @return string
+	 */
+	public function defer_own_scripts( $tag, $handle ) {
+		if ( ! wp_scripts()->get_data( $handle, 'piensa_defer' ) ) {
+			return $tag;
+		}
+
+		if ( false !== strpos( $tag, ' defer' ) || false !== strpos( $tag, ' async' ) ) {
+			return $tag;
+		}
+
+		return str_replace( ' src=', ' defer src=', $tag );
+	}
+
 	public function enqueue_assets() {
 		$settings = Piensa_Cookie_Consent_Admin::get_settings();
 		if ( ! Piensa_Cookie_Consent_Geo::should_show_cmp( $settings ) ) {
 			return;
 		}
 
-		wp_enqueue_style( 'piensa-cookie-consent-cookieconsent', PIENSA_COOKIE_CONSENT_URL . 'assets/css/cookieconsent.css', [], PIENSA_COOKIE_CONSENT_VERSION );
-		wp_enqueue_style( 'piensa-cookie-consent-main', PIENSA_COOKIE_CONSENT_URL . 'assets/css/piensa-cookie-consent.css', [], PIENSA_COOKIE_CONSENT_VERSION );
+		wp_enqueue_style( 'piensa-cookie-consent-cookieconsent', Piensa_Cookie_Consent_Core::asset_url( 'assets/css/cookieconsent.css' ), [], PIENSA_COOKIE_CONSENT_VERSION );
+		wp_enqueue_style( 'piensa-cookie-consent-main', Piensa_Cookie_Consent_Core::asset_url( 'assets/css/piensa-cookie-consent.css' ), [], PIENSA_COOKIE_CONSENT_VERSION );
 
-		wp_enqueue_script( 'piensa-cookie-consent-cookieconsent', PIENSA_COOKIE_CONSENT_URL . 'assets/js/cookieconsent.js', [], PIENSA_COOKIE_CONSENT_VERSION, true );
-		wp_enqueue_script( 'piensa-cookie-consent-main', PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent.js', [ 'piensa-cookie-consent-cookieconsent' ], PIENSA_COOKIE_CONSENT_VERSION, true );
+		wp_enqueue_script( 'piensa-cookie-consent-cookieconsent', Piensa_Cookie_Consent_Core::asset_url( 'assets/js/cookieconsent.js' ), [], PIENSA_COOKIE_CONSENT_VERSION, true );
+		wp_enqueue_script( 'piensa-cookie-consent-main', Piensa_Cookie_Consent_Core::asset_url( 'assets/js/piensa-cookie-consent.js' ), [ 'piensa-cookie-consent-cookieconsent' ], PIENSA_COOKIE_CONSENT_VERSION, true );
+
+		// Deferred rather than merely placed in the footer: a classic script
+		// still blocks the parser where it sits, and these two are the heaviest
+		// thing the plugin puts on the page. Deferred scripts keep their
+		// relative order and still run before DOMContentLoaded, which is what
+		// the front-end script waits for.
+		foreach ( [ 'piensa-cookie-consent-cookieconsent', 'piensa-cookie-consent-main' ] as $handle ) {
+			wp_script_add_data( $handle, 'piensa_defer', true );
+		}
 
 		if ( is_user_logged_in() && current_user_can( 'manage_options' ) && ! empty( $_GET['ag_cookie_audit'] ) && ! empty( $_GET['ag_nonce'] ) ) {
 			$nonce = sanitize_text_field( wp_unslash( $_GET['ag_nonce'] ) );
 			if ( wp_verify_nonce( $nonce, 'piensa_cookie_consent_audit' ) ) {
-				wp_enqueue_script( 'piensa-cookie-consent-audit', PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent-audit.js', [], PIENSA_COOKIE_CONSENT_VERSION, true );
+				wp_enqueue_script( 'piensa-cookie-consent-audit', Piensa_Cookie_Consent_Core::asset_url( 'assets/js/piensa-cookie-consent-audit.js' ), [], PIENSA_COOKIE_CONSENT_VERSION, true );
 				wp_localize_script(
 					'piensa-cookie-consent-audit',
 					'PiensaCookieConsentAudit',

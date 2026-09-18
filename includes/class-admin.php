@@ -1492,10 +1492,10 @@ class Piensa_Cookie_Consent_Admin {
 
 		$config = $this->build_preview_config( $settings );
 
-		$css_cc   = PIENSA_COOKIE_CONSENT_URL . 'assets/css/cookieconsent.css';
-		$css_main = PIENSA_COOKIE_CONSENT_URL . 'assets/css/piensa-cookie-consent.css';
-		$js_cc    = PIENSA_COOKIE_CONSENT_URL . 'assets/js/cookieconsent.js';
-		$js_main  = PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent.js';
+		$css_cc   = Piensa_Cookie_Consent_Core::asset_url( 'assets/css/cookieconsent.css' );
+		$css_main = Piensa_Cookie_Consent_Core::asset_url( 'assets/css/piensa-cookie-consent.css' );
+		$js_cc    = Piensa_Cookie_Consent_Core::asset_url( 'assets/js/cookieconsent.js' );
+		$js_main  = Piensa_Cookie_Consent_Core::asset_url( 'assets/js/piensa-cookie-consent.js' );
 
 		header( 'Content-Type: text/html; charset=utf-8' );
 
@@ -1616,8 +1616,8 @@ class Piensa_Cookie_Consent_Admin {
 			return;
 		}
 
-		wp_enqueue_style( 'piensa-cookie-consent-admin', PIENSA_COOKIE_CONSENT_URL . 'assets/css/piensa-cookie-consent-admin.css', [], PIENSA_COOKIE_CONSENT_VERSION );
-		wp_enqueue_script( 'piensa-cookie-consent-admin', PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent-admin.js', [], PIENSA_COOKIE_CONSENT_VERSION, true );
+		wp_enqueue_style( 'piensa-cookie-consent-admin', Piensa_Cookie_Consent_Core::asset_url( 'assets/css/piensa-cookie-consent-admin.css' ), [], PIENSA_COOKIE_CONSENT_VERSION );
+		wp_enqueue_script( 'piensa-cookie-consent-admin', Piensa_Cookie_Consent_Core::asset_url( 'assets/js/piensa-cookie-consent-admin.js' ), [], PIENSA_COOKIE_CONSENT_VERSION, true );
 		wp_localize_script(
 			'piensa-cookie-consent-admin',
 			'PiensaCookieConsentAdminConfig',
@@ -1627,10 +1627,10 @@ class Piensa_Cookie_Consent_Admin {
 				'previewUrl'    => admin_url( 'admin-ajax.php?action=piensa_cookie_consent_preview' ),
 				'previewNonce'  => wp_create_nonce( 'piensa_cookie_consent_preview' ),
 				'previewAssets' => [
-					'cssCc'   => PIENSA_COOKIE_CONSENT_URL . 'assets/css/cookieconsent.css',
-					'cssMain' => PIENSA_COOKIE_CONSENT_URL . 'assets/css/piensa-cookie-consent.css',
-					'jsCc'    => PIENSA_COOKIE_CONSENT_URL . 'assets/js/cookieconsent.js',
-					'jsMain'  => PIENSA_COOKIE_CONSENT_URL . 'assets/js/piensa-cookie-consent.js',
+					'cssCc'   => Piensa_Cookie_Consent_Core::asset_url( 'assets/css/cookieconsent.css' ),
+					'cssMain' => Piensa_Cookie_Consent_Core::asset_url( 'assets/css/piensa-cookie-consent.css' ),
+					'jsCc'    => Piensa_Cookie_Consent_Core::asset_url( 'assets/js/cookieconsent.js' ),
+					'jsMain'  => Piensa_Cookie_Consent_Core::asset_url( 'assets/js/piensa-cookie-consent.js' ),
 				],
 			]
 		);

@@ -492,6 +492,16 @@ class Piensa_Cookie_Consent_Blocker {
 			return;
 		}
 
+		// Three more passes over the whole document, on top of the five that do
+		// the blocking. They ran on every request so that a host nobody had
+		// seen before could be recorded immediately, which cost every visitor
+		// the scan to save the administrator an hour's wait. Discovery only
+		// feeds the scanner's report — blocking categorises each tag on its own
+		// as it goes — so an hour late is no worse, and the request is lighter.
+		if ( get_transient( self::DISCOVERY_THROTTLE ) ) {
+			return;
+		}
+
 		$found    = [];
 		$patterns = [
 			'/<script[^>]+src=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*>/i',
@@ -520,16 +530,6 @@ class Piensa_Cookie_Consent_Blocker {
 		$discovered = get_option( 'piensa_cookie_consent_discovered', [] );
 		if ( ! is_array( $discovered ) ) {
 			$discovered = [];
-		}
-
-		$new_hosts = array_diff( array_keys( $found ), array_keys( $discovered ) );
-
-		// Refreshing last_seen on every hit would mean an UPDATE against
-		// wp_options for every page view on the site. The timestamp is only
-		// worth a write once an hour, and a host nobody has seen before is
-		// worth one immediately.
-		if ( empty( $new_hosts ) && get_transient( self::DISCOVERY_THROTTLE ) ) {
-			return;
 		}
 
 		foreach ( array_keys( $found ) as $host ) {
