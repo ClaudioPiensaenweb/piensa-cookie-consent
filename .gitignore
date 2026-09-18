@@ -26,7 +26,9 @@ Thumbs.db
 !.env.example
 
 # Generated translations (kept out of VCS, built on release)
-/languages/*.mo
+# Compiled catalogues are committed: WordPress loads the .mo and not the .po,
+# and the release is built from the working tree, so ignoring them shipped
+# packages with no translations at all.
 
 # Session logs written by local tooling, not part of the plugin.
 .planning/

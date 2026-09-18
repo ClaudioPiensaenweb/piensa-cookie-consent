@@ -156,14 +156,27 @@ return function ( $assert ) {
 			);
 		}
 
-		// A catalogue nobody compiled is a catalogue WordPress will not load.
+		// A catalogue nobody compiled is a catalogue WordPress will not load:
+		// it reads the .mo, never the .po. Checked by content rather than by
+		// modification time, which git does not preserve.
 		$compiled = $root . 'languages/piensa-cookie-consent-' . $locale . '.mo';
 
 		$assert( file_exists( $compiled ), "$locale is compiled" );
-		$assert(
-			file_exists( $compiled ) && filemtime( $compiled ) >= filemtime( $root . 'languages/piensa-cookie-consent-' . $locale . '.po' ),
-			"$locale's compiled catalogue is not older than its source"
-		);
+
+		$binary = file_exists( $compiled ) ? file_get_contents( $compiled ) : '';
+
+		foreach ( $strings as $string ) {
+			$translation = isset( $catalogue[ $string ] ) ? $catalogue[ $string ] : '';
+
+			if ( '' === $translation ) {
+				continue;
+			}
+
+			$assert(
+				false !== strpos( $binary, $translation ),
+				"$locale's compiled catalogue carries \"$translation\""
+			);
+		}
 	}
 
 	// Spanish is the language this plugin is primarily used in, so it carries
