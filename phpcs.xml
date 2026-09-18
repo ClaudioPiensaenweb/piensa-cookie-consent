@@ -12,10 +12,32 @@
     <!-- Bundled third-party library, shipped as upstream releases it. -->
     <exclude-pattern>*/assets/js/cookieconsent.js</exclude-pattern>
 
-    <!-- Test fixtures hold script and iframe markup as plain strings: it is
-         input to the patterns under test, never output to a page. -->
+    <!-- The test files are scaffolding, not plugin code: they hold markup as
+         plain strings to feed the patterns under test, declare stub classes
+         and functions beside each other, and replace $wpdb on purpose. The
+         sniffs below describe how a plugin should be written, not how a test
+         double should. -->
     <rule ref="WordPress.WP.EnqueuedResources">
         <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.WP.GlobalVariablesOverride">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="PSR1.Files.SideEffects">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="PSR1.Classes.ClassDeclaration">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="Generic.Commenting.DocComment">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <!-- The runner deliberately starts one interpreter per test file. -->
+    <rule ref="WordPress.PHP.DiscouragedPHPFunctions">
+        <exclude-pattern>*/tests/run.php</exclude-pattern>
     </rule>
 
     <arg name="extensions" value="php"/>

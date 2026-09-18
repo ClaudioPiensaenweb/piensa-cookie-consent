@@ -172,11 +172,11 @@ class Piensa_Cookie_Consent_Core {
 			return;
 		}
 
-		wp_enqueue_style( 'piensa-cookie-consent-cookieconsent', Piensa_Cookie_Consent_Core::asset_url( 'assets/css/cookieconsent.css' ), [], PIENSA_COOKIE_CONSENT_VERSION );
-		wp_enqueue_style( 'piensa-cookie-consent-main', Piensa_Cookie_Consent_Core::asset_url( 'assets/css/piensa-cookie-consent.css' ), [], PIENSA_COOKIE_CONSENT_VERSION );
+		wp_enqueue_style( 'piensa-cookie-consent-cookieconsent', self::asset_url( 'assets/css/cookieconsent.css' ), [], PIENSA_COOKIE_CONSENT_VERSION );
+		wp_enqueue_style( 'piensa-cookie-consent-main', self::asset_url( 'assets/css/piensa-cookie-consent.css' ), [], PIENSA_COOKIE_CONSENT_VERSION );
 
-		wp_enqueue_script( 'piensa-cookie-consent-cookieconsent', Piensa_Cookie_Consent_Core::asset_url( 'assets/js/cookieconsent.js' ), [], PIENSA_COOKIE_CONSENT_VERSION, true );
-		wp_enqueue_script( 'piensa-cookie-consent-main', Piensa_Cookie_Consent_Core::asset_url( 'assets/js/piensa-cookie-consent.js' ), [ 'piensa-cookie-consent-cookieconsent' ], PIENSA_COOKIE_CONSENT_VERSION, true );
+		wp_enqueue_script( 'piensa-cookie-consent-cookieconsent', self::asset_url( 'assets/js/cookieconsent.js' ), [], PIENSA_COOKIE_CONSENT_VERSION, true );
+		wp_enqueue_script( 'piensa-cookie-consent-main', self::asset_url( 'assets/js/piensa-cookie-consent.js' ), [ 'piensa-cookie-consent-cookieconsent' ], PIENSA_COOKIE_CONSENT_VERSION, true );
 
 		// Deferred rather than merely placed in the footer: a classic script
 		// still blocks the parser where it sits, and these two are the heaviest
@@ -190,7 +190,7 @@ class Piensa_Cookie_Consent_Core {
 		if ( is_user_logged_in() && current_user_can( 'manage_options' ) && ! empty( $_GET['ag_cookie_audit'] ) && ! empty( $_GET['ag_nonce'] ) ) {
 			$nonce = sanitize_text_field( wp_unslash( $_GET['ag_nonce'] ) );
 			if ( wp_verify_nonce( $nonce, 'piensa_cookie_consent_audit' ) ) {
-				wp_enqueue_script( 'piensa-cookie-consent-audit', Piensa_Cookie_Consent_Core::asset_url( 'assets/js/piensa-cookie-consent-audit.js' ), [], PIENSA_COOKIE_CONSENT_VERSION, true );
+				wp_enqueue_script( 'piensa-cookie-consent-audit', self::asset_url( 'assets/js/piensa-cookie-consent-audit.js' ), [], PIENSA_COOKIE_CONSENT_VERSION, true );
 				wp_localize_script(
 					'piensa-cookie-consent-audit',
 					'PiensaCookieConsentAudit',
