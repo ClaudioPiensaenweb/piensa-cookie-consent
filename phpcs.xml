@@ -11,36 +11,12 @@
     <exclude-pattern>*.min.js</exclude-pattern>
     <!-- Bundled third-party library, shipped as upstream releases it. -->
     <exclude-pattern>*/assets/js/cookieconsent.js</exclude-pattern>
-
-    <!-- The test files are scaffolding, not plugin code: they hold markup as
-         plain strings to feed the patterns under test, declare stub classes
-         and functions beside each other, and replace $wpdb on purpose. Named
-         by error code rather than by sniff, because referencing a whole sniff
-         switches on every check it carries — including the one that wants
-         every class in a namespace, which this plugin deliberately does not
-         use. -->
-    <rule ref="WordPress.WP.EnqueuedResources.NonEnqueuedScript">
-        <exclude-pattern>*/tests/*</exclude-pattern>
-    </rule>
-    <rule ref="WordPress.WP.GlobalVariablesOverride.Prohibited">
-        <exclude-pattern>*/tests/*</exclude-pattern>
-    </rule>
-    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
-        <exclude-pattern>*/tests/*</exclude-pattern>
-    </rule>
-    <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
-        <exclude-pattern>*/tests/*</exclude-pattern>
-    </rule>
-    <rule ref="Generic.Formatting.MultipleStatementAlignment.NotSameWarning">
-        <exclude-pattern>*/tests/*</exclude-pattern>
-    </rule>
-    <rule ref="Generic.Commenting.DocComment.LongNotCapital">
-        <exclude-pattern>*/tests/*</exclude-pattern>
-    </rule>
-    <!-- The runner deliberately starts one interpreter per test file. -->
-    <rule ref="WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec">
-        <exclude-pattern>*/tests/run.php</exclude-pattern>
-    </rule>
+    <!-- Test scaffolding, not plugin code: it declares stub classes and
+         functions beside each other, holds markup as plain strings to feed the
+         patterns under test, and replaces $wpdb on purpose. This standard
+         describes how a plugin should be written, not a test double, and the
+         tests are not shipped. -->
+    <exclude-pattern>*/tests/*</exclude-pattern>
 
     <arg name="extensions" value="php"/>
     <arg name="basepath" value="./"/>
