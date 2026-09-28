@@ -144,7 +144,10 @@ class Piensa_Cookie_Consent_Scanner {
 	/**
 	 * Whether a URL is one the plugin must never neutralise.
 	 *
-	 * @param string $url Absolute or protocol-relative URL.
+	 * Takes anything, because it is handed whatever a regular expression
+	 * captured out of someone else's markup.
+	 *
+	 * @param mixed $url Absolute or protocol-relative URL.
 	 *
 	 * @return bool
 	 */
