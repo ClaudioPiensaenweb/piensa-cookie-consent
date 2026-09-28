@@ -61,13 +61,13 @@ class Piensa_Cookie_Consent_Blocker {
 	public function start_buffer() {
 		$settings                 = Piensa_Cookie_Consent_Admin::get_settings();
 		$this->enabled            = ! empty( $settings['enable_blocker'] );
-		$this->blocked_domains    = $this->parse_domains( $settings['blocked_domains'] );
+		$this->blocked_domains    = $this->filter_domains( 'blocked', $this->parse_domains( $settings['blocked_domains'] ) );
 		$this->placeholder_title  = $settings['placeholder_title'];
 		$this->placeholder_button = $settings['placeholder_button'];
 		$this->domain_overrides   = isset( $settings['domain_overrides'] ) && is_array( $settings['domain_overrides'] ) ? $settings['domain_overrides'] : [];
 		$this->site_host          = wp_parse_url( home_url(), PHP_URL_HOST );
 		$this->block_unknown      = ! empty( $settings['block_unknown_third_party'] );
-		$this->allowed_domains    = $this->parse_domains( isset( $settings['allowed_domains'] ) ? $settings['allowed_domains'] : '' );
+		$this->allowed_domains    = $this->filter_domains( 'allowed', $this->parse_domains( isset( $settings['allowed_domains'] ) ? $settings['allowed_domains'] : '' ) );
 
 		if ( ! Piensa_Cookie_Consent_Geo::should_show_cmp( $settings ) ) {
 			$this->enabled = false;
@@ -254,6 +254,44 @@ class Piensa_Cookie_Consent_Blocker {
         </div>';
 
 		return $placeholder;
+	}
+
+	/**
+	 * Let code extend one of the domain lists.
+	 *
+	 * The lists are a per-site setting, which means an agency deciding the same
+	 * thing about the same domain across thirty sites has to open thirty
+	 * settings screens. With a filter the decision goes in one must-use plugin
+	 * and every site inherits it.
+	 *
+	 * @param string   $list    Either 'allowed' or 'blocked'.
+	 * @param string[] $domains Domains from the site's own setting.
+	 *
+	 * @return string[]
+	 */
+	private function filter_domains( $list, $domains ) {
+		/**
+		 * Filters a domain list before the blocker uses it.
+		 *
+		 * @param string[] $domains Domains, one per entry.
+		 */
+		$domains = apply_filters( 'piensa_cookie_consent_' . $list . '_domains', $domains );
+
+		if ( ! is_array( $domains ) ) {
+			return [];
+		}
+
+		$clean = [];
+
+		foreach ( $domains as $domain ) {
+			$domain = strtolower( trim( (string) $domain ) );
+
+			if ( '' !== $domain ) {
+				$clean[] = $domain;
+			}
+		}
+
+		return array_values( array_unique( $clean ) );
 	}
 
 	private function parse_domains( $raw ) {

@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - 2026-09-28
+
+### Added
+- `piensa_cookie_consent_allowed_domains` and
+  `piensa_cookie_consent_blocked_domains`, filters over the two domain lists.
+  They were a per-site setting only, so an agency reaching the same conclusion
+  about the same host across thirty sites had to open thirty settings screens.
+  The decision now fits in one must-use plugin. Documented in the README.
+
 ## [1.8.0] - 2026-09-18
 
 Weight, requests and languages.

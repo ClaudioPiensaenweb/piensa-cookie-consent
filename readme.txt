@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,9 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 1.8.1 =
+* Added filters over the allowed and blocked domain lists, so the same decision about a host can be applied across many sites from one place instead of site by site.
 
 = 1.8.0 =
 * **One less request on every page view.** The consent log was being written on every page load rather than when a decision was made, so every visitor who had accepted sent an uncached request to the server on every page they opened. Decisions are recorded once now, and retried if the first attempt fails.
@@ -180,6 +183,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.8.1 =
+Adds filters for the allowed and blocked domain lists. No change in behaviour otherwise.
 
 = 1.8.0 =
 Removes a server request on every page view, cuts about 30 KB from every page, and fixes the cookie retention periods showing in English on Spanish sites.

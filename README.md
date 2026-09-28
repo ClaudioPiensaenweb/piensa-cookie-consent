@@ -68,6 +68,38 @@ The Spanish translation lives in `languages/piensa-cookie-consent-es_ES.po`.
 The `.mo` files are build artefacts, compiled during the release build rather
 than committed.
 
+## Deciding about a domain once, for every site
+
+The allowed and blocked domain lists are a per-site setting, which is fine for
+one site and tedious across thirty. Both lists run through a filter, so the
+decision can live in a single must-use plugin installed everywhere:
+
+```php
+<?php
+/**
+ * Plugin Name: Piensa Cookie Consent — agency defaults
+ */
+
+add_filter(
+	'piensa_cookie_consent_allowed_domains',
+	static function ( $domains ) {
+		// A host that serves assets and sets no cookies. Allowed rather than
+		// left unrecognised, which would block it as marketing and leave the
+		// image missing until the visitor accepted.
+		$domains[] = 'example.com';
+
+		return $domains;
+	}
+);
+```
+
+`piensa_cookie_consent_blocked_domains` takes the same shape. Entries are
+lower-cased and de-duplicated, and they are added to whatever the site's own
+settings already list rather than replacing them.
+
+A third filter, `piensa_cookie_consent_should_block`, switches the whole
+rewriting pass off for one request.
+
 ## Two builds, one codebase
 
 The plugin ships in two shapes:
