@@ -264,18 +264,18 @@ class Piensa_Cookie_Consent_Blocker {
 	 * settings screens. With a filter the decision goes in one must-use plugin
 	 * and every site inherits it.
 	 *
-	 * @param string   $list    Either 'allowed' or 'blocked'.
+	 * @param string   $which   Either 'allowed' or 'blocked'.
 	 * @param string[] $domains Domains from the site's own setting.
 	 *
 	 * @return string[]
 	 */
-	private function filter_domains( $list, $domains ) {
+	private function filter_domains( $which, $domains ) {
 		/**
 		 * Filters a domain list before the blocker uses it.
 		 *
 		 * @param string[] $domains Domains, one per entry.
 		 */
-		$domains = apply_filters( 'piensa_cookie_consent_' . $list . '_domains', $domains );
+		$domains = apply_filters( 'piensa_cookie_consent_' . $which . '_domains', $domains );
 
 		if ( ! is_array( $domains ) ) {
 			return [];
