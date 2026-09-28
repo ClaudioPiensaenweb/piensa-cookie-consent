@@ -214,6 +214,10 @@ class Piensa_Cookie_Consent_Blocker {
 		$full_tag = $matches[0];
 		$src_url  = $matches[1];
 
+		if ( Piensa_Cookie_Consent_Scanner::is_essential_url( $src_url ) ) {
+			return $full_tag;
+		}
+
 		$host     = $this->extract_host( $src_url );
 		$category = $this->categorize_domain( $host );
 		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
@@ -324,6 +328,13 @@ class Piensa_Cookie_Consent_Blocker {
 	private function replace_script_callback( $matches ) {
 		$full_tag = $matches[0];
 		$src_url  = $matches[1];
+
+		// Checked before anything else. A payment script neutralised on a
+		// checkout page takes the card fields with it, and the visitor is left
+		// on a page that cannot take their money.
+		if ( Piensa_Cookie_Consent_Scanner::is_essential_url( $src_url ) ) {
+			return $full_tag;
+		}
 		$host     = $this->extract_host( $src_url );
 		$category = $this->categorize_domain( $host );
 		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
@@ -457,6 +468,10 @@ class Piensa_Cookie_Consent_Blocker {
 	private function replace_img_callback( $matches ) {
 		$full_tag = $matches[0];
 		$src_url  = $matches[1];
+
+		if ( Piensa_Cookie_Consent_Scanner::is_essential_url( $src_url ) ) {
+			return $full_tag;
+		}
 		$host     = $this->extract_host( $src_url );
 		$category = $this->categorize_domain( $host );
 		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );
@@ -488,6 +503,10 @@ class Piensa_Cookie_Consent_Blocker {
 	private function replace_link_callback( $matches ) {
 		$full_tag = $matches[0];
 		$href_url = $matches[1];
+
+		if ( Piensa_Cookie_Consent_Scanner::is_essential_url( $href_url ) ) {
+			return $full_tag;
+		}
 		$host     = $this->extract_host( $href_url );
 		$category = $this->categorize_domain( $host );
 		$service  = Piensa_Cookie_Consent_Scanner::get_service_for_domain( $host );

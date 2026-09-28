@@ -4,6 +4,39 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-09-28
+
+Found on a live shop: the checkout could not take a payment.
+
+### Fixed
+- **Payment scripts were being blocked.** `js.stripe.com` was served as
+  `type="text/plain"` on the checkout, the cart and every product page, because
+  the category map had only `analytics` and `marketing` in it — so a payment
+  gateway fell through to "unrecognised third party" and was treated as
+  marketing. Stripe's script is what draws the card fields, so the shop could
+  not take money from anybody who had not accepted marketing cookies. Nothing
+  about it looks like an error: the page renders, the banner behaves, and the
+  orders simply do not arrive.
+- **reCAPTCHA was being blocked** along with it, and with it the protection on
+  every contact form. It is served from the same hosts as Google Maps, which are
+  categorised as marketing, so the host alone could not tell them apart. It is
+  now recognised by its path.
+
+### Added
+- A `necessary` category, listing payment gateways and fraud checks: Stripe,
+  PayPal, Redsys, Paycomet, Addon Payments, Adyen, Braintree, Checkout.com,
+  Klarna, Mollie, Square, SumUp, Worldpay, Amazon Pay, Google Pay, Apple Pay,
+  Revolut, Cloudflare Turnstile, hCaptcha and Friendly Captcha. These are never
+  blocked, and deliberately not a setting: the allowed-domains list is editable,
+  and a checkout that breaks because of a tidy-up in a settings screen is not a
+  good trade.
+- `piensa_cookie_consent_essential_hosts`, for a gateway the plugin has not
+  heard of.
+- Eighteen more hosts in the technical list that seeds a new install's allowed
+  domains — Font Awesome kits, Adobe Fonts, Bunny Fonts, bootstrapcdn mirrors,
+  DataTables, Tailwind, video.js, Plyr and the WordPress.com image and asset
+  hosts. All serve assets and set no cookies.
+
 ## [1.8.1] - 2026-09-28
 
 ### Added

@@ -68,6 +68,36 @@ The Spanish translation lives in `languages/piensa-cookie-consent-es_ES.po`.
 The `.mo` files are build artefacts, compiled during the release build rather
 than committed.
 
+## What is never blocked
+
+Payment gateways and fraud checks are exempt from consent under ePrivacy: a
+payment is the service the buyer asked for, and a fraud check protects them.
+Blocking either protects nobody — a neutralised payment script takes the card
+fields off the checkout page, so the shop stops taking money from every visitor
+who has not accepted marketing.
+
+That list lives in `Scanner::get_essential_hosts()` rather than in the settings,
+because the allowed-domains list is editable and an editable list is one
+somebody can empty by accident. reCAPTCHA is matched by path instead of host,
+since it is served from the same hosts as Google Maps.
+
+A gateway that is not on the list can be added without touching the plugin:
+
+```php
+add_filter(
+	'piensa_cookie_consent_essential_hosts',
+	static function ( $hosts ) {
+		$hosts[] = 'gateway.example.com';
+
+		return $hosts;
+	}
+);
+```
+
+Hosts that merely serve fonts, icons and libraries — and set no cookies — are a
+separate, editable list in `includes/data/technical-hosts.json`, which seeds the
+allowed domains of a new install.
+
 ## Deciding about a domain once, for every site
 
 The allowed and blocked domain lists are a per-site setting, which is fine for

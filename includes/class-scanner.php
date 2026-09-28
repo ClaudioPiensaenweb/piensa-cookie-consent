@@ -75,8 +75,126 @@ class Piensa_Cookie_Consent_Scanner {
 		];
 	}
 
+	/**
+	 * Hosts that carry out what the visitor asked for, and are never blocked.
+	 *
+	 * Two kinds, on the same footing in law. Payment processing is the service
+	 * a buyer explicitly requested, and fraud prevention protects them; both
+	 * are exempt from consent under ePrivacy. Blocking either protects nobody:
+	 * a neutralised payment script takes the card fields off the checkout page,
+	 * so the shop stops taking money from everyone who has not accepted
+	 * marketing — which is how a cookie banner ends up costing sales.
+	 *
+	 * Deliberately not a setting. The allowed-domains list is editable, and an
+	 * editable list is one somebody can empty by accident; a checkout that
+	 * breaks because of a tidy-up in a settings screen is not a good trade.
+	 * Sites with a gateway that is not here can add it through the filter.
+	 *
+	 * @return string[]
+	 */
+	public static function get_essential_hosts() {
+		$hosts = [
+			// Payment gateways.
+			'stripe.com',
+			'stripe.network',
+			'paypal.com',
+			'paypalobjects.com',
+			// Redsys is the gateway behind most Spanish banks, Bizum included.
+			'redsys.es',
+			'paycomet.com',
+			'addonpayments.com',
+			'adyen.com',
+			'braintreegateway.com',
+			'braintree-api.com',
+			'checkout.com',
+			'klarna.com',
+			'klarnacdn.net',
+			'mollie.com',
+			'squarecdn.com',
+			'squareup.com',
+			'sumup.com',
+			'worldpay.com',
+			'payments-amazon.com',
+			'pay.google.com',
+			'applepay.cdn-apple.com',
+			'merchant.revolut.com',
+			// Bot and fraud protection. reCAPTCHA is handled by path below,
+			// because it shares its hosts with Google Maps.
+			'challenges.cloudflare.com',
+			'hcaptcha.com',
+			'friendlycaptcha.com',
+		];
+
+		/**
+		 * Filters the hosts the blocker must never neutralise.
+		 *
+		 * For a payment gateway or fraud check this plugin has not heard of.
+		 *
+		 * @param string[] $hosts Host names.
+		 */
+		$hosts = apply_filters( 'piensa_cookie_consent_essential_hosts', $hosts );
+
+		return is_array( $hosts ) ? array_values( array_filter( array_map( 'strval', $hosts ) ) ) : [];
+	}
+
+	/**
+	 * Paths that make a request essential whatever its host.
+	 *
+	 * reCAPTCHA is served from www.google.com and www.gstatic.com, the same
+	 * hosts as Google Maps, so the host alone cannot tell them apart. With
+	 * those hosts categorised as marketing, the CAPTCHA on every contact form
+	 * was being neutralised along with the maps.
+	 *
+	 * @return string[]
+	 */
+	public static function get_essential_paths() {
+		return [
+			'/recaptcha/',
+		];
+	}
+
+	/**
+	 * Whether a URL is one the plugin must never neutralise.
+	 *
+	 * @param string $url Absolute or protocol-relative URL.
+	 *
+	 * @return bool
+	 */
+	public static function is_essential_url( $url ) {
+		if ( ! is_string( $url ) || '' === $url ) {
+			return false;
+		}
+
+		$url = strtolower( $url );
+
+		foreach ( self::get_essential_paths() as $path ) {
+			if ( false !== strpos( $url, $path ) ) {
+				return true;
+			}
+		}
+
+		$host = wp_parse_url( 0 === strpos( $url, '//' ) ? 'https:' . $url : $url, PHP_URL_HOST );
+
+		if ( ! $host ) {
+			return false;
+		}
+
+		foreach ( self::get_essential_hosts() as $essential ) {
+			$essential = strtolower( $essential );
+
+			// The host itself, or any subdomain of it. Matched on a dot
+			// boundary so that notstripe.com does not pass as stripe.com.
+			if ( $host === $essential || substr( $host, -strlen( $essential ) - 1 ) === '.' . $essential ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public static function get_domain_category_map() {
 		$map = [
+			'necessary' => self::get_essential_hosts(),
 			'analytics' => [
 				'google-analytics.com',
 				'googletagmanager.com',

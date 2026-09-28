@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.1
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,12 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 1.9.0 =
+* **Payment scripts were being blocked, so shops could not take payments.** Stripe's script draws the card fields, and it was being neutralised on the checkout, the cart and every product page for anyone who had not accepted marketing cookies. Payment gateways and fraud checks are exempt from consent, and are now never blocked.
+* **reCAPTCHA was being blocked too**, and with it the protection on every contact form. It shares its hosts with Google Maps, so it is now recognised by its address rather than by host.
+* Added a necessary category covering the main payment gateways, including Redsys and Bizum, plus Cloudflare Turnstile and hCaptcha, and a filter for any gateway not on the list.
+* Eighteen more font and library hosts recognised as technical, so they are not blocked on a new install.
 
 = 1.8.1 =
 * Added filters over the allowed and blocked domain lists, so the same decision about a host can be applied across many sites from one place instead of site by site.
@@ -183,6 +189,9 @@ Yes. The plugin is fully internationalised and ships with a Spanish translation.
 * Settings and the consent log migrate automatically from 0.5.x.
 
 == Upgrade Notice ==
+
+= 1.9.0 =
+Important for any site that takes payments or uses reCAPTCHA: both were being blocked until the visitor accepted marketing cookies.
 
 = 1.8.1 =
 Adds filters for the allowed and blocked domain lists. No change in behaviour otherwise.

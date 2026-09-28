@@ -7,7 +7,10 @@
     "scripts rather than tracking cookies. Blocking them would break layout",
     "without protecting anyone.",
     "Site owners can edit the list under Settings; analytics and advertising",
-    "hosts must never be added to it."
+    "hosts must never be added to it.",
+    "Payment gateways and fraud checks are deliberately NOT here: they are",
+    "never blocked at all, from a list in the code that a settings screen",
+    "cannot empty. See Scanner::get_essential_hosts()."
   ],
   "hosts": [
     "ajax.googleapis.com",
@@ -22,6 +25,24 @@
     "stackpath.bootstrapcdn.com",
     "s.w.org",
     "ps.w.org",
-    "secure.gravatar.com"
+    "secure.gravatar.com",
+    "kit.fontawesome.com",
+    "ka-f.fontawesome.com",
+    "use.typekit.net",
+    "p.typekit.net",
+    "fonts.bunny.net",
+    "fonts.cdnfonts.com",
+    "maxcdn.bootstrapcdn.com",
+    "netdna.bootstrapcdn.com",
+    "cdn.datatables.net",
+    "cdn.tailwindcss.com",
+    "vjs.zencdn.net",
+    "cdn.plyr.io",
+    "i0.wp.com",
+    "i1.wp.com",
+    "i2.wp.com",
+    "i3.wp.com",
+    "c0.wp.com",
+    "gravatar.com"
   ]
 }
