@@ -275,6 +275,9 @@ class Piensa_Cookie_Consent_Blocker {
 		 *
 		 * @param string[] $domains Domains, one per entry.
 		 */
+		// Whatever a filter hands back, which need not be the array it was
+		// given: a site's own code is on the other side of this call.
+		/** @var mixed $domains */
 		$domains = apply_filters( 'piensa_cookie_consent_' . $which . '_domains', $domains );
 
 		if ( ! is_array( $domains ) ) {
