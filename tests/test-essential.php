@@ -16,6 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', __DIR__ );
 }
 
+if ( ! defined( 'PIENSA_COOKIE_CONSENT_PATH' ) ) {
+	define( 'PIENSA_COOKIE_CONSENT_PATH', dirname( __DIR__ ) . '/' );
+}
+
 if ( ! function_exists( 'wp_parse_url' ) ) {
 	/**
 	 * @param string $url       URL.

@@ -1,0 +1,57 @@
+{
+  "_comment": [
+    "Hosts and paths the blocker must never neutralise.",
+    "The plugin loads nothing from any of them. They are the opposite:",
+    "payment gateways and fraud checks a site's own shop and forms rely on.",
+    "Both are exempt from consent under ePrivacy — a payment is the service",
+    "the buyer asked for, and a fraud check protects them — and blocking",
+    "either protects nobody: a neutralised payment script takes the card",
+    "fields off the checkout page, so the shop stops taking money from every",
+    "visitor who has not accepted marketing.",
+    "In a data file rather than as PHP literals for the same reason as",
+    "technical-hosts.json: written in code, a list of host names reads to an",
+    "analyser as the plugin offloading its own assets, which is a different",
+    "thing and is not allowed in the directory.",
+    "Unlike the technical hosts, this list is NOT a setting. An editable list",
+    "is one somebody can empty by accident, and a checkout that breaks",
+    "because of a tidy-up in a settings screen is not a good trade. Sites",
+    "with a gateway that is not here use the",
+    "piensa_cookie_consent_essential_hosts filter."
+  ],
+  "hosts": [
+    "stripe.com",
+    "stripe.network",
+    "paypal.com",
+    "paypalobjects.com",
+    "redsys.es",
+    "paycomet.com",
+    "addonpayments.com",
+    "adyen.com",
+    "braintreegateway.com",
+    "braintree-api.com",
+    "checkout.com",
+    "klarna.com",
+    "klarnacdn.net",
+    "mollie.com",
+    "squarecdn.com",
+    "squareup.com",
+    "sumup.com",
+    "worldpay.com",
+    "payments-amazon.com",
+    "pay.google.com",
+    "applepay.cdn-apple.com",
+    "merchant.revolut.com",
+    "challenges.cloudflare.com",
+    "hcaptcha.com",
+    "friendlycaptcha.com"
+  ],
+  "_paths_comment": [
+    "Matched anywhere in the address, whatever the host. reCAPTCHA is served",
+    "from www.google.com and www.gstatic.com, the same hosts as Google Maps,",
+    "so the host alone cannot tell them apart: with those categorised as",
+    "marketing, the CAPTCHA on every contact form went down with the maps."
+  ],
+  "paths": [
+    "/recaptcha/"
+  ]
+}

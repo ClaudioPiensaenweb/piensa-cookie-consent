@@ -76,54 +76,45 @@ class Piensa_Cookie_Consent_Scanner {
 	}
 
 	/**
+	 * Read one of the lists in the essential-hosts data file.
+	 *
+	 * @param string $key Either 'hosts' or 'paths'.
+	 *
+	 * @return string[]
+	 */
+	private static function read_essential_list( $key ) {
+		$path = PIENSA_COOKIE_CONSENT_PATH . 'includes/data/essential-hosts.json';
+
+		if ( ! is_readable( $path ) ) {
+			return [];
+		}
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading a file shipped inside the plugin, not a remote resource.
+		$data = json_decode( (string) file_get_contents( $path ), true );
+
+		if ( ! is_array( $data ) || empty( $data[ $key ] ) || ! is_array( $data[ $key ] ) ) {
+			return [];
+		}
+
+		return array_values( array_filter( array_map( 'strval', $data[ $key ] ) ) );
+	}
+
+	/**
 	 * Hosts that carry out what the visitor asked for, and are never blocked.
 	 *
-	 * Two kinds, on the same footing in law. Payment processing is the service
-	 * a buyer explicitly requested, and fraud prevention protects them; both
-	 * are exempt from consent under ePrivacy. Blocking either protects nobody:
-	 * a neutralised payment script takes the card fields off the checkout page,
-	 * so the shop stops taking money from everyone who has not accepted
-	 * marketing — which is how a cookie banner ends up costing sales.
+	 * Payment processing is the service a buyer explicitly requested, and fraud
+	 * prevention protects them; both are exempt from consent under ePrivacy.
+	 * Blocking either protects nobody — a neutralised payment script takes the
+	 * card fields off the checkout page, so the shop stops taking money from
+	 * everyone who has not accepted marketing.
 	 *
-	 * Deliberately not a setting. The allowed-domains list is editable, and an
-	 * editable list is one somebody can empty by accident; a checkout that
-	 * breaks because of a tidy-up in a settings screen is not a good trade.
-	 * Sites with a gateway that is not here can add it through the filter.
+	 * The list itself lives in includes/data/essential-hosts.json, which also
+	 * explains why it is a data file and why it is not a setting.
 	 *
 	 * @return string[]
 	 */
 	public static function get_essential_hosts() {
-		$hosts = [
-			// Payment gateways.
-			'stripe.com',
-			'stripe.network',
-			'paypal.com',
-			'paypalobjects.com',
-			// Redsys is the gateway behind most Spanish banks, Bizum included.
-			'redsys.es',
-			'paycomet.com',
-			'addonpayments.com',
-			'adyen.com',
-			'braintreegateway.com',
-			'braintree-api.com',
-			'checkout.com',
-			'klarna.com',
-			'klarnacdn.net',
-			'mollie.com',
-			'squarecdn.com',
-			'squareup.com',
-			'sumup.com',
-			'worldpay.com',
-			'payments-amazon.com',
-			'pay.google.com',
-			'applepay.cdn-apple.com',
-			'merchant.revolut.com',
-			// Bot and fraud protection. reCAPTCHA is handled by path below,
-			// because it shares its hosts with Google Maps.
-			'challenges.cloudflare.com',
-			'hcaptcha.com',
-			'friendlycaptcha.com',
-		];
+		$hosts = self::read_essential_list( 'hosts' );
 
 		/**
 		 * Filters the hosts the blocker must never neutralise.
@@ -132,6 +123,7 @@ class Piensa_Cookie_Consent_Scanner {
 		 *
 		 * @param string[] $hosts Host names.
 		 */
+		/** @var mixed $hosts */
 		$hosts = apply_filters( 'piensa_cookie_consent_essential_hosts', $hosts );
 
 		return is_array( $hosts ) ? array_values( array_filter( array_map( 'strval', $hosts ) ) ) : [];
@@ -140,17 +132,13 @@ class Piensa_Cookie_Consent_Scanner {
 	/**
 	 * Paths that make a request essential whatever its host.
 	 *
-	 * reCAPTCHA is served from www.google.com and www.gstatic.com, the same
-	 * hosts as Google Maps, so the host alone cannot tell them apart. With
-	 * those hosts categorised as marketing, the CAPTCHA on every contact form
-	 * was being neutralised along with the maps.
+	 * Some services share their hosts with something in another category, so
+	 * the host alone cannot tell them apart; the data file names which.
 	 *
 	 * @return string[]
 	 */
 	public static function get_essential_paths() {
-		return [
-			'/recaptcha/',
-		];
+		return self::read_essential_list( 'paths' );
 	}
 
 	/**
@@ -168,7 +156,7 @@ class Piensa_Cookie_Consent_Scanner {
 		$url = strtolower( $url );
 
 		foreach ( self::get_essential_paths() as $path ) {
-			if ( false !== strpos( $url, $path ) ) {
+			if ( false !== strpos( $url, strtolower( $path ) ) ) {
 				return true;
 			}
 		}
