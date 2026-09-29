@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.2] - 2026-09-29
+
+### Fixed
+- **"Check Again" on Dashboard → Updates did nothing for six hours.**
+  WordPress's own link there points at `update-core.php?force-check=1`, meant
+  to bypass every cache in the chain and show what is really available right
+  now. This plugin's own six-hour cache sat in front of that regardless of how
+  `check_updates()` got invoked, so clicking the button showed the same stale
+  verdict it showed before — indistinguishable, to the person clicking it, from
+  the button doing nothing at all. `force-check` now bypasses the cache and
+  makes a fresh request; an ordinary check goes on being cached as before.
+
 ## [1.9.1] - 2026-09-29
 
 ### Added

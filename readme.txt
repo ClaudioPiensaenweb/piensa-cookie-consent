@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,9 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 1.9.2 =
+* **"Check Again" on Dashboard → Updates did nothing for up to six hours.** The plugin's own cache sat in front of WordPress's request to bypass every cache, so clicking the button showed the same stale answer it showed a moment before. Fixed: force-check now makes a fresh request.
 
 = 1.9.1 =
 * Retention periods for the four cookies this plugin declares by name (`_ga`, `_gid`, `_fbp`, `fr`) are now checked daily against Cookiedatabase.org, the shared database Complianz and other consent tools use, and kept current automatically. A failed check leaves the built-in figure in place.

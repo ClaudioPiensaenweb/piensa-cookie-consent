@@ -158,6 +158,24 @@ class Piensa_Cookie_Consent_Updater {
 		return $reply;
 	}
 
+	/**
+	 * Whether the site owner explicitly asked for a fresh check.
+	 *
+	 * WordPress's own "Check Again" link, on Dashboard → Updates, points at
+	 * update-core.php?force-check=1 — meant to bypass every cache in the
+	 * chain and show what is really available right now. Our own six-hour
+	 * cache sat in front of that regardless of how check_updates() got
+	 * invoked, so clicking the button showed the same stale verdict until the
+	 * cache aged out on its own: indistinguishable, to the person clicking it,
+	 * from the button doing nothing at all.
+	 *
+	 * @return bool
+	 */
+	private static function is_forced_check() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only: decides whether to bypass a cache, changes nothing itself.
+		return isset( $_GET['force-check'] );
+	}
+
 	private function get_update_url( $settings ) {
 		$url = isset( $settings['update_server_url'] ) ? trim( (string) $settings['update_server_url'] ) : '';
 
@@ -196,9 +214,11 @@ class Piensa_Cookie_Consent_Updater {
 	}
 
 	private function get_update_data( $url, $settings ) {
-		$cached = get_site_transient( $this->cache_key );
-		if ( is_array( $cached ) && ! empty( $cached['version'] ) && ! empty( $cached['package'] ) ) {
-			return $cached;
+		if ( ! self::is_forced_check() ) {
+			$cached = get_site_transient( $this->cache_key );
+			if ( is_array( $cached ) && ! empty( $cached['version'] ) && ! empty( $cached['package'] ) ) {
+				return $cached;
+			}
 		}
 
 		$headers = [

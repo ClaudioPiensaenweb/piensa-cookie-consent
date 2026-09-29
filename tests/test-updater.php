@@ -297,4 +297,31 @@ return function ( $assert ) {
 	$updater->check_updates( new stdClass() );
 	$updater->check_updates( new stdClass() );
 	$assert( 1 === count( $GLOBALS['piensa_test_updater']['requested'] ), 'the manifest is fetched once and then cached' );
+
+	// WordPress's own "Check Again" link, on Dashboard → Updates, is meant to
+	// bypass every cache in the chain. Ours sat in front of it regardless: the
+	// site's own cache answered before our filter ever ran again, so clicking
+	// the button showed the same stale verdict until six hours had passed —
+	// indistinguishable, to the person clicking it, from the button doing
+	// nothing.
+	$updater = piensa_test_updater( [] );
+	$updater->check_updates( new stdClass() );
+	$assert( 1 === count( $GLOBALS['piensa_test_updater']['requested'] ), 'the first check is a real request' );
+
+	$_GET['force-check'] = '1';
+	$updater->check_updates( new stdClass() );
+	unset( $_GET['force-check'] );
+
+	$assert(
+		2 === count( $GLOBALS['piensa_test_updater']['requested'] ),
+		'force-check bypasses the cache and makes a fresh request'
+	);
+
+	// And without it present, the cache still holds — force-check is not
+	// treated as a permanent switch that stays flipped after one request.
+	$updater->check_updates( new stdClass() );
+	$assert(
+		2 === count( $GLOBALS['piensa_test_updater']['requested'] ),
+		'the next ordinary check is cached again'
+	);
 };
