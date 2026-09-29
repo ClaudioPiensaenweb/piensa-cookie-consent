@@ -20,10 +20,12 @@ if ( ! defined( 'HOUR_IN_SECONDS' ) ) {
 }
 
 $GLOBALS['piensa_test_retention'] = [
-	'options'   => [],
-	'requested' => [],
-	'response'  => null,
-	'filters'   => [],
+	'options'        => [],
+	'requested'      => [],
+	'response'       => null,
+	'filters'        => [],
+	'scheduled'      => false,
+	'schedule_calls' => 0,
 ];
 
 if ( ! function_exists( 'get_option' ) ) {
@@ -86,7 +88,7 @@ if ( ! function_exists( 'wp_next_scheduled' ) ) {
 	 */
 	function wp_next_scheduled( $hook ) { // phpcs:ignore
 		unset( $hook );
-		return false;
+		return ! empty( $GLOBALS['piensa_test_retention']['scheduled'] );
 	}
 }
 
@@ -99,6 +101,8 @@ if ( ! function_exists( 'wp_schedule_event' ) ) {
 	 */
 	function wp_schedule_event( $timestamp, $recurrence, $hook ) { // phpcs:ignore
 		unset( $timestamp, $recurrence, $hook );
+		$GLOBALS['piensa_test_retention']['scheduled'] = true;
+		++$GLOBALS['piensa_test_retention']['schedule_calls'];
 	}
 }
 
@@ -186,10 +190,12 @@ require_once __DIR__ . '/../includes/class-retention-sync.php';
  */
 function piensa_test_reset_retention( $response ) {
 	$GLOBALS['piensa_test_retention'] = [
-		'options'   => [],
-		'requested' => [],
-		'response'  => $response,
-		'filters'   => [],
+		'options'        => [],
+		'requested'      => [],
+		'response'       => $response,
+		'filters'        => [],
+		'scheduled'      => false,
+		'schedule_calls' => 0,
 	];
 }
 
@@ -280,4 +286,24 @@ return function ( $assert ) {
 	$sync::sync();
 
 	$assert( [] === $GLOBALS['piensa_test_retention']['requested'], 'a disabled sync makes no request' );
+
+	// maybe_schedule() is the real entry point, called once from activation
+	// rather than from init(): calling wp_schedule_event() on every request
+	// was, on its own, enough to exhaust memory inside WordPress's own hook
+	// dispatch during a WP-CLI bootstrap in CI. Not reproducible outside that
+	// environment, so this only guards the guard itself — that a second call
+	// does not schedule a second event.
+	piensa_test_reset_retention( $live_response );
+
+	$assert( ! $GLOBALS['piensa_test_retention']['scheduled'], 'nothing is scheduled yet' );
+
+	$sync::maybe_schedule();
+	$assert( $GLOBALS['piensa_test_retention']['scheduled'], 'activation schedules the sync' );
+
+	$scheduled_once = $GLOBALS['piensa_test_retention']['schedule_calls'];
+	$sync::maybe_schedule();
+	$assert(
+		$scheduled_once === $GLOBALS['piensa_test_retention']['schedule_calls'],
+		'an already-scheduled sync is not scheduled again'
+	);
 };

@@ -52,7 +52,22 @@ class Piensa_Cookie_Consent_Retention_Sync {
 	 */
 	public function init() {
 		add_action( self::CRON_HOOK, [ __CLASS__, 'sync' ] );
+	}
 
+	/**
+	 * Schedule the daily sync, once, on activation.
+	 *
+	 * Deliberately not in init(), where it would run its wp_next_scheduled()
+	 * guard on every single request. That is the pattern this file used at
+	 * first, mirroring the plugin's own consent-log purge — and scheduling
+	 * from there was enough on its own to exhaust memory inside WordPress's own
+	 * hook dispatch during a WP-CLI bootstrap, confirmed by disabling nothing
+	 * else. Activation runs exactly once, which sidesteps whatever about
+	 * calling wp_schedule_event() from init() triggers that.
+	 *
+	 * @return void
+	 */
+	public static function maybe_schedule() {
 		if ( self::is_enabled() && ! wp_next_scheduled( self::CRON_HOOK ) ) {
 			wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', self::CRON_HOOK );
 		}

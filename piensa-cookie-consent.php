@@ -109,6 +109,9 @@ add_action( 'plugins_loaded', 'piensa_cookie_consent_maybe_migrate', 5 );
 function piensa_cookie_consent_activate() {
 	Piensa_Cookie_Consent_Consent_Log::install_table();
 	Piensa_Cookie_Consent_Migrator::maybe_run();
+
+	require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-retention-sync.php';
+	Piensa_Cookie_Consent_Retention_Sync::maybe_schedule();
 }
 register_activation_hook( __FILE__, 'piensa_cookie_consent_activate' );
 

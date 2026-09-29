@@ -34,12 +34,12 @@ class Piensa_Cookie_Consent_Core {
 	private $retention_sync;
 
 	public function __construct() {
-		$this->scanner      = new Piensa_Cookie_Consent_Scanner();
-		$this->consent_mode = new Piensa_Cookie_Consent_Consent_Mode();
-		$this->blocker      = new Piensa_Cookie_Consent_Blocker();
-		$this->admin        = new Piensa_Cookie_Consent_Admin();
-		$this->consent_log  = new Piensa_Cookie_Consent_Consent_Log();
-		$this->consent_api  = new Piensa_Cookie_Consent_Consent_API();
+		$this->scanner        = new Piensa_Cookie_Consent_Scanner();
+		$this->consent_mode   = new Piensa_Cookie_Consent_Consent_Mode();
+		$this->blocker        = new Piensa_Cookie_Consent_Blocker();
+		$this->admin          = new Piensa_Cookie_Consent_Admin();
+		$this->consent_log    = new Piensa_Cookie_Consent_Consent_Log();
+		$this->consent_api    = new Piensa_Cookie_Consent_Consent_API();
 		$this->retention_sync = new Piensa_Cookie_Consent_Retention_Sync();
 	}
 
