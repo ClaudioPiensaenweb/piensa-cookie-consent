@@ -207,12 +207,18 @@ class Piensa_Cookie_Consent_Retention_Sync {
 	public static function last_synced() {
 		$cache = get_option( self::OPTION, [] );
 
-		if ( ! is_array( $cache ) || ! $cache ) {
+		if ( ! is_array( $cache ) ) {
 			return 0;
 		}
 
-		$times = array_column( $cache, 'synced_at' );
+		$latest = 0;
 
-		return $times ? (int) max( $times ) : 0;
+		foreach ( $cache as $entry ) {
+			if ( isset( $entry['synced_at'] ) && (int) $entry['synced_at'] > $latest ) {
+				$latest = (int) $entry['synced_at'];
+			}
+		}
+
+		return $latest;
 	}
 }
