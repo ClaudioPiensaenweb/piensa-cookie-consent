@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,10 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 1.9.1 =
+* Retention periods for the four cookies this plugin declares by name (`_ga`, `_gid`, `_fbp`, `fr`) are now checked daily against Cookiedatabase.org, the shared database Complianz and other consent tools use, and kept current automatically. A failed check leaves the built-in figure in place.
+* Diagnostics now shows when this last ran.
 
 = 1.9.0 =
 * **Payment scripts were being blocked, so shops could not take payments.** Stripe's script draws the card fields, and it was being neutralised on the checkout, the cart and every product page for anyone who had not accepted marketing cookies. Payment gateways and fraud checks are exempt from consent, and are now never blocked.

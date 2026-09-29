@@ -21,6 +21,7 @@ require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-theme-colors.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-diagnostics.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-api.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-retention-sync.php';
 
 class Piensa_Cookie_Consent_Core {
 	private $scanner;
@@ -30,6 +31,7 @@ class Piensa_Cookie_Consent_Core {
 	private $consent_log;
 	private $updater;
 	private $consent_api;
+	private $retention_sync;
 
 	public function __construct() {
 		$this->scanner      = new Piensa_Cookie_Consent_Scanner();
@@ -38,6 +40,7 @@ class Piensa_Cookie_Consent_Core {
 		$this->admin        = new Piensa_Cookie_Consent_Admin();
 		$this->consent_log  = new Piensa_Cookie_Consent_Consent_Log();
 		$this->consent_api  = new Piensa_Cookie_Consent_Consent_API();
+		$this->retention_sync = new Piensa_Cookie_Consent_Retention_Sync();
 	}
 
 	public function init() {
@@ -48,6 +51,7 @@ class Piensa_Cookie_Consent_Core {
 		$this->admin->init();
 		$this->consent_log->init();
 		$this->consent_api->init();
+		$this->retention_sync->init();
 		$this->maybe_init_updater();
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );

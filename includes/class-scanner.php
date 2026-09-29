@@ -411,7 +411,7 @@ class Piensa_Cookie_Consent_Scanner {
 				'name'        => '_ga',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: user identifier.', 'piensa-cookie-consent' ),
-				'duration'    => __( '2 years', 'piensa-cookie-consent' ),
+				'duration'    => Piensa_Cookie_Consent_Retention_Sync::get_retention( '_ga', __( '2 years', 'piensa-cookie-consent' ) ),
 			];
 			// GA4 writes one of these per property, named after the measurement
 			// id, so the exact name is only known at runtime. Declared as a
@@ -429,7 +429,7 @@ class Piensa_Cookie_Consent_Scanner {
 				'name'        => '_gid',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: session identifier.', 'piensa-cookie-consent' ),
-				'duration'    => __( '24 hours', 'piensa-cookie-consent' ),
+				'duration'    => Piensa_Cookie_Consent_Retention_Sync::get_retention( '_gid', __( '24 hours', 'piensa-cookie-consent' ) ),
 			];
 			// Plain _gat with the classic tag, _gat_gtag_<id> with gtag.js.
 			$definitions['analytics']['cookies'][] = [
@@ -452,13 +452,13 @@ class Piensa_Cookie_Consent_Scanner {
 					'name'        => '_fbp',
 					'domain'      => $this->get_cookie_domain(),
 					'description' => __( 'Meta Pixel: browser identifier.', 'piensa-cookie-consent' ),
-					'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
+					'duration'    => Piensa_Cookie_Consent_Retention_Sync::get_retention( '_fbp', __( 'Not declared by the provider', 'piensa-cookie-consent' ) ),
 				];
 				$definitions['marketing']['cookies'][] = [
 					'name'        => 'fr',
 					'domain'      => '.facebook.com',
 					'description' => __( 'Meta Pixel: advertising and measurement.', 'piensa-cookie-consent' ),
-					'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
+					'duration'    => Piensa_Cookie_Consent_Retention_Sync::get_retention( 'fr', __( 'Not declared by the provider', 'piensa-cookie-consent' ) ),
 				];
 				break;
 			}

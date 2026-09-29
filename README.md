@@ -130,6 +130,28 @@ settings already list rather than replacing them.
 A third filter, `piensa_cookie_consent_should_block`, switches the whole
 rewriting pass off for one request.
 
+## Keeping cookie retention periods current
+
+`_ga`, `_gid`, `_fbp` and `fr` are declared with a retention period this plugin
+wrote down at release time. A daily cron job checks those four names against
+[Cookiedatabase.org](https://cookiedatabase.org/), the shared database Complianz
+and other consent tools already read from, and shows its answer instead if one
+comes back.
+
+This does not identify new hosts. Cookiedatabase.org's public API resolves by
+cookie *name* — "how long does `_ga` live" — with no way to go from a
+discovered *host* to a service, so it could not have caught something like the
+Stripe blocking incident this release line grew out of. It only keeps four
+declared retention figures from silently going stale. Disable it with:
+
+```php
+add_filter( 'piensa_cookie_consent_sync_retention', '__return_false' );
+```
+
+A failed lookup — no network, a bad response, a cookie the database has
+nothing on — leaves the plugin's own built-in figure standing; nothing here
+can leave a cookie undeclared.
+
 ## Two builds, one codebase
 
 The plugin ships in two shapes:

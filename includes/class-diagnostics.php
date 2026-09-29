@@ -58,8 +58,31 @@ class Piensa_Cookie_Consent_Diagnostics {
 				? __( 'agency (self-hosted updates)', 'piensa-cookie-consent' )
 				: __( 'WordPress.org', 'piensa-cookie-consent' ),
 			__( 'Update channel', 'piensa-cookie-consent' ) => self::update_channel(),
+			__( 'Cookie retention data', 'piensa-cookie-consent' ) => self::retention_sync_status(),
 			__( 'Site language', 'piensa-cookie-consent' ) => get_locale(),
 		];
+	}
+
+	/**
+	 * Whether the retention periods shown to visitors are current.
+	 *
+	 * Reported for the same reason as the update channel: a sync that never
+	 * runs is silent, and looks exactly like one with nothing new to report.
+	 *
+	 * @return string
+	 */
+	private static function retention_sync_status() {
+		$last = Piensa_Cookie_Consent_Retention_Sync::last_synced();
+
+		if ( ! $last ) {
+			return __( 'Not synced yet (using built-in defaults)', 'piensa-cookie-consent' );
+		}
+
+		return sprintf(
+			/* translators: %s: how long ago the sync last ran. */
+			__( 'Last synced %s ago', 'piensa-cookie-consent' ),
+			human_time_diff( $last )
+		);
 	}
 
 	/**

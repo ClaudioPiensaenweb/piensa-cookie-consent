@@ -89,7 +89,7 @@ msgid "Set the labels and the behavior of each category."
 msgstr ""
 
 #: includes/class-admin.php:187 includes/class-admin.php:1266
-#: includes/class-diagnostics.php:111
+#: includes/class-diagnostics.php:134
 msgid "Category mode"
 msgstr ""
 
@@ -587,7 +587,7 @@ msgstr ""
 
 #: includes/class-admin.php:1046 includes/class-admin.php:1102
 #: includes/class-admin.php:2307 includes/class-admin.php:2313
-#: includes/class-core.php:354
+#: includes/class-core.php:358
 msgid "Domain"
 msgstr ""
 
@@ -962,66 +962,66 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-#: includes/class-core.php:202
+#: includes/class-core.php:206
 msgid "Cookie audit running..."
 msgstr ""
 
-#: includes/class-core.php:203
+#: includes/class-core.php:207
 msgid "Audit complete. Cookies found:"
 msgstr ""
 
-#: includes/class-core.php:204
+#: includes/class-core.php:208
 msgid "Audit complete. No cookies were found."
 msgstr ""
 
-#: includes/class-core.php:205
+#: includes/class-core.php:209
 msgid "Audit failed. Check the browser console."
 msgstr ""
 
-#: includes/class-core.php:231
+#: includes/class-core.php:235
 msgid "Consent:"
 msgstr ""
 
-#: includes/class-core.php:346
+#: includes/class-core.php:350
 msgid "No cookies have been declared in this category."
 msgstr ""
 
-#: includes/class-core.php:352 includes/class-icons.php:153
+#: includes/class-core.php:356 includes/class-icons.php:153
 msgid "Cookie"
 msgstr ""
 
-#: includes/class-core.php:353
+#: includes/class-core.php:357
 msgid "Origin"
 msgstr ""
 
-#: includes/class-core.php:355
+#: includes/class-core.php:359
 msgid "Purpose"
 msgstr ""
 
-#: includes/class-core.php:356 includes/class-diagnostics.php:216
+#: includes/class-core.php:360 includes/class-diagnostics.php:239
 msgid "Retention"
 msgstr ""
 
-#: includes/class-core.php:362
+#: includes/class-core.php:366
 msgid "First-party"
 msgstr ""
 
-#: includes/class-core.php:363
+#: includes/class-core.php:367
 msgid "Third-party"
 msgstr ""
 
-#: includes/class-core.php:377
+#: includes/class-core.php:381
 msgid "How to accept, refuse or withdraw your consent"
 msgstr ""
 
-#: includes/class-core.php:378
+#: includes/class-core.php:382
 msgid ""
 "The banner shown on your first visit lets you accept all cookies, refuse "
 "every cookie that is not strictly necessary, or choose category by category. "
 "Refusing takes the same single click as accepting."
 msgstr ""
 
-#: includes/class-core.php:379
+#: includes/class-core.php:383
 msgid ""
 "You can change or withdraw your choice at any time, with the same ease, "
 "using the cookie settings button on this site. Withdrawing consent deletes "
@@ -1065,7 +1065,7 @@ msgstr ""
 msgid "agency (self-hosted updates)"
 msgstr ""
 
-#: includes/class-diagnostics.php:59 includes/class-diagnostics.php:75
+#: includes/class-diagnostics.php:59 includes/class-diagnostics.php:98
 msgid "WordPress.org"
 msgstr ""
 
@@ -1074,108 +1074,122 @@ msgid "Update channel"
 msgstr ""
 
 #: includes/class-diagnostics.php:61
+msgid "Cookie retention data"
+msgstr ""
+
+#: includes/class-diagnostics.php:62
 msgid "Site language"
 msgstr ""
 
+#: includes/class-diagnostics.php:78
+msgid "Not synced yet (using built-in defaults)"
+msgstr ""
+
+#. translators: %s: how long ago the sync last ran.
+#: includes/class-diagnostics.php:83
+#, php-format
+msgid "Last synced %s ago"
+msgstr ""
+
 #. translators: 1: manifest address, 2: the version found there.
-#: includes/class-diagnostics.php:87
+#: includes/class-diagnostics.php:110
 #, php-format
 msgid "%1$s (last seen: %2$s)"
 msgstr ""
 
 #. translators: %s: manifest address.
-#: includes/class-diagnostics.php:95
+#: includes/class-diagnostics.php:118
 #, php-format
 msgid "%s (not checked yet)"
 msgstr ""
 
-#: includes/class-diagnostics.php:116
+#: includes/class-diagnostics.php:139
 msgid "shown in the banner"
 msgstr ""
 
-#: includes/class-diagnostics.php:117
+#: includes/class-diagnostics.php:140
 msgid "NOT shown in the banner"
 msgstr ""
 
-#: includes/class-diagnostics.php:121
+#: includes/class-diagnostics.php:144
 msgid "Decided by"
 msgstr ""
 
-#: includes/class-diagnostics.php:121
+#: includes/class-diagnostics.php:144
 msgid "the manual toggles under Categories"
 msgstr ""
 
-#: includes/class-diagnostics.php:130
+#: includes/class-diagnostics.php:153
 msgid "Plugins that activate a category"
 msgstr ""
 
-#: includes/class-diagnostics.php:143
+#: includes/class-diagnostics.php:166
 msgid "Domains that activate a category"
 msgstr ""
 
-#: includes/class-diagnostics.php:145
+#: includes/class-diagnostics.php:168
 msgid "none found by the scanner"
 msgstr ""
 
-#: includes/class-diagnostics.php:148
+#: includes/class-diagnostics.php:171
 msgid "Why only necessary is shown"
 msgstr ""
 
-#: includes/class-diagnostics.php:148
+#: includes/class-diagnostics.php:171
 msgid ""
 "neither route found anything: run a scan, or switch Category mode to manual "
 "and turn the categories on yourself"
 msgstr ""
 
-#: includes/class-diagnostics.php:174
+#: includes/class-diagnostics.php:197
 msgid "none active"
 msgstr ""
 
-#: includes/class-diagnostics.php:200
+#: includes/class-diagnostics.php:223
 msgid "Logging enabled"
 msgstr ""
 
-#: includes/class-diagnostics.php:201 includes/class-diagnostics.php:205
+#: includes/class-diagnostics.php:224 includes/class-diagnostics.php:228
 msgid "yes"
 msgstr ""
 
-#: includes/class-diagnostics.php:202 includes/class-diagnostics.php:206
+#: includes/class-diagnostics.php:225 includes/class-diagnostics.php:229
 msgid "no"
 msgstr ""
 
-#: includes/class-diagnostics.php:203
+#: includes/class-diagnostics.php:226
 msgid "Table"
 msgstr ""
 
-#: includes/class-diagnostics.php:204
+#: includes/class-diagnostics.php:227
 msgid "Marked as installed"
 msgstr ""
 
-#: includes/class-diagnostics.php:207
+#: includes/class-diagnostics.php:230
 msgid "Records stored"
 msgstr ""
 
-#: includes/class-diagnostics.php:208
+#: includes/class-diagnostics.php:231
 msgid "the table could not be read — it may not exist"
 msgstr ""
 
-#: includes/class-diagnostics.php:213
+#: includes/class-diagnostics.php:236
 msgid "Most recent record"
 msgstr ""
 
-#: includes/class-diagnostics.php:218
+#: includes/class-diagnostics.php:241
 msgid "kept indefinitely"
 msgstr ""
 
-#: includes/class-diagnostics.php:246
+#: includes/class-diagnostics.php:269
 msgid "Domains discovered"
 msgstr ""
 
-#: includes/class-diagnostics.php:247
+#: includes/class-diagnostics.php:270
 msgid "By category"
 msgstr ""
 
-#: includes/class-diagnostics.php:248
+#: includes/class-diagnostics.php:271
 msgid "Cookies recorded"
 msgstr ""
 
@@ -1191,76 +1205,76 @@ msgstr ""
 msgid "Padlock"
 msgstr ""
 
-#: includes/class-scanner.php:261
+#: includes/class-scanner.php:370
 msgid "Stores the cookie choices you have made on this site."
 msgstr ""
 
-#: includes/class-scanner.php:262
+#: includes/class-scanner.php:371
 msgid "6 months"
 msgstr ""
 
-#: includes/class-scanner.php:267
+#: includes/class-scanner.php:376
 msgid "Keeps you signed in to WordPress."
 msgstr ""
 
-#: includes/class-scanner.php:268
+#: includes/class-scanner.php:377
 msgid "Session, or 14 days if you choose to be remembered"
 msgstr ""
 
-#: includes/class-scanner.php:273
+#: includes/class-scanner.php:382
 msgid "Remembers your WordPress interface preferences."
 msgstr ""
 
-#: includes/class-scanner.php:274 includes/class-scanner.php:280
+#: includes/class-scanner.php:383 includes/class-scanner.php:389
 msgid "1 year"
 msgstr ""
 
-#: includes/class-scanner.php:279
+#: includes/class-scanner.php:388
 msgid "Records when your WordPress preferences were set."
 msgstr ""
 
-#: includes/class-scanner.php:304
+#: includes/class-scanner.php:413
 msgid "Google Analytics: user identifier."
 msgstr ""
 
-#: includes/class-scanner.php:305 includes/class-scanner.php:317
+#: includes/class-scanner.php:414 includes/class-scanner.php:426
 msgid "2 years"
 msgstr ""
 
-#: includes/class-scanner.php:316
+#: includes/class-scanner.php:425
 msgid "Google Analytics 4: session state, one per property."
 msgstr ""
 
-#: includes/class-scanner.php:322
+#: includes/class-scanner.php:431
 msgid "Google Analytics: session identifier."
 msgstr ""
 
-#: includes/class-scanner.php:323
+#: includes/class-scanner.php:432
 msgid "24 hours"
 msgstr ""
 
-#: includes/class-scanner.php:330
+#: includes/class-scanner.php:439
 msgid "Google Analytics: request throttling."
 msgstr ""
 
-#: includes/class-scanner.php:331
+#: includes/class-scanner.php:440
 msgid "1 minute"
 msgstr ""
 
-#: includes/class-scanner.php:345
+#: includes/class-scanner.php:454
 msgid "Meta Pixel: browser identifier."
 msgstr ""
 
-#: includes/class-scanner.php:346 includes/class-scanner.php:352
-#: includes/class-scanner.php:363
+#: includes/class-scanner.php:455 includes/class-scanner.php:461
+#: includes/class-scanner.php:472
 msgid "Not declared by the provider"
 msgstr ""
 
-#: includes/class-scanner.php:351
+#: includes/class-scanner.php:460
 msgid "Meta Pixel: advertising and measurement."
 msgstr ""
 
-#: includes/class-scanner.php:362
+#: includes/class-scanner.php:471
 msgid "Google Analytics (via GTM)."
 msgstr ""
 
