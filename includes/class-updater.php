@@ -24,6 +24,21 @@ class Piensa_Cookie_Consent_Updater {
 	const DEFAULT_MANIFEST = 'https://claudiopiensaenweb.github.io/piensa-cookie-consent/update.json';
 
 	/**
+	 * Verifies a signed manifest without any per-site configuration.
+	 *
+	 * Pairs with the private half held as the UPDATE_SIGNING_KEY repository
+	 * secret, which scripts/build-update-manifest.sh signs each release with.
+	 * "Require a valid signature" defaults to on, and until this constant
+	 * existed that meant every site silently rejected every update: the
+	 * setting asked for a signature, no site had a public key configured, and
+	 * verify_signature() has nothing to check a signature against without one.
+	 * A key with nobody able to sign against it protects nothing — rotate it
+	 * by generating a new pair, updating the UPDATE_SIGNING_KEY secret, and
+	 * replacing the value here in the same release.
+	 */
+	const DEFAULT_PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAuzsXEB5kXRvx1DKKfKSL\nemiW+Rtm3PTNYRGLqVKZy9Fpr8bJ88hpaXSpDTCa5uJBSiruYZWpz3MkZRjGx8Na\n65CsE7fgiEJS8CqrJIZ2JtddgXXLxR4hvdMZOF2gzkZnUOPHEW0VgAEHSI8hrH5x\nvvWtM46Gm6rSlskN6Tqhhho9PhXTX9yZoY6qmkQ6azsz25Ny2LUjm7ABM2DTEqF1\nRBj1nLYa5EmGz//TebcbktoZMLvsY0CgNmrgZ81OzO9gLO35QtAda/KxPBPUnxsD\nTZ9DTiLhZLSFV/R8Cl3OQ08SJATp93lJBn02a083T+ONjOvuZvy5jQk6Fw+N3rr4\ngoYmm3DM/wrxVMZ4siBXDsxAE2ifN5nuIVwSWvsQO3sNuOemlENdEWeoaXwWmW1w\nzHCtxX6O3cvCdEUty9wTqoY0HTSXtpcYSGqhuMEiUFxa6wuW7B7Q5yjJGiymHxCm\n8cMkgLxhHvZ7MjF32r8YB306CggD7Ge98HiCHkzONV69fo2J3bF1EdsAaa/OBQtf\n1QGWY0QGZiXvr+O96NAE67nlpJNXYvJjCkiqnoCnjNLcYj1Kachzxi5cGPbYdgOk\nv9dT/q2VWSRtEjOpMkBddOxnwuHEAdrVbDWchM1b+Vq5UC3OFIoEHUwBjp2sphke\n1MIIg/kM/9gNJ+g57oEmHc0CAwEAAQ==\n-----END PUBLIC KEY-----";
+
+	/**
 	 * Site transient holding the last manifest read.
 	 */
 	const CACHE_KEY = 'piensa_cookie_consent_update';
@@ -39,6 +54,33 @@ class Piensa_Cookie_Consent_Updater {
 		add_filter( 'pre_set_site_transient_update_plugins', [ $this, 'check_updates' ] );
 		add_filter( 'plugins_api', [ $this, 'plugins_api' ], 10, 3 );
 		add_filter( 'upgrader_post_download', [ $this, 'verify_download' ], 10, 3 );
+		add_filter( 'auto_update_plugin', [ $this, 'maybe_auto_update' ], 10, 2 );
+	}
+
+	/**
+	 * Answer WordPress's own auto-update gate for this plugin specifically.
+	 *
+	 * $update already carries the site's own stored choice — whether an admin
+	 * ticked "Enable auto-updates" for this plugin in the Plugins list — which
+	 * is virtually always false, since nobody visits that screen. Every check
+	 * this update passed to get here already confirmed the manifest checksum,
+	 * and the signature too when one is required, so saying yes here is not
+	 * skipping a check WordPress would otherwise have made — only setting the
+	 * plugin's own default answer, the same as clicking that toggle would.
+	 *
+	 * @param bool|null $update Whether WordPress would auto-update this item.
+	 * @param object    $item   The update object, as this plugin built it.
+	 *
+	 * @return bool|null
+	 */
+	public function maybe_auto_update( $update, $item ) {
+		if ( ! isset( $item->plugin ) || $item->plugin !== $this->plugin_slug ) {
+			return $update;
+		}
+
+		$settings = Piensa_Cookie_Consent_Admin::get_settings();
+
+		return ! empty( $settings['enable_auto_update'] );
 	}
 
 	public function check_updates( $transient ) {
@@ -311,7 +353,7 @@ class Piensa_Cookie_Consent_Updater {
 			return $settings['update_public_key'];
 		}
 
-		return '';
+		return self::DEFAULT_PUBLIC_KEY;
 	}
 
 	private function get_cached_update() {

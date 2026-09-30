@@ -190,21 +190,36 @@ names.
 ### Signing
 
 The updater verifies an RSA signature over `version|package|checksum` when the
-site requires one. Add the private key as the `UPDATE_SIGNING_KEY` repository
-secret and the workflow signs each manifest:
+site requires one, which it does by default. The matching public key is built
+into `Piensa_Cookie_Consent_Updater::DEFAULT_PUBLIC_KEY`, so every site
+verifies out of the box — nobody has to paste anything into a **Public key**
+field.
+
+Rotating the key means generating a new pair, updating both places in the same
+release:
 
 ```bash
 openssl genrsa -out update-signing.key 4096
 openssl rsa -in update-signing.key -pubout -out update-signing.pub
 ```
 
-Paste the private key into the secret and the public key into the plugin's
-**Public key** field on each client site.
+The private half replaces the `UPDATE_SIGNING_KEY` repository secret, which the
+workflow signs each manifest with; the public half replaces the constant.
 
-Without the secret the manifest ships unsigned, and those sites have to turn
-off *Require a valid signature*. The checksum is verified either way, so a
-corrupted or swapped download is still rejected; the signature is what protects
-against the manifest itself being tampered with.
+Without the secret the manifest ships unsigned, and every site — trusting the
+built-in key by default — would reject it. A site can still opt out of
+signature checking, or point at its own key instead, from the plugin's own
+settings.
+
+### Automatic updates
+
+A verified update still needed someone to click **Update Now**, on every site,
+for every release — until this plugin started answering WordPress's own
+`auto_update_plugin` filter for itself. **Automatic updates**, under the same
+settings section, toggles that answer; it defaults to on. Nothing here skips a
+check: the checksum and, when required, the signature still have to pass
+first, and a host or network that disables automatic updates outright is still
+respected. It only decides whether a verified update waits for a click.
 
 ## Directory assets
 

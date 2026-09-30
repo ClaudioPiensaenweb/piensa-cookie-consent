@@ -568,6 +568,14 @@ class Piensa_Cookie_Consent_Admin {
 			'piensa-cookie-consent',
 			'piensa_cookie_consent_updates'
 		);
+
+		add_settings_field(
+			'piensa_cookie_consent_auto_update',
+			esc_html__( 'Automatic updates', 'piensa-cookie-consent' ),
+			[ $this, 'render_auto_update_field' ],
+			'piensa-cookie-consent',
+			'piensa_cookie_consent_updates'
+		);
 	}
 
 	public function render_blocker_field() {
@@ -1212,7 +1220,23 @@ class Piensa_Cookie_Consent_Admin {
 		$settings = self::get_settings();
 		$value    = esc_textarea( $settings['update_public_key'] );
 		echo '<textarea class="large-text code" rows="4" name="' . esc_attr( $this->option_name ) . '[update_public_key]" placeholder="-----BEGIN PUBLIC KEY-----">' . esc_attr( $value ) . '</textarea>';
+
+		// As with the update server address: spelled out, because an empty
+		// field here used to mean every signature failed to verify — "Require
+		// a valid signature" defaults to on, and with nothing to check a
+		// signature against, verify_signature() has no way to return true.
+		if ( class_exists( 'Piensa_Cookie_Consent_Updater' ) ) {
+			echo '<p class="description">' . esc_html__( 'Leave empty to use the official key, already built into this release.', 'piensa-cookie-consent' ) . '</p>';
+		}
+
 		echo '<p class="description">' . esc_html__( 'Public key used to verify signatures from the central server.', 'piensa-cookie-consent' ) . '</p>';
+	}
+
+	public function render_auto_update_field() {
+		$settings = self::get_settings();
+		$checked  = ! empty( $settings['enable_auto_update'] ) ? 'checked' : '';
+		echo '<label><input type="checkbox" name="' . esc_attr( $this->option_name ) . '[enable_auto_update]" value="1" ' . esc_attr( $checked ) . '> ' . esc_html__( 'Install updates automatically, once verified', 'piensa-cookie-consent' ) . '</label>';
+		echo '<p class="description">' . esc_html__( 'Uses the automatic-update mechanism WordPress itself provides, which still respects a host or network disabling it entirely. A checksum mismatch, or a missing signature when one is required, blocks the install either way — this only decides whether a verified update still needs someone to click Update.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
 	public function render_update_signature_field() {
@@ -1676,6 +1700,7 @@ class Piensa_Cookie_Consent_Admin {
 		$update_token             = isset( $value['update_token'] ) ? sanitize_text_field( (string) $value['update_token'] ) : '';
 		$update_public_key        = isset( $value['update_public_key'] ) ? trim( (string) $value['update_public_key'] ) : '';
 		$update_require_signature = ! empty( $value['update_require_signature'] ) ? true : false;
+		$enable_auto_update       = ! empty( $value['enable_auto_update'] ) ? true : false;
 
 		$banner_show_icon  = ! empty( $value['banner_show_icon'] ) ? true : false;
 		$banner_icon_style = isset( $value['banner_icon_style'] ) && in_array( $value['banner_icon_style'], [ 'cookie', 'cookie-bite', 'shield', 'lock', 'fingerprint' ], true )
@@ -1758,6 +1783,7 @@ class Piensa_Cookie_Consent_Admin {
 			'update_token'              => $update_token !== '' ? $update_token : $defaults['update_token'],
 			'update_public_key'         => $update_public_key !== '' ? $update_public_key : $defaults['update_public_key'],
 			'update_require_signature'  => $update_require_signature,
+			'enable_auto_update'        => $enable_auto_update,
 			'banner_show_icon'          => $banner_show_icon,
 			'banner_icon_style'         => $banner_icon_style,
 			'custom_cookies'            => $custom_cookies !== '' ? $custom_cookies : $defaults['custom_cookies'],
@@ -1924,6 +1950,7 @@ class Piensa_Cookie_Consent_Admin {
 			'update_token'              => '',
 			'update_public_key'         => '',
 			'update_require_signature'  => true,
+			'enable_auto_update'        => true,
 			'banner_show_icon'          => true,
 			'banner_icon_style'         => 'cookie',
 			'custom_cookies'            => '',

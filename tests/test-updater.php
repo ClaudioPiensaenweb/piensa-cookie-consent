@@ -324,4 +324,80 @@ return function ( $assert ) {
 		2 === count( $GLOBALS['piensa_test_updater']['requested'] ),
 		'the next ordinary check is cached again'
 	);
+
+	// "Require a valid signature" defaults to on in real installs — the stub
+	// settings above bypass class-admin's own defaulting, which is exactly
+	// why this went unnoticed: every existing scenario left the setting
+	// simply absent, which reads as false here, never as the true a fresh
+	// site actually gets. Passed explicitly, it reproduces the real default.
+	//
+	// The signature below is real, made with the private half of the key
+	// built into the plugin, over the exact payload build_signature_payload()
+	// assembles: version|package|checksum. Nothing about the private key
+	// itself is in this repository; only what it signed.
+	$signed_version   = '9.9.9';
+	$signed_package   = 'https://example.test/piensa-cookie-consent-9.9.9-agency.zip';
+	$signed_checksum  = 'deadbeef00112233445566778899aabbccddeeff00112233445566778899aa';
+	$valid_signature  = 'WL1+XcVWzwd/0QoLficIgl83UHS/i6lQoFe/PpaRj6+cRdSY1UPoQNCWvHXGobk4T3skGgG1qQ+PQYyPeCX5by4BT10JRiwXvyCBvjzhLhOjt6Ac6xKx0pjPOry+brjAHYpYxdks90NOn4xGG7rVSp3Axgf5iAkexUsp+m9m8wwk1OIjN4v1orlZDPeoPPgwcH7rgZ2UI+8738w2TL7ZLbW1Xx6zpwT1MfnpcARfzq0+/M9vtm7pi3kAAf6IT7MU30pmE3Kmvg1rc21//7FaxrehVMkB3C32VQy67VPt2lPtuJwQtAgPgx1up7+7/f9MmZU16BJ334d08zkoQNQ0HLv7WDcAgrvrI2+4xn8NOlPHQXAcLkXt+Y9H/XZc8QWqixD7Tz2p7AeV+VCGKyxKbwoqRjVZGXiI6ELCGveDAWZ+MWEDqAwbChGOZ5zgQKLucUPFjvHRDSAYgqWlTJENXebHH30MxYBP0LK11Ms+fw0RLOMwK22ut8gambWPdPgkHBuvYw+66gnyzLxQxzg49tu05pPyBaOmausoIGelnfslzO3FidoK7AAx1nnqd6eXQ+IzsFF5Mn/aZEsEzLMYvvPGsaxhv3xTTCi5gNYStepdT0gEXELL8apo8xs+wTxt+38jTAcHr4A0ORl9cZ+v6u29tJ1iKYVngQuABdsRPbo=';
+
+	$manifest( 'version', $signed_version );
+	$manifest( 'package', $signed_package );
+	$manifest( 'checksum', $signed_checksum );
+	$manifest( 'signature', $valid_signature );
+
+	$updater  = piensa_test_updater( [ 'update_require_signature' => true ] );
+	$response = $updater->check_updates( new stdClass() );
+	$assert(
+		isset( $response->response[ $slug ] ),
+		'the built-in public key verifies a real signature, with no site-level key configured'
+	);
+
+	// A tampered or wrong signature must still be rejected — the built-in key
+	// makes verification possible everywhere, not verification pointless.
+	$manifest( 'signature', substr( $valid_signature, 0, -4 ) . 'AAAA' );
+	$updater  = piensa_test_updater( [ 'update_require_signature' => true ] );
+	$response = $updater->check_updates( new stdClass() );
+	$assert(
+		! isset( $response->response[ $slug ] ),
+		'a tampered signature is still rejected'
+	);
+
+	// Turning the requirement off is unaffected: an unsigned manifest is
+	// offered exactly as it always could be.
+	$manifest( 'signature', '' );
+	$updater  = piensa_test_updater( [ 'update_require_signature' => false ] );
+	$response = $updater->check_updates( new stdClass() );
+	$assert(
+		isset( $response->response[ $slug ] ),
+		'signature checking can still be switched off'
+	);
+
+	$manifest( 'version', '1.7.0' );
+	$manifest( 'package', 'https://example.test/piensa-cookie-consent-1.7.0-agency.zip' );
+	$manifest( 'checksum', 'abc123' );
+	$manifest( 'signature', null );
+
+	// Automatic installs. The filter answers only for this plugin's own
+	// update object, and only once told to: WordPress's automatic updater
+	// asks this same question for every plugin on the site, and answering
+	// for somebody else's item would auto-update things this plugin has
+	// nothing to do with.
+	$other_item          = (object) [ 'plugin' => 'some-other-plugin/some-other-plugin.php' ];
+	$own_item            = (object) [ 'plugin' => $slug ];
+
+	$updater = piensa_test_updater( [ 'enable_auto_update' => true ] );
+	$assert(
+		'unrelated' === $updater->maybe_auto_update( 'unrelated', $other_item ),
+		'a different plugin\'s update decision is left untouched'
+	);
+	$assert(
+		true === $updater->maybe_auto_update( false, $own_item ),
+		'enabling the setting answers yes for this plugin, regardless of the incoming value'
+	);
+
+	$updater = piensa_test_updater( [ 'enable_auto_update' => false ] );
+	$assert(
+		false === $updater->maybe_auto_update( true, $own_item ),
+		'disabling the setting answers no even if WordPress\'s own default leaned yes'
+	);
 };

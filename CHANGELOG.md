@@ -4,6 +4,37 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.3] - 2026-09-30
+
+Found while looking into why updates were not appearing: they never could
+have.
+
+### Fixed
+- **Every site has been silently rejecting every update, since signature
+  checking was added.** "Require a valid signature" defaults to on, and no
+  site has ever had a public key to check one against — the field defaults
+  to empty, and nothing filled it in. `verify_signature()` has nothing to
+  verify without a key, so it always returned false, and `check_updates()`
+  always stopped there. Every version this project has shipped reached a
+  production site only because it was installed by hand; the update mechanism
+  itself has not delivered one. The matching public key is built into the
+  plugin now, the same way the manifest address already was, so verification
+  works without any per-site configuration — while a site is still free to
+  turn signature checking off, or supply its own key instead.
+
+### Added
+- **Automatic updates.** This plugin now answers WordPress's own
+  `auto_update_plugin` filter for itself, so once a site's update check finds
+  a new, verified release, WordPress installs it without anyone clicking
+  Update — the same as switching on "Enable auto-updates" from the Plugins
+  list, done once from here rather than on every site. A new setting,
+  defaulting on, controls it; nothing here bypasses the checksum or signature
+  check, or a host's own decision to disable automatic updates entirely.
+- Six tests: the built-in key verifying a real signature made with the private
+  half now held only as a repository secret, a tampered signature still being
+  rejected, signature checking still being switchable off, and the auto-update
+  filter answering only for this plugin's own update object.
+
 ## [1.9.2] - 2026-09-29
 
 ### Fixed

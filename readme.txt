@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.9.2
+Stable tag: 1.9.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,10 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 1.9.3 =
+* **Every site has been silently rejecting every update.** Signature checking defaults to on, and no site has ever had a public key to check one against, so verification always failed and the update was always withheld. The matching key now ships built into the plugin, so verification works without any setup.
+* **Added automatic updates.** Once a site's own check finds a new, verified release, WordPress installs it without anyone clicking Update — a new setting, on by default, answering the same question the "Enable auto-updates" link in the Plugins list does.
 
 = 1.9.2 =
 * **"Check Again" on Dashboard → Updates did nothing for up to six hours.** The plugin's own cache sat in front of WordPress's request to bypass every cache, so clicking the button showed the same stale answer it showed a moment before. Fixed: force-check now makes a fresh request.
