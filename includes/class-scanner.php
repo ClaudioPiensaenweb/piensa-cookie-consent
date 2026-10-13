@@ -406,7 +406,7 @@ class Piensa_Cookie_Consent_Scanner {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		if ( is_plugin_active( 'google-site-kit/google-site-kit.php' ) || is_plugin_active( 'google-analytics-for-wordpress/googleanalytics.php' ) ) {
+		if ( is_plugin_active( 'google-site-kit/google-site-kit.php' ) || is_plugin_active( 'google-analytics-for-wordpress/googleanalytics.php' ) || self::google_analytics_detected() ) {
 			$definitions['analytics']['cookies'][] = [
 				'name'        => '_ga',
 				'domain'      => $this->get_cookie_domain(),
@@ -481,7 +481,43 @@ class Piensa_Cookie_Consent_Scanner {
 			$definitions[ $category ]['cookies'] = array_merge( $definitions[ $category ]['cookies'], $cookies );
 		}
 
-		return $definitions;
+		/**
+		 * Filters the cookies declared to the visitor, by category.
+		 *
+		 * What is returned here is what the policy table lists, what the
+		 * preferences panel shows and what is deleted when consent for a
+		 * category is withdrawn.
+		 *
+		 * @param array<string, array<string, mixed>> $definitions Cookie definitions by category.
+		 */
+		return apply_filters( 'piensa_cookie_consent_cookie_definitions', $definitions );
+	}
+
+	/**
+	 * Whether the site has been seen loading Google Analytics.
+	 *
+	 * The declaration used to list the Google Analytics cookies only when one
+	 * of two plugins was active. A tag pasted into the header, a snippet or a
+	 * theme option loads the same cookies and declared none of them, so the
+	 * policy table had no `_ga` while the site set it. The blocker records
+	 * every Google Analytics host it neutralises, which covers all of those.
+	 *
+	 * @return bool
+	 */
+	private static function google_analytics_detected() {
+		$discovered = get_option( 'piensa_cookie_consent_discovered', [] );
+
+		if ( ! is_array( $discovered ) ) {
+			return false;
+		}
+
+		foreach ( $discovered as $entry ) {
+			if ( is_array( $entry ) && isset( $entry['service'] ) && in_array( $entry['service'], [ 'google_analytics', 'google_analytics_4' ], true ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public function scan_site( $limit = 25 ) {
@@ -767,6 +803,9 @@ class Piensa_Cookie_Consent_Scanner {
 			'/^complianz_/'              => 'necessary',
 			'/^cookie_notice_accepted$/' => 'necessary',
 			'/^g_state$/'                => 'necessary',
+			'/^sbjs_/'                   => 'marketing',
+			'/^woocommerce_/'            => 'necessary',
+			'/^wp_woocommerce_session_/' => 'necessary',
 		];
 
 		foreach ( self::get_services() as $service ) {

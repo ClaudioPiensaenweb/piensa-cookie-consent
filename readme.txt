@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.9.3
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,12 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 1.10.0 =
+* **WooCommerce's order attribution set seven cookies before the visitor had answered the banner, and kept them after Reject.** The `sbjs_*` cookies record where a visit came from and which campaign brought it. They are written from the site's own domain, which the blocker — working by third-party host — never looked at. A Kit Digital review rejected a shop for it. Attribution now starts switched off on every page and is turned on only when the visitor accepts marketing cookies; withdrawing consent deletes them, through WooCommerce's own switch.
+* **The cookie policy table now lists WooCommerce's cookies**: the cart and session cookies as necessary, the attribution cookies as marketing, and Stripe's fraud-prevention cookies when the Stripe gateway is active.
+* **Google Analytics cookies were missing from the policy table when the tag was added without a plugin** — pasted into the header, a snippet or a theme option. They are now declared whenever the site has been seen loading Google Analytics.
+* New filter, `piensa_cookie_consent_cookie_definitions`, to add or change the cookies declared to the visitor.
 
 = 1.9.3 =
 * **Every site has been silently rejecting every update.** Signature checking defaults to on, and no site has ever had a public key to check one against, so verification always failed and the update was always withheld. The matching key now ships built into the plugin, so verification works without any setup.
