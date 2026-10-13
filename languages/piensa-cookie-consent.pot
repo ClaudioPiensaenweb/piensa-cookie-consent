@@ -1305,3 +1305,39 @@ msgstr ""
 #: includes/class-updater.php:197
 msgid "Invalid update checksum. The update was blocked."
 msgstr ""
+
+#: includes/class-woocommerce.php
+msgid "WooCommerce: detects changes to the cart contents."
+msgstr ""
+
+#: includes/class-woocommerce.php
+msgid "WooCommerce: records whether the cart has products."
+msgstr ""
+
+#: includes/class-woocommerce.php
+msgid "WooCommerce: keeps the cart and the checkout of each visitor."
+msgstr ""
+
+#: includes/class-woocommerce.php
+msgid "Stripe: fraud prevention when paying by card."
+msgstr ""
+
+#: includes/class-woocommerce.php
+msgid "WooCommerce order attribution: marks the current visit."
+msgstr ""
+
+#: includes/class-woocommerce.php
+msgid "WooCommerce order attribution: records which source or campaign brought the visit, to attribute the order."
+msgstr ""
+
+#: includes/class-woocommerce.php
+msgid "Session"
+msgstr ""
+
+#: includes/class-woocommerce.php
+msgid "2 days"
+msgstr ""
+
+#: includes/class-woocommerce.php
+msgid "30 minutes"
+msgstr ""

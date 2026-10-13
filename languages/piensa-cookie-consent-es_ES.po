@@ -1251,3 +1251,39 @@ msgstr "Actualización gestionada desde el servidor central."
 #: includes/class-updater.php:197
 msgid "Invalid update checksum. The update was blocked."
 msgstr "Checksum de actualización inválido. Actualización bloqueada."
+
+#: includes/class-woocommerce.php
+msgid "WooCommerce: detects changes to the cart contents."
+msgstr "WooCommerce: detecta cambios en el contenido del carrito."
+
+#: includes/class-woocommerce.php
+msgid "WooCommerce: records whether the cart has products."
+msgstr "WooCommerce: indica si el carrito tiene productos."
+
+#: includes/class-woocommerce.php
+msgid "WooCommerce: keeps the cart and the checkout of each visitor."
+msgstr "WooCommerce: conserva el carrito y el proceso de compra de cada visitante."
+
+#: includes/class-woocommerce.php
+msgid "Stripe: fraud prevention when paying by card."
+msgstr "Stripe: prevención del fraude en los pagos con tarjeta."
+
+#: includes/class-woocommerce.php
+msgid "WooCommerce order attribution: marks the current visit."
+msgstr "Atribución de pedidos de WooCommerce: identifica la visita en curso."
+
+#: includes/class-woocommerce.php
+msgid "WooCommerce order attribution: records which source or campaign brought the visit, to attribute the order."
+msgstr "Atribución de pedidos de WooCommerce: registra de qué fuente o campaña procede la visita, para atribuirle el pedido."
+
+#: includes/class-woocommerce.php
+msgid "Session"
+msgstr "Sesión"
+
+#: includes/class-woocommerce.php
+msgid "2 days"
+msgstr "2 días"
+
+#: includes/class-woocommerce.php
+msgid "30 minutes"
+msgstr "30 minutos"

@@ -4,6 +4,46 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-10-13
+
+Found when a Kit Digital review rejected a shop for setting non-technical
+cookies before consent.
+
+### Fixed
+- **WooCommerce's order attribution set seven cookies before the visitor had
+  answered the banner, and kept them after Reject.** Order attribution, on by
+  default since WooCommerce 8.5, loads Sourcebuster.js, which writes
+  `sbjs_migrations`, `sbjs_current`, `sbjs_current_add`, `sbjs_first`,
+  `sbjs_first_add`, `sbjs_udata` and `sbjs_session` on the first page view.
+  They come from the site's own domain, and the blocker works by third-party
+  host, so nothing ever held them back. WooCommerce only ties them to consent
+  when the separate WP Consent API plugin is installed. Now the
+  `wc_order_attribution_allow_tracking` filter starts every page with
+  attribution off — the same answer for every visitor, so pages stay safe to
+  cache — and a small script after WooCommerce's turns it on through
+  `wc_order_attribution.setOrderTracking()` once the visitor has accepted
+  marketing cookies, or off again, deleting the cookies, when they withdraw.
+  Where no banner is shown, WooCommerce is left alone.
+- **Google Analytics cookies were missing from the policy table** whenever
+  the tag was added without one of the two plugins the declaration checked
+  for. A tag in the header, a snippet or a theme option sets the same cookies.
+  They are now declared whenever the blocker has recorded a Google Analytics
+  host.
+
+### Added
+- WooCommerce's cookies in the declaration the visitor reads — the policy
+  table, the preferences panel and the list cleared on withdrawal: the cart
+  and session cookies as necessary, the attribution cookies as marketing, and
+  `__stripe_mid` / `__stripe_sid` as necessary when the Stripe gateway is
+  active.
+- The scanner recognises `sbjs_*` as marketing and WooCommerce's cart and
+  session cookies as necessary, instead of listing them as unknown.
+- `piensa_cookie_consent_cookie_definitions` filter, to add or change the
+  cookies declared to the visitor.
+- Tests for the integration: attribution off while the banner is in charge and
+  left alone where it is not, the bridge listening for both consent events,
+  and every declared cookie carrying a name, domain, purpose and duration.
+
 ## [1.9.3] - 2026-09-30
 
 Found while looking into why updates were not appearing: they never could
