@@ -21,7 +21,7 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # The tag, the plugin header and the readme stable tag must agree, or
       # wp.org will serve a version that does not match the code.
@@ -87,7 +87,7 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # The plugin has to be approved by the directory before SVN exists to
       # push to. Until the credentials are set, skip the upload rather than
