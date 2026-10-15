@@ -59,7 +59,7 @@ jobs:
             build/piensa-cookie-consent-${{ steps.version.outputs.value }}-agency.zip
 
       - name: Upload the manifest for publishing
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: build/pages
 
