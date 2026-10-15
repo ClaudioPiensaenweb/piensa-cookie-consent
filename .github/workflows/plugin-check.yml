@@ -33,7 +33,7 @@ jobs:
           bash scripts/build-release.sh --output-dir=build
           unzip -q build/*.zip -d /tmp/package
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
 
