@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.13.0
+Stable tag: 1.14.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,12 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 1.14.0 =
+* **The declaration learns from real visits.** Visitors who have consented report, at most once a week, the names (never the values) of the cookies and storage keys their browser holds for the site. That finds what the server-side scanner cannot see, such as `_ga`, `_fbp` or Clarity's `_clck`.
+* **Recognised cookies found on the site join the policy and the banner by themselves**; unclassified ones wait for someone to classify them.
+* **Weekly check with email alerts**: it scans the site, emails once about any new unclassified cookie or third party, and emails when the compliance checks start failing. A new unclassified cookie reported by a visitor brings the check forward to within the hour.
+* **Agency monitoring**: a token-protected status endpoint (`/wp-json/piensa-cookie-consent/v1/status`) and an optional webhook, signed with HMAC-SHA256, that receives the status after every check. New "Monitoring" page.
 
 = 1.13.0 =
 * **Google Fonts are served from the site itself.** Stylesheets from fonts.googleapis.com (Bricks, Elementor, Divi, themes) sent every visitor's IP address to Google before consent. They are now downloaded once and served locally; the page looks the same.

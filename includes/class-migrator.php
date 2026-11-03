@@ -285,6 +285,8 @@ class Piensa_Cookie_Consent_Migrator {
 				'piensa_cookie_consent_fonts',
 				'piensa_cookie_consent_declaration',
 				'piensa_cookie_consent_certificate',
+				'piensa_cookie_consent_monitor',
+				'piensa_cookie_consent_monitor_state',
 			]
 		);
 	}

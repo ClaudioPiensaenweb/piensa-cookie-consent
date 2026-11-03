@@ -4,6 +4,38 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2026-11-03
+
+The declaration used to be as good as the last time someone looked at it.
+The scanner fetches pages from the server and never runs JavaScript, so it
+missed every cookie a script writes, and nothing ran it again or told anyone
+when a site changed.
+
+### Added
+- **Cookies reported by real visits.** After consent, at most once a week per
+  browser and ten seconds after the accepted scripts have run, the browser
+  sends the names of the cookies and `localStorage`/`sessionStorage` keys it
+  holds for the site. Names only: anything shaped like a value is refused on
+  the server. Anonymous endpoint, rate-limited per visitor address, capped at
+  60 names a report; can be switched off.
+- **Found cookies join the declaration.** Recognised cookies the built-in
+  declarations do not cover are added to the policy table and the banner under
+  their category; storage keys are declared as such. Unclassified ones are
+  left out until classified. Adding one raises the policy revision, so
+  visitors are asked again.
+- **Weekly check** (`piensa_cookie_consent_weekly_check`): runs the server
+  scan, re-runs the certificate's compliance checks, and emails the alert
+  address once about every new unclassified cookie or third-party host, and
+  when the checks newly fail. A visitor reporting an unclassified cookie
+  brings a check forward to within the hour.
+- **Agency monitoring.** `GET /wp-json/piensa-cookie-consent/v1/status`
+  answers with the version, the compliance result and checks, unclassified
+  cookies and hosts and the consent counts, to requests carrying the site's
+  token in `X-PCC-Token`. An optional webhook receives the same JSON after
+  every check, signed in `X-PCC-Signature` (HMAC-SHA256 with the token).
+- **Monitoring page** for the alert email, the webhook, the token, the last
+  and next check, and running the check on demand.
+
 ## [1.13.0] - 2026-11-03
 
 From an audit of the plugin against a live site (emedemuro.es) and the AEPD

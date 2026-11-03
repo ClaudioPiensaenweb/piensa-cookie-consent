@@ -233,10 +233,72 @@ function handleConsentEvent(detail, actionType) {
     activate_blocked_content(cookie);
     updateConsentStatus(cookie);
     maybeLogConsent(cookie, actionType);
+    maybeReportCookies(cookie);
 
     if (actionType === 'change') {
         logNecessaryDisabled(cookie);
     }
+}
+
+/**
+ * Tell the site which cookies this browser really holds for it.
+ *
+ * The server-side scanner never runs JavaScript, so it cannot see `_ga`,
+ * `_fbp` or anything else a script writes. A visitor who has consented has
+ * those scripts running; their browser is the only place the real list
+ * exists. Names only, never values, at most once a week per browser, and only
+ * after the scripts accepted have had time to write.
+ */
+function maybeReportCookies(cookie) {
+    const config = window.PiensaCookieConsentConfig || {};
+    const policy = config.policy || {};
+    if (!policy.reportCookies || !policy.ajaxUrl || !cookie) {
+        return;
+    }
+
+    const key = 'pcc_cookie_report';
+    try {
+        const last = Number(localStorage.getItem(key) || 0);
+        if (Date.now() - last < 7 * 24 * 3600 * 1000) {
+            return;
+        }
+    } catch {
+        return;
+    }
+
+    setTimeout(function () {
+        const cookies = document.cookie.split(';')
+            .map(part => part.split('=')[0].trim())
+            .filter(Boolean);
+        const storage = [];
+        try {
+            for (let i = 0; i < localStorage.length; i++) {
+                storage.push(localStorage.key(i));
+            }
+            for (let i = 0; i < sessionStorage.length; i++) {
+                storage.push(sessionStorage.key(i));
+            }
+        } catch {
+            // Storage blocked: report the cookies alone.
+        }
+
+        const payload = new URLSearchParams();
+        payload.append('action', 'piensa_cookie_consent_report_cookies');
+        payload.append('cookies', JSON.stringify(cookies));
+        payload.append('storage', JSON.stringify(storage.filter(name => name && name !== key)));
+
+        fetch(policy.ajaxUrl, { method: 'POST', body: payload, credentials: 'same-origin', keepalive: true })
+            .then(response => {
+                if (response.ok) {
+                    try {
+                        localStorage.setItem(key, String(Date.now()));
+                    } catch {
+                        // Nothing to remember it in; it will report again.
+                    }
+                }
+            })
+            .catch(() => {});
+    }, 10000);
 }
 
 /**
