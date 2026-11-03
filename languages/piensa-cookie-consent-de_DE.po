@@ -1010,11 +1010,11 @@ msgstr ""
 
 #: includes/class-core.php:362
 msgid "First-party"
-msgstr ""
+msgstr "Eigene"
 
 #: includes/class-core.php:363
 msgid "Third-party"
-msgstr ""
+msgstr "Von Drittanbietern"
 
 #: includes/class-core.php:377
 msgid "How to accept, refuse or withdraw your consent"
@@ -1319,54 +1319,67 @@ msgid "30 minutes"
 msgstr "30 Minuten"
 
 msgid "Third-party (%s)"
-msgstr ""
+msgstr "Von Drittanbietern (%s)"
 
 msgid "Types of cookies by origin"
-msgstr ""
+msgstr "Arten von Cookies nach Herkunft"
 
 msgid "First-party cookies:"
-msgstr ""
+msgstr "Eigene Cookies:"
 
 msgid ""
 "sent to your device from a device or domain managed by the owner of this "
 "website, from which the service you request is provided."
 msgstr ""
+"werden von einem Gerät oder einer Domain an Ihr Gerät gesendet, die vom "
+"Betreiber dieser Website verwaltet wird und von der aus der angeforderte "
+"Dienst erbracht wird."
 
 msgid "Third-party cookies:"
-msgstr ""
+msgstr "Cookies von Drittanbietern:"
 
 msgid ""
 "sent to your device from a device or domain not managed by the owner of this"
 " website, but by another entity that processes the data obtained through "
 "them."
 msgstr ""
+"werden von einem Gerät oder einer Domain an Ihr Gerät gesendet, die nicht "
+"vom Betreiber dieser Website verwaltet wird, sondern von einer anderen "
+"Stelle, die die damit gewonnenen Daten verarbeitet."
 
 msgid "Types of cookies by purpose"
-msgstr ""
+msgstr "Arten von Cookies nach Zweck"
 
 msgid "Technical (necessary) cookies:"
-msgstr ""
+msgstr "Technische (notwendige) Cookies:"
 
 msgid ""
 "allow you to browse the website and use its basic functions, such as "
 "remembering your cookie choices. They do not require consent."
 msgstr ""
+"ermöglichen das Surfen auf der Website und die Nutzung ihrer "
+"Grundfunktionen, etwa das Speichern Ihrer Cookie-Auswahl. Sie erfordern "
+"keine Einwilligung."
 
 msgid "Analytics cookies:"
-msgstr ""
+msgstr "Analyse-Cookies:"
 
 msgid ""
 "allow the number of visitors to be counted and how they use the website to "
 "be analysed statistically. They are only installed if you accept them."
 msgstr ""
+"ermöglichen es, die Anzahl der Besucher zu zählen und ihre Nutzung der "
+"Website statistisch auszuwerten. Sie werden nur gesetzt, wenn Sie zustimmen."
 
 msgid "Advertising (marketing) cookies:"
-msgstr ""
+msgstr "Werbe-Cookies (Marketing):"
 
 msgid ""
 "allow advertising to be managed and shown according to your browsing habits."
 " They are only installed if you accept them."
 msgstr ""
+"ermöglichen es, Werbung nach Ihrem Surfverhalten zu verwalten und "
+"anzuzeigen. Sie werden nur gesetzt, wenn Sie zustimmen."
 
 msgid "Cookies used on this website"
-msgstr ""
+msgstr "Auf dieser Website verwendete Cookies"
