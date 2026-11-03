@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.10.0
+Stable tag: 1.11.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,11 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 1.11.0 =
+* **Every declared cookie now says whether it is first-party or third-party**, in the policy table and in the preferences panel. Kit Digital reviews reject a policy that does not classify cookies by origin. Google Analytics, Meta and Stripe cookies are third-party even when stored on the site's own domain.
+* **The `[piensa_cookie_consent_policy]` shortcode now defines the types of cookies** by origin (first-party, third-party) and by purpose (technical, analytics, advertising) before the tables.
+* **Button labels are no longer cut** in the banner and the preferences panel; buttons grow or wrap to fit them.
 
 = 1.10.0 =
 * **WooCommerce's order attribution set seven cookies before the visitor had answered the banner, and kept them after Reject.** The `sbjs_*` cookies record where a visit came from and which campaign brought it. They are written from the site's own domain, which the blocker — working by third-party host — never looked at. A Kit Digital review rejected a shop for it. Attribution now starts switched off on every page and is turned on only when the visitor accepts marketing cookies; withdrawing consent deletes them, through WooCommerce's own switch.

@@ -3,18 +3,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Piensa Cookie Consent 1.8.0\n"
-"Report-Msgid-Bugs-To: https://github.com/ClaudioPiensaenweb/piensa-cookie-"
-"consent/issues\n"
+"Report-Msgid-Bugs-To: https://github.com/ClaudioPiensaenweb/piensa-cookie-consent/issues\n"
 "POT-Creation-Date: 2026-09-18 09:20+0000\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Domain: piensa-cookie-consent\n"
 "PO-Revision-Date: 2026-09-18 09:20+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Domain: piensa-cookie-consent\n"
 
 #: piensa-cookie-consent.php:38
 msgid ""
@@ -319,8 +318,9 @@ msgstr ""
 
 #: includes/class-admin.php:598
 msgid ""
-"Third-party hosts that serve no cookies and are never blocked, one per line. "
-"Intended for asset CDNs and font providers, not for analytics or advertising."
+"Third-party hosts that serve no cookies and are never blocked, one per line."
+" Intended for asset CDNs and font providers, not for analytics or "
+"advertising."
 msgstr ""
 
 #: includes/class-admin.php:604
@@ -435,8 +435,8 @@ msgstr ""
 
 #: includes/class-admin.php:799
 msgid ""
-"Reads the palette your theme declares and fills the fields below. Review the "
-"result before saving: a palette says which colors a theme uses, not which "
+"Reads the palette your theme declares and fills the fields below. Review the"
+" result before saving: a palette says which colors a theme uses, not which "
 "one belongs on a button."
 msgstr ""
 
@@ -583,8 +583,8 @@ msgstr ""
 #: includes/class-admin.php:1038
 msgid ""
 "Discovered domains accumulate across scans and are never removed on their "
-"own, so an entry can outlive the page that introduced it. Clear the list and "
-"scan again to see only what the site loads today."
+"own, so an entry can outlive the page that introduced it. Clear the list and"
+" scan again to see only what the site loads today."
 msgstr ""
 
 #: includes/class-admin.php:1041
@@ -1010,11 +1010,11 @@ msgstr ""
 
 #: includes/class-core.php:362
 msgid "First-party"
-msgstr ""
+msgstr "Propre"
 
 #: includes/class-core.php:363
 msgid "Third-party"
-msgstr ""
+msgstr "Tiers"
 
 #: includes/class-core.php:377
 msgid "How to accept, refuse or withdraw your consent"
@@ -1023,8 +1023,8 @@ msgstr ""
 #: includes/class-core.php:378
 msgid ""
 "The banner shown on your first visit lets you accept all cookies, refuse "
-"every cookie that is not strictly necessary, or choose category by category. "
-"Refusing takes the same single click as accepting."
+"every cookie that is not strictly necessary, or choose category by category."
+" Refusing takes the same single click as accepting."
 msgstr ""
 
 #: includes/class-core.php:379
@@ -1223,7 +1223,8 @@ msgstr "1 an"
 
 #: includes/class-scanner.php:279
 msgid "Records when your WordPress preferences were set."
-msgstr "Enregistre la date à laquelle vos préférences WordPress ont été définies."
+msgstr ""
+"Enregistre la date à laquelle vos préférences WordPress ont été définies."
 
 #: includes/class-scanner.php:304
 msgid "Google Analytics: user identifier."
@@ -1299,8 +1300,12 @@ msgid "WooCommerce order attribution: marks the current visit."
 msgstr "Attribution des commandes WooCommerce : identifie la visite en cours."
 
 #: includes/class-woocommerce.php
-msgid "WooCommerce order attribution: records which source or campaign brought the visit, to attribute the order."
-msgstr "Attribution des commandes WooCommerce : enregistre la source ou la campagne d'origine de la visite, pour lui attribuer la commande."
+msgid ""
+"WooCommerce order attribution: records which source or campaign brought the "
+"visit, to attribute the order."
+msgstr ""
+"Attribution des commandes WooCommerce : enregistre la source ou la campagne "
+"d'origine de la visite, pour lui attribuer la commande."
 
 #: includes/class-woocommerce.php
 msgid "Session"
@@ -1313,3 +1318,68 @@ msgstr "2 jours"
 #: includes/class-woocommerce.php
 msgid "30 minutes"
 msgstr "30 minutes"
+
+msgid "Third-party (%s)"
+msgstr "Tiers (%s)"
+
+msgid "Types of cookies by origin"
+msgstr "Types de cookies selon leur origine"
+
+msgid "First-party cookies:"
+msgstr "Cookies propres :"
+
+msgid ""
+"sent to your device from a device or domain managed by the owner of this "
+"website, from which the service you request is provided."
+msgstr ""
+"envoyés à votre appareil depuis un équipement ou un domaine géré par le "
+"titulaire de ce site, d'où est fourni le service demandé."
+
+msgid "Third-party cookies:"
+msgstr "Cookies tiers :"
+
+msgid ""
+"sent to your device from a device or domain not managed by the owner of this"
+" website, but by another entity that processes the data obtained through "
+"them."
+msgstr ""
+"envoyés à votre appareil depuis un équipement ou un domaine qui n'est pas "
+"géré par le titulaire de ce site, mais par une autre entité qui traite les "
+"données obtenues."
+
+msgid "Types of cookies by purpose"
+msgstr "Types de cookies selon leur finalité"
+
+msgid "Technical (necessary) cookies:"
+msgstr "Cookies techniques (nécessaires) :"
+
+msgid ""
+"allow you to browse the website and use its basic functions, such as "
+"remembering your cookie choices. They do not require consent."
+msgstr ""
+"permettent de naviguer sur le site et d'utiliser ses fonctions de base, "
+"comme mémoriser vos choix de cookies. Ils ne nécessitent pas de "
+"consentement."
+
+msgid "Analytics cookies:"
+msgstr "Cookies analytiques :"
+
+msgid ""
+"allow the number of visitors to be counted and how they use the website to "
+"be analysed statistically. They are only installed if you accept them."
+msgstr ""
+"permettent de mesurer le nombre de visiteurs et d'analyser statistiquement "
+"leur utilisation du site. Ils ne sont installés que si vous les acceptez."
+
+msgid "Advertising (marketing) cookies:"
+msgstr "Cookies publicitaires (marketing) :"
+
+msgid ""
+"allow advertising to be managed and shown according to your browsing habits."
+" They are only installed if you accept them."
+msgstr ""
+"permettent de gérer et d'afficher de la publicité selon vos habitudes de "
+"navigation. Ils ne sont installés que si vous les acceptez."
+
+msgid "Cookies used on this website"
+msgstr "Cookies utilisés sur ce site"

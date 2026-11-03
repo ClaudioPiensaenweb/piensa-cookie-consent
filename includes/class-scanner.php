@@ -411,6 +411,7 @@ class Piensa_Cookie_Consent_Scanner {
 				'name'        => '_ga',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: user identifier.', 'piensa-cookie-consent' ),
+				'provider'    => 'Google',
 				'duration'    => Piensa_Cookie_Consent_Retention_Sync::get_retention( '_ga', __( '2 years', 'piensa-cookie-consent' ) ),
 			];
 			// GA4 writes one of these per property, named after the measurement
@@ -423,12 +424,14 @@ class Piensa_Cookie_Consent_Scanner {
 				'is_pattern'  => true,
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics 4: session state, one per property.', 'piensa-cookie-consent' ),
+				'provider'    => 'Google',
 				'duration'    => __( '2 years', 'piensa-cookie-consent' ),
 			];
 			$definitions['analytics']['cookies'][] = [
 				'name'        => '_gid',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: session identifier.', 'piensa-cookie-consent' ),
+				'provider'    => 'Google',
 				'duration'    => Piensa_Cookie_Consent_Retention_Sync::get_retention( '_gid', __( '24 hours', 'piensa-cookie-consent' ) ),
 			];
 			// Plain _gat with the classic tag, _gat_gtag_<id> with gtag.js.
@@ -437,6 +440,7 @@ class Piensa_Cookie_Consent_Scanner {
 				'is_pattern'  => true,
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics: request throttling.', 'piensa-cookie-consent' ),
+				'provider'    => 'Google',
 				'duration'    => __( '1 minute', 'piensa-cookie-consent' ),
 			];
 		}
@@ -452,12 +456,14 @@ class Piensa_Cookie_Consent_Scanner {
 					'name'        => '_fbp',
 					'domain'      => $this->get_cookie_domain(),
 					'description' => __( 'Meta Pixel: browser identifier.', 'piensa-cookie-consent' ),
+					'provider'    => 'Meta',
 					'duration'    => Piensa_Cookie_Consent_Retention_Sync::get_retention( '_fbp', __( 'Not declared by the provider', 'piensa-cookie-consent' ) ),
 				];
 				$definitions['marketing']['cookies'][] = [
 					'name'        => 'fr',
 					'domain'      => '.facebook.com',
 					'description' => __( 'Meta Pixel: advertising and measurement.', 'piensa-cookie-consent' ),
+					'provider'    => 'Meta',
 					'duration'    => Piensa_Cookie_Consent_Retention_Sync::get_retention( 'fr', __( 'Not declared by the provider', 'piensa-cookie-consent' ) ),
 				];
 				break;
@@ -469,6 +475,7 @@ class Piensa_Cookie_Consent_Scanner {
 				'name'        => '_ga*',
 				'domain'      => $this->get_cookie_domain(),
 				'description' => __( 'Google Analytics (via GTM).', 'piensa-cookie-consent' ),
+				'provider'    => 'Google',
 				'duration'    => __( 'Not declared by the provider', 'piensa-cookie-consent' ),
 			];
 		}
@@ -490,7 +497,78 @@ class Piensa_Cookie_Consent_Scanner {
 		 *
 		 * @param array<string, array<string, mixed>> $definitions Cookie definitions by category.
 		 */
-		return apply_filters( 'piensa_cookie_consent_cookie_definitions', $definitions );
+		$definitions = apply_filters( 'piensa_cookie_consent_cookie_definitions', $definitions );
+
+		return self::annotate_origin( $definitions, (string) wp_parse_url( home_url(), PHP_URL_HOST ) );
+	}
+
+	/**
+	 * Mark every declared cookie as first-party or third-party.
+	 *
+	 * Kit Digital reviews reject a policy that does not classify cookies by
+	 * origin. The domain alone cannot decide it: Google Analytics writes `_ga`
+	 * on the site's own domain, yet Google manages it, so a cookie with a
+	 * `provider` is third-party wherever it is stored.
+	 *
+	 * @param array<string, array<string, mixed>> $definitions Cookie definitions by category.
+	 * @param string                              $site_host   Host of this site.
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	public static function annotate_origin( $definitions, $site_host ) {
+		foreach ( $definitions as $category => $data ) {
+			if ( empty( $data['cookies'] ) || ! is_array( $data['cookies'] ) ) {
+				continue;
+			}
+
+			foreach ( $data['cookies'] as $index => $cookie ) {
+				$domain = isset( $cookie['domain'] ) ? (string) $cookie['domain'] : '';
+				$first  = empty( $cookie['provider'] ) && self::is_first_party_domain( $domain, $site_host );
+
+				if ( $first ) {
+					$label = __( 'First-party', 'piensa-cookie-consent' );
+				} elseif ( empty( $cookie['provider'] ) ) {
+					$label = __( 'Third-party', 'piensa-cookie-consent' );
+				} else {
+					/* translators: %s: company that manages the cookie. */
+					$label = sprintf( __( 'Third-party (%s)', 'piensa-cookie-consent' ), $cookie['provider'] );
+				}
+
+				$cookie['origin']       = $first ? 'first' : 'third';
+				$cookie['origin_label'] = $label;
+
+				$definitions[ $category ]['cookies'][ $index ] = $cookie;
+			}
+		}
+
+		return $definitions;
+	}
+
+	/**
+	 * Whether a cookie domain belongs to this site rather than a third party.
+	 *
+	 * Cookie domains are commonly written with a leading dot, and a subdomain
+	 * of the site is still the site.
+	 *
+	 * @param string $domain    Cookie domain.
+	 * @param string $site_host Host of this site.
+	 *
+	 * @return bool
+	 */
+	public static function is_first_party_domain( $domain, $site_host ) {
+		if ( $domain === '' || ! $site_host ) {
+			return true;
+		}
+
+		$domain = strtolower( ltrim( $domain, '.' ) );
+		$site   = strtolower( (string) $site_host );
+
+		if ( $domain === $site ) {
+			return true;
+		}
+
+		return substr( $site, - strlen( $domain ) - 1 ) === '.' . $domain
+			|| substr( $domain, - strlen( $site ) - 1 ) === '.' . $site;
 	}
 
 	/**
