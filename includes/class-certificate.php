@@ -522,9 +522,9 @@ class Piensa_Cookie_Consent_Certificate {
 	/**
 	 * The certificate itself.
 	 *
-	 * @param array<string, string>                $data   File data.
-	 * @param array<string, mixed>                 $facts  From collect_facts().
-	 * @param array<int, array<string, string>>    $checks From evaluate().
+	 * @param array<string, string>             $data   File data.
+	 * @param array<string, mixed>              $facts  From collect_facts().
+	 * @param array<int, array<string, string>> $checks From evaluate().
 	 *
 	 * @return string
 	 */
@@ -582,6 +582,7 @@ class Piensa_Cookie_Consent_Certificate {
 		$h .= '<li><strong>Técnicas (necesarias):</strong> permiten la navegación y el uso de las funciones básicas del sitio, como recordar la decisión sobre cookies. No requieren consentimiento.</li>';
 		$h .= '<li><strong>Analíticas:</strong> permiten cuantificar los usuarios y analizar estadísticamente el uso del sitio. Solo se instalan con consentimiento.</li>';
 		$h .= '<li><strong>Publicitarias:</strong> permiten gestionar y mostrar publicidad según los hábitos de navegación. Solo se instalan con consentimiento.</li></ul>';
+
 		$terms = isset( $facts['policy_page']['terms'] ) ? $facts['policy_page']['terms'] : [];
 		if ( $terms ) {
 			$found = [];
