@@ -46,7 +46,7 @@ class Piensa_Cookie_Consent_Fonts {
 	 * @return void
 	 */
 	public function init() {
-		add_action( self::CRON, [ __CLASS__, 'cache' ] );
+		add_action( self::CRON, [ __CLASS__, 'handle_cron' ] );
 	}
 
 	/**
@@ -129,6 +129,17 @@ class Piensa_Cookie_Consent_Fonts {
 		);
 
 		return $html;
+	}
+
+	/**
+	 * Cron entry point for cache().
+	 *
+	 * @param string $url Google Fonts stylesheet URL.
+	 *
+	 * @return void
+	 */
+	public static function handle_cron( $url ) {
+		self::cache( $url );
 	}
 
 	/**
