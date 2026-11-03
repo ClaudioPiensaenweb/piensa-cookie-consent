@@ -182,8 +182,12 @@ function applyConsentPositionOverride(position, layout) {
         root.classList.add('ag-pos-bottom');
     }
 
+    // Watches only for #cc-main to appear and stops once it has: observing the
+    // whole document for the rest of the visit cost every DOM change on
+    // builder and shop pages.
     const observer = new MutationObserver(() => {
         if (document.getElementById('cc-main')) {
+            observer.disconnect();
             root.classList.remove('ag-pos-left', 'ag-pos-right', 'ag-pos-center', 'ag-pos-top', 'ag-pos-bottom');
             if (tokens.includes('left')) {
                 root.classList.add('ag-pos-left');
@@ -202,7 +206,7 @@ function applyConsentPositionOverride(position, layout) {
             }
         }
     });
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, { childList: true });
 }
 
 function logNecessaryDisabled(cookie) {
@@ -396,7 +400,7 @@ function update_consent_mode(cookie) {
     });
 }
 
-function buildPreferenceSections(definitions, enabledFlags, texts) {
+function buildPreferenceSections(definitions, enabledFlags, texts, tableLabels) {
     const legalNote = texts.necessary_legal_note || '';
     const sections = [
         {
@@ -406,7 +410,7 @@ function buildPreferenceSections(definitions, enabledFlags, texts) {
                 legalNote
             ),
             linkedCategory: 'necessary',
-            cookieTable: buildCookieTable(definitions.necessary ? definitions.necessary.cookies : []),
+            cookieTable: buildCookieTable(definitions.necessary ? definitions.necessary.cookies : [], tableLabels),
         },
     ];
 
@@ -415,7 +419,7 @@ function buildPreferenceSections(definitions, enabledFlags, texts) {
             title: texts.analytics_label || definitions.analytics.label,
             description: texts.analytics_description || definitions.analytics.description,
             linkedCategory: 'analytics',
-            cookieTable: buildCookieTable(definitions.analytics.cookies || []),
+            cookieTable: buildCookieTable(definitions.analytics.cookies || [], tableLabels),
         });
     }
 
@@ -424,7 +428,7 @@ function buildPreferenceSections(definitions, enabledFlags, texts) {
             title: texts.marketing_label || definitions.marketing.label,
             description: texts.marketing_description || definitions.marketing.description,
             linkedCategory: 'marketing',
-            cookieTable: buildCookieTable(definitions.marketing.cookies || []),
+            cookieTable: buildCookieTable(definitions.marketing.cookies || [], tableLabels),
         });
     }
 
@@ -440,19 +444,21 @@ function buildLegalDescription(description, legalNote) {
     return clean ? clean + ' ' + note : note;
 }
 
-function buildCookieTable(cookies) {
+function buildCookieTable(cookies, labels) {
     if (!cookies || !cookies.length) {
         return null;
     }
 
+    labels = labels || TABLE_LABELS.es;
+
     return {
-        caption: 'Listado de cookies',
+        caption: labels.caption,
         headers: {
-            name: 'Cookie',
-            origin: 'Origen',
-            domain: 'Dominio',
-            description: 'Finalidad',
-            duration: 'Duracion',
+            name: labels.name,
+            origin: labels.origin,
+            domain: labels.domain,
+            description: labels.description,
+            duration: labels.duration,
         },
         body: cookies.map(cookie => ({
             name: cookie.name || '',
@@ -625,6 +631,13 @@ function escapeAttribute(value) {
 
 // Labels for the policy links, per language. The banner is read by visitors,
 // so these follow the banner's language rather than the dashboard's.
+const TABLE_LABELS = {
+    es: { caption: 'Listado de cookies', name: 'Cookie', origin: 'Origen', domain: 'Dominio', description: 'Finalidad', duration: 'Duración' },
+    en: { caption: 'Cookies used', name: 'Cookie', origin: 'Origin', domain: 'Domain', description: 'Purpose', duration: 'Duration' },
+    de: { caption: 'Verwendete Cookies', name: 'Cookie', origin: 'Herkunft', domain: 'Domain', description: 'Zweck', duration: 'Dauer' },
+    fr: { caption: 'Cookies utilisés', name: 'Cookie', origin: 'Origine', domain: 'Domaine', description: 'Finalité', duration: 'Durée' },
+};
+
 const POLICY_LABELS = {
     es: { cookiePolicy: 'Política de cookies', privacyPolicy: 'Política de privacidad' },
     en: { cookiePolicy: 'Cookie policy', privacyPolicy: 'Privacy policy' },
@@ -642,7 +655,7 @@ function buildTranslations(languageConfig, definitions, enabledFlags, policy, br
         const t = texts[code] || {};
         const labels = POLICY_LABELS[code] || POLICY_LABELS.en;
         const footer = buildFooter(policy, brand, labels);
-        const sections = buildPreferenceSections(definitions, enabledFlags, t);
+        const sections = buildPreferenceSections(definitions, enabledFlags, t, TABLE_LABELS[code] || TABLE_LABELS.en);
 
         translations[code] = {
             consentModal: {
@@ -833,19 +846,79 @@ function injectBannerIcon() {
 
     checkAndInject();
 
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach(() => {
-            checkAndInject();
-        });
+    // Scoped to the banner's own container once it exists, and stopped when
+    // both titles carry their icon.
+    let watched = null;
+    const observer = new MutationObserver(() => {
+        checkAndInject();
+        const main = document.getElementById('cc-main');
+        if (document.querySelector('#cc-main .cm__title .cc-cookie-icon') && document.querySelector('#cc-main .pm__title .cc-cookie-icon')) {
+            observer.disconnect();
+            return;
+        }
+        if (main && watched !== main) {
+            observer.disconnect();
+            watched = main;
+            observer.observe(main, { childList: true, subtree: true });
+        }
     });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    const main = document.getElementById('cc-main');
+    watched = main || document.body;
+    observer.observe(watched, main ? { childList: true, subtree: true } : { childList: true });
 
     setTimeout(checkAndInject, 100);
     setTimeout(checkAndInject, 500);
+}
+
+function parseColor(value) {
+    const hex = String(value || '').trim().replace(/^#/, '');
+    if (/^[0-9a-f]{3}$/i.test(hex)) {
+        return hex.split('').map(c => parseInt(c + c, 16));
+    }
+    if (/^[0-9a-f]{6}$/i.test(hex)) {
+        return [0, 2, 4].map(i => parseInt(hex.slice(i, i + 2), 16));
+    }
+    const rgb = String(value || '').match(/rgba?\(\s*(\d+)\D+(\d+)\D+(\d+)/i);
+    return rgb ? [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])] : null;
+}
+
+function luminance(rgb) {
+    const channel = v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    };
+    return 0.2126 * channel(rgb[0]) + 0.7152 * channel(rgb[1]) + 0.0722 * channel(rgb[2]);
+}
+
+function contrastRatio(a, b) {
+    const la = luminance(a);
+    const lb = luminance(b);
+    return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+
+/**
+ * `color`, darkened or lightened as little as needed to reach `min` contrast
+ * against `against`. Colours it cannot parse are returned unchanged.
+ */
+function ensureContrast(color, against, min = 4.5) {
+    const fg = parseColor(color);
+    const bg = parseColor(against);
+    if (!fg || !bg || contrastRatio(fg, bg) >= min) {
+        return color;
+    }
+
+    const target = luminance(bg) > 0.5 ? 0 : 255;
+    let mixed = fg;
+    for (let step = 1; step <= 20; step++) {
+        const t = step / 20;
+        mixed = fg.map(c => Math.round(c + (target - c) * t));
+        if (contrastRatio(mixed, bg) >= min) {
+            break;
+        }
+    }
+
+    return '#' + mixed.map(c => c.toString(16).padStart(2, '0')).join('');
 }
 
 function applyThemeVars(theme) {
@@ -860,15 +933,25 @@ function applyThemeVars(theme) {
         }
     };
 
+    // Colours come from the site's theme, and a theme's light grey for
+    // secondary text is not a banner's: emedemuro.es read #bababa on white,
+    // 1.9:1. Every text colour is brought to WCAG AA (4.5:1) against what it
+    // sits on, keeping its hue; button backgrounds are darkened rather than
+    // their text changed, so the brand colour stays recognisable.
+    const bg = theme.bg || '#ffffff';
+    const primaryBtnColor = theme.primaryBtnColor || '#ffffff';
+    const primaryBtnBg = theme.primaryBtnBg ? ensureContrast(theme.primaryBtnBg, primaryBtnColor) : '';
+    const secondaryBtnBg = theme.secondaryBtnBg || bg;
+
     setVar('--cc-bg', theme.bg);
-    setVar('--cc-primary-color', theme.primaryColor);
-    setVar('--cc-secondary-color', theme.secondaryColor);
-    setVar('--cc-btn-primary-bg', theme.primaryBtnBg);
+    setVar('--cc-primary-color', theme.primaryColor ? ensureContrast(theme.primaryColor, bg) : '');
+    setVar('--cc-secondary-color', theme.secondaryColor ? ensureContrast(theme.secondaryColor, bg) : '');
+    setVar('--cc-btn-primary-bg', primaryBtnBg);
     setVar('--cc-btn-primary-color', theme.primaryBtnColor);
     setVar('--cc-btn-secondary-bg', theme.secondaryBtnBg);
-    setVar('--cc-btn-secondary-color', theme.secondaryBtnColor);
-    if (theme.primaryBtnBg) {
-        setVar('--cc-toggle-on-bg', theme.primaryBtnBg);
+    setVar('--cc-btn-secondary-color', theme.secondaryBtnColor ? ensureContrast(theme.secondaryBtnColor, secondaryBtnBg) : '');
+    if (primaryBtnBg) {
+        setVar('--cc-toggle-on-bg', primaryBtnBg);
     }
     if (theme.modalRadius !== undefined && theme.modalRadius !== null) {
         setVar('--cc-modal-border-radius', theme.modalRadius + 'px');

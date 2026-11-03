@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.14.0
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,14 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 2.0.0 =
+The plugin now keeps a site compliant by itself and can prove it. 2.0 completes the work of 1.11–1.14: cookies classified by origin and type, the policy declaration placed on the page automatically, a Kit Digital compliance certificate, Google Fonts served locally, a guard for trackers injected after load, a consent log that survives page caches and proxies, cookies learnt from real visits, weekly checks with email alerts and agency monitoring. This release adds:
+
+* **Accessible colours by default.** Banner text and buttons are brought to WCAG AA contrast (4.5:1) whatever the theme's colours, keeping their hue.
+* **Cookie table headings follow the banner's language** (Spanish, English, German, French) instead of always being Spanish.
+* **Lighter on every page**: the banner's DOM observers stop once their job is done instead of watching the whole page for the entire visit.
+* **The blocker no longer gives up on very large pages.** A page that exhausted PCRE's backtrack limit used to be served with nothing blocked.
 
 = 1.14.0 =
 * **The declaration learns from real visits.** Visitors who have consented report, at most once a week, the names (never the values) of the cookies and storage keys their browser holds for the site. That finds what the server-side scanner cannot see, such as `_ga`, `_fbp` or Clarity's `_clck`.

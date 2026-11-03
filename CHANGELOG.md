@@ -4,6 +4,45 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-11-03
+
+A major version because of what the plugin now does, not because anything
+was removed: no setting, shortcode, hook or filter changed incompatibly.
+Since 1.10 it classifies cookies by origin and type, places the declaration on
+the policy page by itself, issues a Kit Digital compliance certificate, serves
+Google Fonts locally, holds back trackers injected after load, keeps the
+consent log working behind caches and proxies, learns the real cookies from
+visits, checks itself weekly, alerts by email and reports to the agency.
+
+### Fixed
+- **Banner text could be unreadable.** Colours are taken from the site's
+  theme, and emedemuro.es showed its body text in #bababa on white (1.9:1).
+  Text colours are now adjusted to at least 4.5:1 against their background,
+  keeping their hue, and primary button backgrounds are darkened under their
+  text; colours that already pass are left as they are.
+- **The cookie table headings were always Spanish** (and "Duracion" without its
+  accent). They follow the banner's language.
+- **The blocker served large pages unprocessed.** A rewrite pass that hit PCRE's
+  backtrack limit returned nothing and the page went out with every script it
+  should have held. The limit is raised for the rewrite and restored after.
+
+### Changed
+- The banner's two MutationObservers watched every change on the page for the
+  whole visit. One now stops when the banner appears, the other is scoped to
+  the banner and stops when its icons are in place.
+
+### Added
+- Tests for the consent log's handling of anonymous input (categories,
+  client address behind Cloudflare and proxies) and for the contrast fix.
+
+### Known limitations
+- Most of the administration screens are still in English with partial
+  translations; the visitor-facing text is fully translated.
+- IAB TCF v2.3 and Google CMP certification are not supported. They are needed
+  only by sites that run AdSense, Ad Manager or AdMob in the EEA; Google
+  Analytics and Google Ads work with the Consent Mode v2 signals the plugin
+  sends.
+
 ## [1.14.0] - 2026-11-03
 
 The declaration used to be as good as the last time someone looked at it.
