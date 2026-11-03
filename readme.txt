@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.11.0
+Stable tag: 1.12.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,12 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 1.12.0 =
+* **Kit Digital compliance certificate.** A new "Certificado Kit Digital" page checks the live site against what Red.es LSSI correction requests ask for — banner, refusing as easily as accepting, prior blocking, policy published, cookies defined by origin and type, every cookie described, consent withdrawal and the consent log — and generates a printable document with the file data (beneficiary, agreement, digital voucher) and the evidence for each point, ready to save as PDF.
+* **The cookie declaration is added to the policy page by itself** when the page does not have it: after a leftover CookieYes "Configurar consentimiento" link, or otherwise right after the page heading. Works with page builders that bypass `the_content`, such as Bricks.
+* **The policy is always rendered in the banner's default language**, not in the language of the logged-in user's profile.
+* Leftover CookieYes "Configurar consentimiento" links now open the preferences panel.
 
 = 1.11.0 =
 * **Every declared cookie now says whether it is first-party or third-party**, in the policy table and in the preferences panel. Kit Digital reviews reject a policy that does not classify cookies by origin. Google Analytics, Meta and Stripe cookies are third-party even when stored on the site's own domain.

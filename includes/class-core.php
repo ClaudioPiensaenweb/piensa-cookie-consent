@@ -23,6 +23,8 @@ require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-api.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-retention-sync.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-woocommerce.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-policy-page.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-certificate.php';
 
 class Piensa_Cookie_Consent_Core {
 	private $scanner;
@@ -34,6 +36,8 @@ class Piensa_Cookie_Consent_Core {
 	private $consent_api;
 	private $retention_sync;
 	private $woocommerce;
+	private $policy_page;
+	private $certificate;
 
 	public function __construct() {
 		$this->scanner        = new Piensa_Cookie_Consent_Scanner();
@@ -44,6 +48,8 @@ class Piensa_Cookie_Consent_Core {
 		$this->consent_api    = new Piensa_Cookie_Consent_Consent_API();
 		$this->retention_sync = new Piensa_Cookie_Consent_Retention_Sync();
 		$this->woocommerce    = new Piensa_Cookie_Consent_WooCommerce();
+		$this->policy_page    = new Piensa_Cookie_Consent_Policy_Page( [ $this, 'render_cookie_policy_shortcode' ] );
+		$this->certificate    = new Piensa_Cookie_Consent_Certificate( $this->scanner );
 	}
 
 	public function init() {
@@ -56,6 +62,8 @@ class Piensa_Cookie_Consent_Core {
 		$this->consent_api->init();
 		$this->retention_sync->init();
 		$this->woocommerce->init();
+		$this->policy_page->init();
+		$this->certificate->init();
 		$this->maybe_init_updater();
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
@@ -331,6 +339,87 @@ class Piensa_Cookie_Consent_Core {
 	}
 
 	/**
+	 * The `[piensa_cookie_consent_policy]` shortcode.
+	 *
+	 * @return string
+	 */
+	public function render_cookie_policy_shortcode() {
+		return self::in_policy_language( [ $this, 'render_cookie_policy' ] );
+	}
+
+	/**
+	 * Run a renderer in the language the policy is published in.
+	 *
+	 * Strings follow the locale of whoever is looking, so an administrator
+	 * whose profile is in English saw the declaration in English inside the
+	 * page builder, on a Spanish site whose visitors read it in Spanish. The
+	 * policy is a published legal text with one language: the banner's
+	 * default one.
+	 *
+	 * @param callable $render Returns HTML.
+	 *
+	 * @return string
+	 */
+	public static function in_policy_language( $render ) {
+		$settings = Piensa_Cookie_Consent_Admin::get_settings();
+		$locale   = self::locale_for_language( ! empty( $settings['default_language'] ) ? $settings['default_language'] : 'es' );
+		$switched = function_exists( 'switch_to_locale' ) && determine_locale() !== $locale && switch_to_locale( $locale );
+
+		if ( $switched ) {
+			self::reload_translations( $locale );
+		}
+
+		try {
+			return (string) call_user_func( $render );
+		} finally {
+			if ( $switched ) {
+				restore_previous_locale();
+				self::reload_translations( determine_locale() );
+			}
+		}
+	}
+
+	/**
+	 * The WordPress locale for one of the banner's language codes.
+	 *
+	 * @param string $code Language code, such as `es`.
+	 *
+	 * @return string
+	 */
+	public static function locale_for_language( $code ) {
+		$map = [
+			'es' => 'es_ES',
+			'en' => 'en_US',
+			'de' => 'de_DE',
+			'fr' => 'fr_FR',
+			'it' => 'it_IT',
+			'pt' => 'pt_PT',
+			'ca' => 'ca',
+		];
+
+		return isset( $map[ $code ] ) ? $map[ $code ] : (string) $code;
+	}
+
+	/**
+	 * Load this plugin's strings for a locale.
+	 *
+	 * Switching locale does not reliably reload a plugin's own translations:
+	 * the bundled .mo of the agency build is not in WordPress's registry.
+	 *
+	 * @param string $locale Locale.
+	 *
+	 * @return void
+	 */
+	private static function reload_translations( $locale ) {
+		unload_textdomain( 'piensa-cookie-consent' );
+
+		$file = PIENSA_COOKIE_CONSENT_PATH . 'languages/piensa-cookie-consent-' . $locale . '.mo';
+		if ( is_readable( $file ) ) {
+			load_textdomain( 'piensa-cookie-consent', $file, $locale );
+		}
+	}
+
+	/**
 	 * Render the cookie policy table.
 	 *
 	 * The columns are the ones a cookie policy is required to carry: which
@@ -340,7 +429,7 @@ class Piensa_Cookie_Consent_Core {
 	 *
 	 * @return string
 	 */
-	public function render_cookie_policy_shortcode() {
+	public function render_cookie_policy() {
 		$definitions = $this->scanner->get_cookie_definitions();
 
 		$output  = '<div class="ag-cookie-policy">';

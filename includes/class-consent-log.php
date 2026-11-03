@@ -162,6 +162,52 @@ class Piensa_Cookie_Consent_Consent_Log {
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 
+	/**
+	 * How many consent records there are, by the choice they record.
+	 *
+	 * Used as evidence: refusals in the log show that refusing works and is
+	 * kept, not only accepting.
+	 *
+	 * @return array{total: int, all: int, necessary: int, partial: int}
+	 */
+	public static function count_by_choice() {
+		global $wpdb;
+		$table  = $wpdb->prefix . self::TABLE;
+		$counts = [
+			'total'     => 0,
+			'all'       => 0,
+			'necessary' => 0,
+			'partial'   => 0,
+		];
+
+		if ( ! self::table_ready() ) {
+			return $counts;
+		}
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table owned by this plugin.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be parameterised; $table is built from the trusted prefix.
+		$rows = $wpdb->get_results( "SELECT categories, COUNT(*) AS total FROM $table GROUP BY categories", ARRAY_A );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		foreach ( (array) $rows as $row ) {
+			$total      = (int) $row['total'];
+			$categories = (string) $row['categories'];
+			$analytics  = false !== strpos( $categories, 'analytics' );
+			$marketing  = false !== strpos( $categories, 'marketing' );
+
+			$counts['total'] += $total;
+			if ( $analytics && $marketing ) {
+				$counts['all'] += $total;
+			} elseif ( ! $analytics && ! $marketing ) {
+				$counts['necessary'] += $total;
+			} else {
+				$counts['partial'] += $total;
+			}
+		}
+
+		return $counts;
+	}
+
 	public static function export_logs() {
 		// Streamed in batches rather than loaded at once: the export is
 		// evidence of compliance and silently stopping at the first thousand

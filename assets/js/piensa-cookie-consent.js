@@ -144,8 +144,11 @@ document.addEventListener('DOMContentLoaded', function() {
         injectBannerIcon();
     }
 
-    document.querySelectorAll('[data-ag-consent-review]').forEach(btn => {
-        btn.addEventListener('click', function() {
+    // `.cky-banner-element` is the link CookieYes left in policies written
+    // for it. Without this it is dead text on every site that moved here.
+    document.querySelectorAll('[data-ag-consent-review], .cky-banner-element').forEach(btn => {
+        btn.addEventListener('click', function(event) {
+            event.preventDefault();
             if (window.CookieConsent && CookieConsent.showPreferences) {
                 CookieConsent.showPreferences();
             }
