@@ -195,6 +195,13 @@ class Piensa_Cookie_Consent_Blocker {
 			[ self::IFRAME_PATTERN, 'replace_iframe_callback' ],
 		];
 
+		// A large builder page can exhaust PCRE's default backtrack limit, and a
+		// pass that fails returns nothing: the page used to be served with
+		// every script it should have held back. The limit is raised for the
+		// duration of the rewrite and restored after.
+		// phpcs:ignore WordPress.PHP.IniSet.Risky -- Raised only for this call and restored below.
+		$previous_limit = ini_set( 'pcre.backtrack_limit', '10000000' );
+
 		foreach ( $passes as $pass ) {
 			$result = preg_replace_callback( $pass[0], [ $this, $pass[1] ], $html );
 
@@ -202,10 +209,15 @@ class Piensa_Cookie_Consent_Blocker {
 				// Whatever defeated this pass is still in the document, so the
 				// remaining ones would meet it too. Stop here and serve what we
 				// have, which is valid HTML either way.
-				return $html;
+				break;
 			}
 
 			$html = $result;
+		}
+
+		if ( false !== $previous_limit ) {
+			// phpcs:ignore WordPress.PHP.IniSet.Risky -- Restoring the value read above.
+			ini_set( 'pcre.backtrack_limit', $previous_limit );
 		}
 
 		return $html;
