@@ -91,7 +91,7 @@ class Piensa_Cookie_Consent_Policy_Page {
 	 * @return string
 	 */
 	public function process_html( $html ) {
-		if ( ! is_string( $html ) || $html === '' || self::has_policy( $html ) ) {
+		if ( $html === '' || self::has_policy( $html ) ) {
 			return $html;
 		}
 
