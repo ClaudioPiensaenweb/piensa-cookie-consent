@@ -262,7 +262,7 @@ class Piensa_Cookie_Consent_Monitor {
 
 		$incoming = [];
 		$new      = 0;
-		$by_type = [
+		$by_type  = [
 			'cookie'  => $cookies,
 			'storage' => $storage,
 		];
