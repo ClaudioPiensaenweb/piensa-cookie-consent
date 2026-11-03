@@ -4,6 +4,38 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2026-11-03
+
+Follows the Kit Digital correction request for emedemuro.es: the plugin was
+fixed in 1.11.0, but the site still had to prove it, and the policy page still
+did not show the declaration.
+
+### Added
+- **Kit Digital compliance certificate** (Piensa Cookie Consent → Certificado
+  Kit Digital). Ten checks against the live site — banner shown in Spain,
+  refusing as easy as accepting, prior blocking and Consent Mode defaults,
+  policy published (fetched as a visitor gets it), cookies defined by origin
+  and type, every declared cookie with origin, purpose and duration, nothing
+  detected left unclassified, consent withdrawal, consent log and privacy
+  policy — with the evidence for each. The form keeps the file data
+  (beneficiary, NIF, agreement, voucher, procedure, digitising agent,
+  requirement) and generates a printable document with a SHA-256 fingerprint,
+  to save as PDF and upload under "Ampliación de documentación".
+- **The declaration is placed on the policy page by itself** when the page
+  lacks it: after a leftover CookieYes `.cky-banner-element` link, closing its
+  paragraph, or else right after the first `<h1>`. It works on the finished
+  HTML because Bricks' text element never passes through `the_content`.
+  Builder canvases are skipped so the generated markup is never saved into
+  the page.
+- `Piensa_Cookie_Consent_Consent_Log::count_by_choice()`.
+
+### Fixed
+- **The policy came out in English for administrators with an English
+  profile**, inside page builders, on Spanish sites. It is now always rendered
+  in the banner's default language.
+- Leftover CookieYes "Configurar consentimiento" links were dead text; they
+  now open the preferences panel.
+
 ## [1.11.0] - 2026-11-03
 
 Found when a Kit Digital review asked a site to define its cookies "by origin
