@@ -262,7 +262,11 @@ class Piensa_Cookie_Consent_Monitor {
 
 		$incoming = [];
 		$new      = 0;
-		foreach ( [ 'cookie' => $cookies, 'storage' => $storage ] as $type => $names ) {
+		$by_type = [
+			'cookie'  => $cookies,
+			'storage' => $storage,
+		];
+		foreach ( $by_type as $type => $names ) {
 			foreach ( $names as $name ) {
 				$category   = self::declared_category( $name, $declared );
 				$category   = $category !== null ? $category : Piensa_Cookie_Consent_Scanner::categorize_cookie_for_site( $name, $host, $host );
@@ -380,12 +384,12 @@ class Piensa_Cookie_Consent_Monitor {
 	 * Email what is new.
 	 *
 	 * @param array<string, mixed> $status     Status.
-	 * @param string[]             $new        Names and hosts not alerted before.
+	 * @param string[]             $fresh      Names and hosts not alerted before.
 	 * @param bool                 $regression Whether the checks newly fail.
 	 *
 	 * @return void
 	 */
-	private static function send_alert( array $status, array $new, $regression ) {
+	private static function send_alert( array $status, array $fresh, $regression ) {
 		$to = self::get_settings()['alert_email'];
 		if ( ! is_email( $to ) ) {
 			return;
@@ -399,9 +403,9 @@ class Piensa_Cookie_Consent_Monitor {
 			: sprintf( __( '[%s] New unclassified cookies or third parties', 'piensa-cookie-consent' ), $host );
 
 		$lines = [];
-		if ( $new ) {
+		if ( $fresh ) {
 			$lines[] = __( 'Found on the site and not yet in the cookie declaration:', 'piensa-cookie-consent' );
-			foreach ( $new as $item ) {
+			foreach ( $fresh as $item ) {
 				$lines[] = '  - ' . $item;
 			}
 			$lines[] = '';
