@@ -278,7 +278,14 @@ class Piensa_Cookie_Consent_Migrator {
 		return array_merge(
 			array_values( self::$renamed_options ),
 			array_keys( self::$renamed_options ),
-			[ self::VERSION_OPTION, Piensa_Cookie_Consent_Consent_Log::INSTALLED_OPTION ]
+			[
+				self::VERSION_OPTION,
+				Piensa_Cookie_Consent_Consent_Log::INSTALLED_OPTION,
+				// Literal names: uninstall loads only this class and the log.
+				'piensa_cookie_consent_fonts',
+				'piensa_cookie_consent_declaration',
+				'piensa_cookie_consent_certificate',
+			]
 		);
 	}
 }

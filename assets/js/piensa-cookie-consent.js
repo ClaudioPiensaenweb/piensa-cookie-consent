@@ -422,17 +422,48 @@ function cookieMatcher(cookie) {
     return new RegExp('^' + escaped.replace(/\\\*/g, '.*') + '$');
 }
 
+/**
+ * Every domain a cookie of this page can live on: the host and each parent
+ * the browser accepts cookies for, down to the registrable domain. Found by
+ * trying, as Google Analytics does, since the public suffix list is not
+ * available in the browser.
+ */
+function cookieDomainVariants() {
+    const host = window.location.hostname;
+    const parts = host.split('.');
+    const variants = [host];
+
+    for (let i = parts.length - 2; i >= 1; i--) {
+        const candidate = parts.slice(-i - 1).join('.');
+        const probe = 'pcc_domain_probe=1; path=/; domain=.' + candidate;
+        document.cookie = probe;
+        if (document.cookie.indexOf('pcc_domain_probe=1') !== -1) {
+            document.cookie = probe + '; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            variants.push(candidate);
+        }
+    }
+
+    return variants;
+}
+
 function buildAutoClear(definitions, enabledFlags) {
     const buildList = (cookies) => {
         if (!cookies || !cookies.length) {
             return undefined;
         }
+        // Google Analytics and most trackers write to the registrable domain
+        // (`.example.es`) even on `www.example.es`, so deleting only on the
+        // declared host left `_ga` behind after a refusal.
+        const domains = cookieDomainVariants();
         return {
-            cookies: cookies.map(cookie => ({
-                name: cookieMatcher(cookie),
-                domain: cookie.domain || '',
-                path: '/',
-            })),
+            cookies: cookies.flatMap(cookie => {
+                const declared = cookie.domain ? [cookie.domain] : [];
+                return Array.from(new Set(declared.concat(domains))).map(domain => ({
+                    name: cookieMatcher(cookie),
+                    domain: domain,
+                    path: '/',
+                }));
+            }),
         };
     };
 
@@ -789,7 +820,7 @@ function applyThemeVars(theme) {
 function logConsent(cookie, actionType, fingerprint) {
     const config = window.PiensaCookieConsentConfig || {};
     const policy = config.policy || {};
-    if (!policy.logConsent || !policy.ajaxUrl || !policy.nonce || !cookie) {
+    if (!policy.logConsent || !policy.ajaxUrl || !cookie) {
         return;
     }
 
