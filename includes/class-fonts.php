@@ -107,13 +107,13 @@ class Piensa_Cookie_Consent_Fonts {
 		// Stylesheets, including ones preloaded.
 		$html = (string) preg_replace_callback(
 			'#<link\b[^>]*\bhref=(["\'])(https?:)?//fonts\.googleapis\.com/([^"\']+)\1[^>]*>\s*#i',
-			function ( $match ) use ( $resolve ) {
-				$url   = 'https://fonts.googleapis.com/' . html_entity_decode( $match[3], ENT_QUOTES );
+			function ( $found ) use ( $resolve ) {
+				$url   = 'https://fonts.googleapis.com/' . html_entity_decode( $found[3], ENT_QUOTES );
 				$local = call_user_func( $resolve, $url );
 				if ( ! is_string( $local ) || $local === '' ) {
 					return '';
 				}
-				return (string) preg_replace( '#\bhref=(["\'])[^"\']*\1#i', 'href="' . esc_url( $local ) . '"', $match[0], 1 );
+				return (string) preg_replace( '#\bhref=(["\'])[^"\']*\1#i', 'href="' . esc_url( $local ) . '"', $found[0], 1 );
 			},
 			$html
 		);
@@ -121,8 +121,8 @@ class Piensa_Cookie_Consent_Fonts {
 		// @import inside inline styles.
 		$html = (string) preg_replace_callback(
 			'#@import\s+(?:url\()?\s*["\']?(?:https?:)?//fonts\.googleapis\.com/([^"\')\s;]+)["\']?\s*\)?\s*;?#i',
-			function ( $match ) use ( $resolve ) {
-				$local = call_user_func( $resolve, 'https://fonts.googleapis.com/' . html_entity_decode( $match[1], ENT_QUOTES ) );
+			function ( $found ) use ( $resolve ) {
+				$local = call_user_func( $resolve, 'https://fonts.googleapis.com/' . html_entity_decode( $found[1], ENT_QUOTES ) );
 				return is_string( $local ) && $local !== '' ? '@import url("' . $local . '");' : '';
 			},
 			$html
@@ -169,16 +169,16 @@ class Piensa_Cookie_Consent_Fonts {
 		$failed = false;
 		$css    = (string) preg_replace_callback(
 			'#url\((["\']?)(https://fonts\.gstatic\.com/[^"\')]+)\1\)#i',
-			function ( $match ) use ( $dir, $base, $args, &$failed ) {
-				$ext  = pathinfo( (string) wp_parse_url( $match[2], PHP_URL_PATH ), PATHINFO_EXTENSION );
-				$name = md5( $match[2] ) . '.' . ( $ext !== '' ? $ext : 'woff2' );
+			function ( $found ) use ( $dir, $base, $args, &$failed ) {
+				$ext  = pathinfo( (string) wp_parse_url( $found[2], PHP_URL_PATH ), PATHINFO_EXTENSION );
+				$name = md5( $found[2] ) . '.' . ( $ext !== '' ? $ext : 'woff2' );
 				$file = $dir . '/' . $name;
 
 				if ( ! file_exists( $file ) ) {
-					$font = wp_remote_get( $match[2], $args );
+					$font = wp_remote_get( $found[2], $args );
 					if ( is_wp_error( $font ) || 200 !== (int) wp_remote_retrieve_response_code( $font ) ) {
 						$failed = true;
-						return $match[0];
+						return $found[0];
 					}
 					file_put_contents( $file, wp_remote_retrieve_body( $font ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 				}

@@ -124,6 +124,7 @@ class Piensa_Cookie_Consent_Consent_Log {
 			wp_send_json_error( [ 'message' => 'Too many requests' ], 429 );
 		}
 
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Anonymous endpoint; see the note at the top of this method.
 		$payload = [
 			'consent_id'        => isset( $_POST['consent_id'] ) ? sanitize_text_field( wp_unslash( $_POST['consent_id'] ) ) : '',
 			'action'            => isset( $_POST['consent_action'] ) ? sanitize_text_field( wp_unslash( $_POST['consent_action'] ) ) : '',
@@ -157,6 +158,8 @@ class Piensa_Cookie_Consent_Consent_Log {
 		$ip                    = self::client_ip();
 		$payload['ip_hash']    = $ip !== '' ? hash( 'sha256', $ip . wp_salt( 'auth' ) ) : null;
 		$payload['user_agent'] = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : null;
+
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		$this->insert_log( $payload );
 
