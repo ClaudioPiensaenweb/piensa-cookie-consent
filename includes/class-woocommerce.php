@@ -160,11 +160,13 @@ class Piensa_Cookie_Consent_WooCommerce {
 			$necessary[] = [
 				'name'        => '__stripe_mid',
 				'description' => __( 'Stripe: fraud prevention when paying by card.', 'piensa-cookie-consent' ),
+				'provider'    => 'Stripe',
 				'duration'    => __( '1 year', 'piensa-cookie-consent' ),
 			];
 			$necessary[] = [
 				'name'        => '__stripe_sid',
 				'description' => __( 'Stripe: fraud prevention when paying by card.', 'piensa-cookie-consent' ),
+				'provider'    => 'Stripe',
 				'duration'    => __( '30 minutes', 'piensa-cookie-consent' ),
 			];
 		}

@@ -4,6 +4,27 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2026-11-03
+
+Found when a Kit Digital review asked a site to define its cookies "by origin
+and type (first-party, third-party, technical, analytics, advertising)".
+
+### Fixed
+- **The preferences panel did not say whose each cookie was.** It listed
+  name, domain, purpose and duration, but not origin. It now has an Origin
+  column.
+- **Google Analytics cookies were labelled first-party** in the policy table,
+  because `_ga` is stored on the site's own domain. Origin now follows who
+  manages the cookie: a declared cookie with a `provider` (Google, Meta,
+  Stripe) is third-party wherever it is stored.
+
+### Added
+- The `[piensa_cookie_consent_policy]` shortcode opens with the definitions
+  the review asks for: cookies by origin (first-party, third-party) and by
+  purpose (technical, analytics, advertising).
+- A `provider` key for declared cookies, and `origin` / `origin_label` on
+  every cookie returned by `get_cookie_definitions()`.
+
 ## [1.10.0] - 2026-10-13
 
 Found when a Kit Digital review rejected a shop for setting non-technical

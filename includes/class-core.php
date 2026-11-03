@@ -342,9 +342,20 @@ class Piensa_Cookie_Consent_Core {
 	 */
 	public function render_cookie_policy_shortcode() {
 		$definitions = $this->scanner->get_cookie_definitions();
-		$site_host   = wp_parse_url( home_url(), PHP_URL_HOST );
 
-		$output = '<div class="ag-cookie-policy">';
+		$output  = '<div class="ag-cookie-policy">';
+		$output .= '<h3>' . esc_html__( 'Types of cookies by origin', 'piensa-cookie-consent' ) . '</h3>';
+		$output .= '<ul>';
+		$output .= '<li><strong>' . esc_html__( 'First-party cookies:', 'piensa-cookie-consent' ) . '</strong> ' . esc_html__( 'sent to your device from a device or domain managed by the owner of this website, from which the service you request is provided.', 'piensa-cookie-consent' ) . '</li>';
+		$output .= '<li><strong>' . esc_html__( 'Third-party cookies:', 'piensa-cookie-consent' ) . '</strong> ' . esc_html__( 'sent to your device from a device or domain not managed by the owner of this website, but by another entity that processes the data obtained through them.', 'piensa-cookie-consent' ) . '</li>';
+		$output .= '</ul>';
+		$output .= '<h3>' . esc_html__( 'Types of cookies by purpose', 'piensa-cookie-consent' ) . '</h3>';
+		$output .= '<ul>';
+		$output .= '<li><strong>' . esc_html__( 'Technical (necessary) cookies:', 'piensa-cookie-consent' ) . '</strong> ' . esc_html__( 'allow you to browse the website and use its basic functions, such as remembering your cookie choices. They do not require consent.', 'piensa-cookie-consent' ) . '</li>';
+		$output .= '<li><strong>' . esc_html__( 'Analytics cookies:', 'piensa-cookie-consent' ) . '</strong> ' . esc_html__( 'allow the number of visitors to be counted and how they use the website to be analysed statistically. They are only installed if you accept them.', 'piensa-cookie-consent' ) . '</li>';
+		$output .= '<li><strong>' . esc_html__( 'Advertising (marketing) cookies:', 'piensa-cookie-consent' ) . '</strong> ' . esc_html__( 'allow advertising to be managed and shown according to your browsing habits. They are only installed if you accept them.', 'piensa-cookie-consent' ) . '</li>';
+		$output .= '</ul>';
+		$output .= '<h3>' . esc_html__( 'Cookies used on this website', 'piensa-cookie-consent' ) . '</h3>';
 
 		foreach ( $definitions as $data ) {
 			$output .= '<h3>' . esc_html( $data['label'] ) . '</h3>';
@@ -366,9 +377,7 @@ class Piensa_Cookie_Consent_Core {
 
 			foreach ( $data['cookies'] as $cookie ) {
 				$domain = isset( $cookie['domain'] ) ? (string) $cookie['domain'] : '';
-				$origin = self::is_first_party_domain( $domain, $site_host )
-					? __( 'First-party', 'piensa-cookie-consent' )
-					: __( 'Third-party', 'piensa-cookie-consent' );
+				$origin = isset( $cookie['origin_label'] ) ? (string) $cookie['origin_label'] : '';
 
 				$output .= '<tr>';
 				$output .= '<td>' . esc_html( $cookie['name'] ) . '</td>';
@@ -389,33 +398,6 @@ class Piensa_Cookie_Consent_Core {
 		$output .= '</div>';
 
 		return $output;
-	}
-
-	/**
-	 * Whether a cookie domain belongs to this site rather than a third party.
-	 *
-	 * Cookie domains are commonly written with a leading dot, and a subdomain
-	 * of the site is still the site.
-	 *
-	 * @param string $domain    Cookie domain.
-	 * @param string $site_host Host of this site.
-	 *
-	 * @return bool
-	 */
-	private static function is_first_party_domain( $domain, $site_host ) {
-		if ( $domain === '' || ! $site_host ) {
-			return true;
-		}
-
-		$domain = strtolower( ltrim( $domain, '.' ) );
-		$site   = strtolower( (string) $site_host );
-
-		if ( $domain === $site ) {
-			return true;
-		}
-
-		return substr( $site, - strlen( $domain ) - 1 ) === '.' . $domain
-			|| substr( $domain, - strlen( $site ) - 1 ) === '.' . $site;
 	}
 
 	public function maybe_inject_cookie_audit() {

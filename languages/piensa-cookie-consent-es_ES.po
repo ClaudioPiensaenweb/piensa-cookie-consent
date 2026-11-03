@@ -15,14 +15,21 @@ msgstr ""
 "X-Domain: piensa-cookie-consent\n"
 
 #: piensa-cookie-consent.php:38
-msgid "Piensa Cookie Consent is installed twice. Only the first copy is running; deactivate and delete the other one."
-msgstr "Piensa Cookie Consent está instalado dos veces. Solo se ejecuta la primera copia; desactiva y elimina la otra."
+msgid ""
+"Piensa Cookie Consent is installed twice. Only the first copy is running; "
+"deactivate and delete the other one."
+msgstr ""
+"Piensa Cookie Consent está instalado dos veces. Solo se ejecuta la primera "
+"copia; desactiva y elimina la otra."
 
 #. translators: 1: required PHP version, 2: current PHP version
 #: piensa-cookie-consent.php:68
 #, php-format
-msgid "Piensa Cookie Consent requires PHP %1$s or higher. This site runs PHP %2$s."
-msgstr "Piensa Cookie Consent requiere PHP %1$s o superior. Este sitio ejecuta PHP %2$s."
+msgid ""
+"Piensa Cookie Consent requires PHP %1$s or higher. This site runs PHP %2$s."
+msgstr ""
+"Piensa Cookie Consent requiere PHP %1$s o superior. Este sitio ejecuta PHP "
+"%2$s."
 
 #: includes/class-admin.php:39 includes/class-admin.php:40
 #: includes/class-admin.php:1260 includes/class-admin.php:2320
@@ -143,8 +150,14 @@ msgid "Multilingual text"
 msgstr "Textos multilenguaje"
 
 #: includes/class-admin.php:287
-msgid "The text visitors read, in each language the banner ships with. Every field already carries a translation; change one only if you want different wording. Leave a field empty to go back to the shipped text."
-msgstr "El texto que leen los visitantes, en cada idioma con el que se distribuye el aviso. Todos los campos ya vienen traducidos; cambia uno solo si quieres otra redacción. Deja un campo vacío para volver al texto original."
+msgid ""
+"The text visitors read, in each language the banner ships with. Every field "
+"already carries a translation; change one only if you want different "
+"wording. Leave a field empty to go back to the shipped text."
+msgstr ""
+"El texto que leen los visitantes, en cada idioma con el que se distribuye el"
+" aviso. Todos los campos ya vienen traducidos; cambia uno solo si quieres "
+"otra redacción. Deja un campo vacío para volver al texto original."
 
 #: includes/class-admin.php:302 includes/class-admin.php:1443
 msgid "Branding and white-label"
@@ -211,8 +224,12 @@ msgid "Automatic discovery"
 msgstr "Descubrimiento automatico"
 
 #: includes/class-admin.php:438
-msgid "External resources such as scripts, iframes and images are detected to suggest categories."
-msgstr "Se detectan recursos externos (scripts, iframes, imágenes) para sugerir categorías."
+msgid ""
+"External resources such as scripts, iframes and images are detected to "
+"suggest categories."
+msgstr ""
+"Se detectan recursos externos (scripts, iframes, imágenes) para sugerir "
+"categorías."
 
 #: includes/class-admin.php:445 includes/class-admin.php:1286
 #: includes/class-admin.php:2333
@@ -293,28 +310,54 @@ msgid "days"
 msgstr "días"
 
 #: includes/class-admin.php:592
-msgid "Records older than this are deleted daily. Keeping consent records indefinitely is itself a compliance problem: the GDPR asks for a defined retention period. Set to 0 to keep everything, which you should only do if something else purges the table."
-msgstr "Los registros más antiguos se eliminan a diario. Conservar los consentimientos de forma indefinida es en sí mismo un problema de cumplimiento: el RGPD exige un plazo de conservación definido. Pon 0 para conservarlo todo, y hazlo solo si otro sistema se encarga de purgar la tabla."
+msgid ""
+"Records older than this are deleted daily. Keeping consent records "
+"indefinitely is itself a compliance problem: the GDPR asks for a defined "
+"retention period. Set to 0 to keep everything, which you should only do if "
+"something else purges the table."
+msgstr ""
+"Los registros más antiguos se eliminan a diario. Conservar los "
+"consentimientos de forma indefinida es en sí mismo un problema de "
+"cumplimiento: el RGPD exige un plazo de conservación definido. Pon 0 para "
+"conservarlo todo, y hazlo solo si otro sistema se encarga de purgar la "
+"tabla."
 
 #: includes/class-admin.php:598
 msgid "Block third-party resources the plugin does not recognise"
 msgstr "Bloquear los recursos de terceros que el plugin no reconoce"
 
 #: includes/class-admin.php:599
-msgid "Required to comply: without it, a third party the plugin has never seen loads before the visitor chooses. Unrecognised third parties are treated as marketing and load once that category is accepted."
-msgstr "Necesario para cumplir: sin esta opción, un tercero que el plugin no haya visto nunca se carga antes de que la persona elija. Los terceros no reconocidos se tratan como marketing y se cargan cuando se acepta esa categoría."
+msgid ""
+"Required to comply: without it, a third party the plugin has never seen "
+"loads before the visitor chooses. Unrecognised third parties are treated as "
+"marketing and load once that category is accepted."
+msgstr ""
+"Necesario para cumplir: sin esta opción, un tercero que el plugin no haya "
+"visto nunca se carga antes de que la persona elija. Los terceros no "
+"reconocidos se tratan como marketing y se cargan cuando se acepta esa "
+"categoría."
 
 #: includes/class-admin.php:606
-msgid "Third-party hosts that serve no cookies and are never blocked, one per line. Intended for asset CDNs and font providers, not for analytics or advertising."
-msgstr "Dominios de terceros que no instalan cookies y nunca se bloquean, uno por línea. Pensado para CDN de recursos y proveedores de tipografías, no para analítica ni publicidad."
+msgid ""
+"Third-party hosts that serve no cookies and are never blocked, one per line."
+" Intended for asset CDNs and font providers, not for analytics or "
+"advertising."
+msgstr ""
+"Dominios de terceros que no instalan cookies y nunca se bloquean, uno por "
+"línea. Pensado para CDN de recursos y proveedores de tipografías, no para "
+"analítica ni publicidad."
 
 #: includes/class-admin.php:612
 msgid "Keep a consent log"
 msgstr "Guardar registro de consentimiento"
 
 #: includes/class-admin.php:619
-msgid "Increase this value when you change the text or the policy, to ask visitors for consent again."
-msgstr "Incrementa este valor cuando cambies el texto o la política para solicitar nuevo consentimiento."
+msgid ""
+"Increase this value when you change the text or the policy, to ask visitors "
+"for consent again."
+msgstr ""
+"Incrementa este valor cuando cambies el texto o la política para solicitar "
+"nuevo consentimiento."
 
 #: includes/class-admin.php:628
 msgid "Show an icon in the banner"
@@ -417,12 +460,22 @@ msgid "Use the theme colors"
 msgstr "Usar los colores del tema"
 
 #: includes/class-admin.php:807
-msgid "Reads the palette your theme declares and fills the fields below. Review the result before saving: a palette says which colors a theme uses, not which one belongs on a button."
-msgstr "Lee la paleta que declara tu tema y rellena los campos de abajo. Revisa el resultado antes de guardar: una paleta dice qué colores usa un tema, no cuál corresponde a un botón."
+msgid ""
+"Reads the palette your theme declares and fills the fields below. Review the"
+" result before saving: a palette says which colors a theme uses, not which "
+"one belongs on a button."
+msgstr ""
+"Lee la paleta que declara tu tema y rellena los campos de abajo. Revisa el "
+"resultado antes de guardar: una paleta dice qué colores usa un tema, no cuál"
+" corresponde a un botón."
 
 #: includes/class-admin.php:809
-msgid "This theme declares no color palette, so its colors cannot be read. Pick a template above or set the colors by hand."
-msgstr "Este tema no declara ninguna paleta de colores, así que no se pueden leer. Elige una plantilla de arriba o define los colores a mano."
+msgid ""
+"This theme declares no color palette, so its colors cannot be read. Pick a "
+"template above or set the colors by hand."
+msgstr ""
+"Este tema no declara ninguna paleta de colores, así que no se pueden leer. "
+"Elige una plantilla de arriba o define los colores a mano."
 
 #: includes/class-admin.php:821
 msgid "A live preview of the banner. It updates as you change the fields."
@@ -449,8 +502,10 @@ msgid "With no geo header available, the banner is always shown."
 msgstr "Si no hay cabecera de geo, se mostrará siempre."
 
 #: includes/class-admin.php:841
-msgid "Comma-separated ISO2 codes, for example ES,FR,DE. Only used in custom mode."
-msgstr "Códigos ISO2 separados por coma (ej: ES,FR,DE). Solo aplica en modo custom."
+msgid ""
+"Comma-separated ISO2 codes, for example ES,FR,DE. Only used in custom mode."
+msgstr ""
+"Códigos ISO2 separados por coma (ej: ES,FR,DE). Solo aplica en modo custom."
 
 #: includes/class-admin.php:845
 msgid "Auto-detect (CF/IP/Geo)"
@@ -489,8 +544,12 @@ msgid "Download the JSON report"
 msgstr "Descargar informe JSON"
 
 #: includes/class-admin.php:904
-msgid "The banner and category text is edited under Languages, in every language the plugin ships with."
-msgstr "El texto del aviso y de las categorías se edita en Idiomas, en todos los idiomas con los que se distribuye el plugin."
+msgid ""
+"The banner and category text is edited under Languages, in every language "
+"the plugin ships with."
+msgstr ""
+"El texto del aviso y de las categorías se edita en Idiomas, en todos los "
+"idiomas con los que se distribuye el plugin."
 
 #: includes/class-admin.php:906
 msgid "Go to Languages"
@@ -525,8 +584,13 @@ msgid "Diagnostics"
 msgstr "Diagnóstico"
 
 #: includes/class-admin.php:985
-msgid "The state the plugin is actually in. When the banner offers the wrong categories or the log looks empty, this says which input produced that result."
-msgstr "El estado real del plugin. Cuando el aviso ofrece categorías que no tocan o el registro parece vacío, esto te dice qué dato ha producido ese resultado."
+msgid ""
+"The state the plugin is actually in. When the banner offers the wrong "
+"categories or the log looks empty, this says which input produced that "
+"result."
+msgstr ""
+"El estado real del plugin. Cuando el aviso ofrece categorías que no tocan o "
+"el registro parece vacío, esto te dice qué dato ha producido ese resultado."
 
 #: includes/class-admin.php:989
 msgid "Copy for support"
@@ -553,8 +617,14 @@ msgid "Clear the list"
 msgstr "Vaciar la lista"
 
 #: includes/class-admin.php:1046
-msgid "Discovered domains accumulate across scans and are never removed on their own, so an entry can outlive the page that introduced it. Clear the list and scan again to see only what the site loads today."
-msgstr "Los dominios descubiertos se acumulan entre escaneos y no se borran solos, así que una entrada puede sobrevivir a la página que la introdujo. Vacía la lista y vuelve a escanear para ver solo lo que el sitio carga hoy."
+msgid ""
+"Discovered domains accumulate across scans and are never removed on their "
+"own, so an entry can outlive the page that introduced it. Clear the list and"
+" scan again to see only what the site loads today."
+msgstr ""
+"Los dominios descubiertos se acumulan entre escaneos y no se borran solos, "
+"así que una entrada puede sobrevivir a la página que la introdujo. Vacía la "
+"lista y vuelve a escanear para ver solo lo que el sitio carga hoy."
 
 #: includes/class-admin.php:1049
 msgid "No external domains have been detected yet."
@@ -606,8 +676,12 @@ msgid "Scan cookies in the browser"
 msgstr "Escanear cookies en el navegador"
 
 #: includes/class-admin.php:1099
-msgid "Opens your site in audit mode to detect the cookies scripts actually set. Administrators only. Names are stored, never values."
-msgstr "Abre tu sitio en modo auditoría para detectar cookies reales (JS). Solo admins. Se guardan nombres, no valores."
+msgid ""
+"Opens your site in audit mode to detect the cookies scripts actually set. "
+"Administrators only. Names are stored, never values."
+msgstr ""
+"Abre tu sitio en modo auditoría para detectar cookies reales (JS). Solo "
+"admins. Se guardan nombres, no valores."
 
 #: includes/class-admin.php:1105
 msgid "No cookies have been detected in a scan yet."
@@ -625,8 +699,12 @@ msgid "Forget the %s cookie"
 msgstr "Olvidar la cookie %s"
 
 #: includes/class-admin.php:1140
-msgid "Use the [piensa_cookie_consent_policy] shortcode on a page if you do not have a URL of your own."
-msgstr "Usa el shortcode [piensa_cookie_consent_policy] en una página si no tienes URL propia."
+msgid ""
+"Use the [piensa_cookie_consent_policy] shortcode on a page if you do not "
+"have a URL of your own."
+msgstr ""
+"Usa el shortcode [piensa_cookie_consent_policy] en una página si no tienes "
+"URL propia."
 
 #: includes/class-admin.php:1153
 msgid "Format: name|category|purpose|duration|domain. For example:"
@@ -670,8 +748,12 @@ msgid "Leave empty to use the official channel: %s"
 msgstr "Déjalo vacío para usar el canal oficial: %s"
 
 #: includes/class-admin.php:1200
-msgid "Supports the {slug}, {channel} and {site} variables. Left out, they are appended as query arguments."
-msgstr "Soporta variables: {slug}, {channel}, {site}. Si no las usas se agregan vía query."
+msgid ""
+"Supports the {slug}, {channel} and {site} variables. Left out, they are "
+"appended as query arguments."
+msgstr ""
+"Soporta variables: {slug}, {channel}, {site}. Si no las usas se agregan vía "
+"query."
 
 #: includes/class-admin.php:1215
 msgid "Bearer token (optional)"
@@ -694,8 +776,17 @@ msgid "Install updates automatically, once verified"
 msgstr "Instalar las actualizaciones automáticamente, una vez verificadas"
 
 #: includes/class-admin.php:1239
-msgid "Uses the automatic-update mechanism WordPress itself provides, which still respects a host or network disabling it entirely. A checksum mismatch, or a missing signature when one is required, blocks the install either way — this only decides whether a verified update still needs someone to click Update."
-msgstr "Usa el propio mecanismo de actualización automática de WordPress, que sigue respetando que un hosting o la red lo desactiven por completo. Un checksum que no coincide, o una firma ausente cuando se exige, bloquean la instalación en cualquier caso — esto solo decide si una actualización ya verificada necesita además que alguien pulse Actualizar."
+msgid ""
+"Uses the automatic-update mechanism WordPress itself provides, which still "
+"respects a host or network disabling it entirely. A checksum mismatch, or a "
+"missing signature when one is required, blocks the install either way — this"
+" only decides whether a verified update still needs someone to click Update."
+msgstr ""
+"Usa el propio mecanismo de actualización automática de WordPress, que sigue "
+"respetando que un hosting o la red lo desactiven por completo. Un checksum "
+"que no coincide, o una firma ausente cuando se exige, bloquean la "
+"instalación en cualquier caso — esto solo decide si una actualización ya "
+"verificada necesita además que alguien pulse Actualizar."
 
 #: includes/class-admin.php:1245
 msgid "Require a valid signature"
@@ -711,7 +802,9 @@ msgstr "Panel central de consentimiento"
 
 #: includes/class-admin.php:1262
 msgid "Consent management for agencies: compliance, control and clean data."
-msgstr "Gestión del consentimiento para agencias: cumplimiento, control y datos limpios."
+msgstr ""
+"Gestión del consentimiento para agencias: cumplimiento, control y datos "
+"limpios."
 
 #: includes/class-admin.php:1268
 msgid "View the policy"
@@ -759,7 +852,9 @@ msgstr "Define geolocalización e idioma."
 
 #: includes/class-admin.php:1359
 msgid "The text visitors read, in every language the banner ships with."
-msgstr "El texto que leen los visitantes, en todos los idiomas con los que se distribuye el aviso."
+msgstr ""
+"El texto que leen los visitantes, en todos los idiomas con los que se "
+"distribuye el aviso."
 
 #: includes/class-admin.php:1371
 msgid "Set the labels, and turn categories on or off."
@@ -844,7 +939,9 @@ msgid "Not authorized"
 msgstr "No autorizado"
 
 #: includes/class-admin.php:2442
-msgid "The CMP is switched off by geo-targeting. Check that this meets your obligations."
+msgid ""
+"The CMP is switched off by geo-targeting. Check that this meets your "
+"obligations."
 msgstr "El CMP está desactivado por geolocalización. Verifica cumplimiento."
 
 #: includes/class-admin.php:2445
@@ -852,8 +949,16 @@ msgid "Geo-targeting is set to a custom list, but no countries are defined."
 msgstr "Geo-targeting en modo custom sin países definidos."
 
 #: includes/class-admin.php:2453
-msgid "Geo-targeting is on and a page cache is active. The cache cannot tell visitors apart, so it may serve the unblocked version to a visitor the banner should have been shown to. Either exclude the site from page caching or set geo-targeting to always show."
-msgstr "El geo-targeting está activo y hay una cache de página en marcha. La cache no distingue visitantes, asi que puede servir la versión sin bloqueo a alguien a quien habria que mostrarle el aviso. Excluye el sitio de la cache de página o pon el geo-targeting en mostrar siempre."
+msgid ""
+"Geo-targeting is on and a page cache is active. The cache cannot tell "
+"visitors apart, so it may serve the unblocked version to a visitor the "
+"banner should have been shown to. Either exclude the site from page caching "
+"or set geo-targeting to always show."
+msgstr ""
+"El geo-targeting está activo y hay una cache de página en marcha. La cache "
+"no distingue visitantes, asi que puede servir la versión sin bloqueo a "
+"alguien a quien habria que mostrarle el aviso. Excluye el sitio de la cache "
+"de página o pon el geo-targeting en mostrar siempre."
 
 #: includes/class-admin.php:2457
 msgid "The consent log is switched off."
@@ -990,12 +1095,27 @@ msgid "How to accept, refuse or withdraw your consent"
 msgstr "Cómo aceptar, rechazar o retirar tu consentimiento"
 
 #: includes/class-core.php:382
-msgid "The banner shown on your first visit lets you accept all cookies, refuse every cookie that is not strictly necessary, or choose category by category. Refusing takes the same single click as accepting."
-msgstr "El aviso que aparece en tu primera visita te permite aceptar todas las cookies, rechazar todas las que no sean estrictamente necesarias, o elegir categoría por categoría. Rechazar cuesta el mismo clic que aceptar."
+msgid ""
+"The banner shown on your first visit lets you accept all cookies, refuse "
+"every cookie that is not strictly necessary, or choose category by category."
+" Refusing takes the same single click as accepting."
+msgstr ""
+"El aviso que aparece en tu primera visita te permite aceptar todas las "
+"cookies, rechazar todas las que no sean estrictamente necesarias, o elegir "
+"categoría por categoría. Rechazar cuesta el mismo clic que aceptar."
 
 #: includes/class-core.php:383
-msgid "You can change or withdraw your choice at any time, with the same ease, using the cookie settings button on this site. Withdrawing consent deletes the cookies in the categories you no longer accept. Your browser settings also let you block or delete cookies for any site."
-msgstr "Puedes cambiar o retirar tu decisión en cualquier momento, con la misma facilidad, mediante el botón de configuración de cookies de este sitio. Al retirar el consentimiento se eliminan las cookies de las categorías que dejas de aceptar. La configuración de tu navegador también te permite bloquear o borrar las cookies de cualquier sitio."
+msgid ""
+"You can change or withdraw your choice at any time, with the same ease, "
+"using the cookie settings button on this site. Withdrawing consent deletes "
+"the cookies in the categories you no longer accept. Your browser settings "
+"also let you block or delete cookies for any site."
+msgstr ""
+"Puedes cambiar o retirar tu decisión en cualquier momento, con la misma "
+"facilidad, mediante el botón de configuración de cookies de este sitio. Al "
+"retirar el consentimiento se eliminan las cookies de las categorías que "
+"dejas de aceptar. La configuración de tu navegador también te permite "
+"bloquear o borrar las cookies de cualquier sitio."
 
 #: includes/class-diagnostics.php:28
 msgid "Environment"
@@ -1104,8 +1224,12 @@ msgid "Why only necessary is shown"
 msgstr "Por qué solo se muestra necesarias"
 
 #: includes/class-diagnostics.php:171
-msgid "neither route found anything: run a scan, or switch Category mode to manual and turn the categories on yourself"
-msgstr "ninguna de las dos vías ha encontrado nada: lanza un escaneo, o pon el modo de categorías en manual y actívalas tú"
+msgid ""
+"neither route found anything: run a scan, or switch Category mode to manual "
+"and turn the categories on yourself"
+msgstr ""
+"ninguna de las dos vías ha encontrado nada: lanza un escaneo, o pon el modo "
+"de categorías en manual y actívalas tú"
 
 #: includes/class-diagnostics.php:197
 msgid "none active"
@@ -1262,7 +1386,8 @@ msgstr "WooCommerce: indica si el carrito tiene productos."
 
 #: includes/class-woocommerce.php
 msgid "WooCommerce: keeps the cart and the checkout of each visitor."
-msgstr "WooCommerce: conserva el carrito y el proceso de compra de cada visitante."
+msgstr ""
+"WooCommerce: conserva el carrito y el proceso de compra de cada visitante."
 
 #: includes/class-woocommerce.php
 msgid "Stripe: fraud prevention when paying by card."
@@ -1273,8 +1398,12 @@ msgid "WooCommerce order attribution: marks the current visit."
 msgstr "Atribución de pedidos de WooCommerce: identifica la visita en curso."
 
 #: includes/class-woocommerce.php
-msgid "WooCommerce order attribution: records which source or campaign brought the visit, to attribute the order."
-msgstr "Atribución de pedidos de WooCommerce: registra de qué fuente o campaña procede la visita, para atribuirle el pedido."
+msgid ""
+"WooCommerce order attribution: records which source or campaign brought the "
+"visit, to attribute the order."
+msgstr ""
+"Atribución de pedidos de WooCommerce: registra de qué fuente o campaña "
+"procede la visita, para atribuirle el pedido."
 
 #: includes/class-woocommerce.php
 msgid "Session"
@@ -1287,3 +1416,68 @@ msgstr "2 días"
 #: includes/class-woocommerce.php
 msgid "30 minutes"
 msgstr "30 minutos"
+
+msgid "Third-party (%s)"
+msgstr "De terceros (%s)"
+
+msgid "Types of cookies by origin"
+msgstr "Tipos de cookies según la entidad que las gestiona"
+
+msgid "First-party cookies:"
+msgstr "Cookies propias:"
+
+msgid ""
+"sent to your device from a device or domain managed by the owner of this "
+"website, from which the service you request is provided."
+msgstr ""
+"son las que se envían a su equipo desde un equipo o dominio gestionado por "
+"el titular de este sitio web y desde el que se presta el servicio "
+"solicitado."
+
+msgid "Third-party cookies:"
+msgstr "Cookies de terceros:"
+
+msgid ""
+"sent to your device from a device or domain not managed by the owner of this"
+" website, but by another entity that processes the data obtained through "
+"them."
+msgstr ""
+"son las que se envían a su equipo desde un equipo o dominio que no gestiona "
+"el titular de este sitio web, sino otra entidad que trata los datos "
+"obtenidos a través de ellas."
+
+msgid "Types of cookies by purpose"
+msgstr "Tipos de cookies según su finalidad"
+
+msgid "Technical (necessary) cookies:"
+msgstr "Cookies técnicas (necesarias):"
+
+msgid ""
+"allow you to browse the website and use its basic functions, such as "
+"remembering your cookie choices. They do not require consent."
+msgstr ""
+"permiten navegar por el sitio web y utilizar sus funciones básicas, como "
+"recordar sus preferencias de cookies. No requieren consentimiento."
+
+msgid "Analytics cookies:"
+msgstr "Cookies analíticas:"
+
+msgid ""
+"allow the number of visitors to be counted and how they use the website to "
+"be analysed statistically. They are only installed if you accept them."
+msgstr ""
+"permiten cuantificar el número de visitantes y analizar estadísticamente el "
+"uso que hacen del sitio web. Solo se instalan si usted las acepta."
+
+msgid "Advertising (marketing) cookies:"
+msgstr "Cookies publicitarias (marketing):"
+
+msgid ""
+"allow advertising to be managed and shown according to your browsing habits."
+" They are only installed if you accept them."
+msgstr ""
+"permiten gestionar y mostrar publicidad en función de sus hábitos de "
+"navegación. Solo se instalan si usted las acepta."
+
+msgid "Cookies used on this website"
+msgstr "Cookies utilizadas en este sitio web"

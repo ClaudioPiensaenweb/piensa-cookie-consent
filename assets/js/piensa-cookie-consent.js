@@ -384,12 +384,14 @@ function buildCookieTable(cookies) {
         caption: 'Listado de cookies',
         headers: {
             name: 'Cookie',
+            origin: 'Origen',
             domain: 'Dominio',
             description: 'Finalidad',
             duration: 'Duracion',
         },
         body: cookies.map(cookie => ({
             name: cookie.name || '',
+            origin: cookie.origin_label || '',
             domain: cookie.domain || '',
             description: cookie.description || '',
             duration: cookie.duration || '',

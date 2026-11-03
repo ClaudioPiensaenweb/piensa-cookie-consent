@@ -317,8 +317,9 @@ msgstr ""
 
 #: includes/class-admin.php:606
 msgid ""
-"Third-party hosts that serve no cookies and are never blocked, one per line. "
-"Intended for asset CDNs and font providers, not for analytics or advertising."
+"Third-party hosts that serve no cookies and are never blocked, one per line."
+" Intended for asset CDNs and font providers, not for analytics or "
+"advertising."
 msgstr ""
 
 #: includes/class-admin.php:612
@@ -433,8 +434,8 @@ msgstr ""
 
 #: includes/class-admin.php:807
 msgid ""
-"Reads the palette your theme declares and fills the fields below. Review the "
-"result before saving: a palette says which colors a theme uses, not which "
+"Reads the palette your theme declares and fills the fields below. Review the"
+" result before saving: a palette says which colors a theme uses, not which "
 "one belongs on a button."
 msgstr ""
 
@@ -581,8 +582,8 @@ msgstr ""
 #: includes/class-admin.php:1046
 msgid ""
 "Discovered domains accumulate across scans and are never removed on their "
-"own, so an entry can outlive the page that introduced it. Clear the list and "
-"scan again to see only what the site loads today."
+"own, so an entry can outlive the page that introduced it. Clear the list and"
+" scan again to see only what the site loads today."
 msgstr ""
 
 #: includes/class-admin.php:1049
@@ -732,8 +733,8 @@ msgstr ""
 msgid ""
 "Uses the automatic-update mechanism WordPress itself provides, which still "
 "respects a host or network disabling it entirely. A checksum mismatch, or a "
-"missing signature when one is required, blocks the install either way — this "
-"only decides whether a verified update still needs someone to click Update."
+"missing signature when one is required, blocks the install either way — this"
+" only decides whether a verified update still needs someone to click Update."
 msgstr ""
 
 #: includes/class-admin.php:1245
@@ -1037,8 +1038,8 @@ msgstr ""
 #: includes/class-core.php:382
 msgid ""
 "The banner shown on your first visit lets you accept all cookies, refuse "
-"every cookie that is not strictly necessary, or choose category by category. "
-"Refusing takes the same single click as accepting."
+"every cookie that is not strictly necessary, or choose category by category."
+" Refusing takes the same single click as accepting."
 msgstr ""
 
 #: includes/class-core.php:383
@@ -1327,7 +1328,9 @@ msgid "WooCommerce order attribution: marks the current visit."
 msgstr ""
 
 #: includes/class-woocommerce.php
-msgid "WooCommerce order attribution: records which source or campaign brought the visit, to attribute the order."
+msgid ""
+"WooCommerce order attribution: records which source or campaign brought the "
+"visit, to attribute the order."
 msgstr ""
 
 #: includes/class-woocommerce.php
@@ -1340,4 +1343,57 @@ msgstr ""
 
 #: includes/class-woocommerce.php
 msgid "30 minutes"
+msgstr ""
+
+msgid "Third-party (%s)"
+msgstr ""
+
+msgid "Types of cookies by origin"
+msgstr ""
+
+msgid "First-party cookies:"
+msgstr ""
+
+msgid ""
+"sent to your device from a device or domain managed by the owner of this "
+"website, from which the service you request is provided."
+msgstr ""
+
+msgid "Third-party cookies:"
+msgstr ""
+
+msgid ""
+"sent to your device from a device or domain not managed by the owner of this"
+" website, but by another entity that processes the data obtained through "
+"them."
+msgstr ""
+
+msgid "Types of cookies by purpose"
+msgstr ""
+
+msgid "Technical (necessary) cookies:"
+msgstr ""
+
+msgid ""
+"allow you to browse the website and use its basic functions, such as "
+"remembering your cookie choices. They do not require consent."
+msgstr ""
+
+msgid "Analytics cookies:"
+msgstr ""
+
+msgid ""
+"allow the number of visitors to be counted and how they use the website to "
+"be analysed statistically. They are only installed if you accept them."
+msgstr ""
+
+msgid "Advertising (marketing) cookies:"
+msgstr ""
+
+msgid ""
+"allow advertising to be managed and shown according to your browsing habits."
+" They are only installed if you accept them."
+msgstr ""
+
+msgid "Cookies used on this website"
 msgstr ""
