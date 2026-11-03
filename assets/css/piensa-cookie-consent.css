@@ -233,7 +233,7 @@
 #cc-main .cm__btns {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
     gap: 8px !important;
     align-items: stretch !important;
 }
@@ -250,23 +250,23 @@
     font-weight: 600 !important;
     min-height: 42px !important;
     transition: all 0.15s ease !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     border: 2px solid transparent !important;
-    width: 100% !important;
-    flex: 1 1 0 !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    width: auto !important;
+    flex: 1 1 auto !important;
+    min-width: min(100%, max-content) !important;
+    max-width: 100% !important;
+    text-align: center !important;
+    line-height: 1.25 !important;
 }
 
 #cc-main .cm__btn > span {
     display: block !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
+    overflow: visible !important;
 }
 
 /* Primary button - Accept (derecha) */
@@ -310,7 +310,7 @@
    Layout BOX
    ============================================ */
 #cc-main .cm--box {
-    max-width: 420px !important;
+    max-width: 520px !important;
 }
 
 #cc-main .cm--box .cm__btns {
@@ -336,10 +336,11 @@
 }
 
 #cc-main .cm--cloud .cm__btns {
+    flex-wrap: nowrap !important;
     border-top: none !important;
     border-left: 1px solid var(--cc-separator-border-color, #e5e7eb) !important;
     flex-direction: column !important;
-    min-width: 160px !important;
+    min-width: 200px !important;
 }
 
 #cc-main .cm--cloud .cm__btn-group {
@@ -349,6 +350,7 @@
 
 #cc-main .cm--cloud .cm__btn {
     width: 100% !important;
+    min-width: 0 !important;
 }
 
 /* ============================================
@@ -370,7 +372,7 @@
 #cc-main .pm__footer {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
     gap: 8px !important;
     align-items: stretch !important;
 }
@@ -387,18 +389,18 @@
     min-height: 42px !important;
     transition: all 0.15s ease !important;
     border: 2px solid transparent !important;
-    width: 100% !important;
-    flex: 1 1 0 !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    width: auto !important;
+    flex: 1 1 auto !important;
+    min-width: min(100%, max-content) !important;
+    max-width: 100% !important;
+    text-align: center !important;
+    line-height: 1.25 !important;
 }
 
 #cc-main .pm__btn > span {
     display: block !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
+    overflow: visible !important;
 }
 
 /* Primary - Aceptar todas */
@@ -468,12 +470,12 @@
         gap: 6px !important;
     }
 
+    /* One button per row on phones: the full label, never an ellipsis. */
     #cc-main .cm__btn {
-        padding: 8px 6px !important;
-        font-size: 0.72em !important;
-        min-height: 36px !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        flex: 1 1 100% !important;
+        padding: 10px 12px !important;
+        font-size: 0.8em !important;
+        min-height: 40px !important;
     }
 
     #cc-main .pm__footer,
@@ -482,12 +484,12 @@
         gap: 6px !important;
     }
 
+    /* One button per row on phones: the full label, never an ellipsis. */
     #cc-main .pm__btn {
-        padding: 8px 6px !important;
-        font-size: 0.72em !important;
-        min-height: 36px !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        flex: 1 1 100% !important;
+        padding: 10px 12px !important;
+        font-size: 0.8em !important;
+        min-height: 40px !important;
     }
 
     .cc-cookie-icon {
