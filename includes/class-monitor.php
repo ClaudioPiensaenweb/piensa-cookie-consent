@@ -85,8 +85,8 @@ class Piensa_Cookie_Consent_Monitor {
 	 * @return void
 	 */
 	public function init() {
-		add_action( self::CRON_HOOK, [ $this, 'run_check' ] );
-		add_action( self::SOON_HOOK, [ $this, 'run_check' ] );
+		add_action( self::CRON_HOOK, [ $this, 'handle_cron' ] );
+		add_action( self::SOON_HOOK, [ $this, 'handle_cron' ] );
 		add_action( 'wp_ajax_piensa_cookie_consent_report_cookies', [ $this, 'handle_report' ] );
 		add_action( 'wp_ajax_nopriv_piensa_cookie_consent_report_cookies', [ $this, 'handle_report' ] );
 		add_action( 'rest_api_init', [ $this, 'register_route' ] );
@@ -289,6 +289,15 @@ class Piensa_Cookie_Consent_Monitor {
 		}
 
 		return $new;
+	}
+
+	/**
+	 * Cron entry point for run_check().
+	 *
+	 * @return void
+	 */
+	public function handle_cron() {
+		$this->run_check();
 	}
 
 	/**
