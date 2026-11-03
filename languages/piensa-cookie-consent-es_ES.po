@@ -1481,3 +1481,95 @@ msgstr ""
 
 msgid "Cookies used on this website"
 msgstr "Cookies utilizadas en este sitio web"
+
+msgid "Browser storage key detected on this site."
+msgstr "Clave de almacenamiento del navegador detectada en este sitio."
+
+msgid "Detected on this site."
+msgstr "Detectada en este sitio."
+
+msgid "Until deleted"
+msgstr "Hasta que se borre"
+
+msgid "[%s] The cookie compliance check now fails"
+msgstr "[%s] La comprobación de cumplimiento de cookies ahora falla"
+
+msgid "[%s] New unclassified cookies or third parties"
+msgstr "[%s] Nuevas cookies o terceros sin clasificar"
+
+msgid "Found on the site and not yet in the cookie declaration:"
+msgstr ""
+"Encontrado en el sitio y aún no incluido en la declaración de cookies:"
+
+msgid ""
+"Classify them in the scanner so the policy and the banner declare them, or "
+"block them if they should not be there."
+msgstr ""
+"Clasifícalos en el escáner para que la política y el banner los declaren, o "
+"bloquéalos si no deberían estar."
+
+msgid "Failing checks:"
+msgstr "Comprobaciones que fallan:"
+
+msgid "Monitoring"
+msgstr "Supervisión"
+
+msgid "Check completed."
+msgstr "Comprobación completada."
+
+msgid ""
+"Keeps the cookie declaration up to date by itself: real visits report which "
+"cookies the site sets, a weekly check scans for anything new, and the agency"
+" is told."
+msgstr ""
+"Mantiene la declaración de cookies al día por sí sola: las visitas reales "
+"informan de qué cookies pone el sitio, una comprobación semanal busca "
+"novedades y se avisa a la agencia."
+
+msgid "Last check"
+msgstr "Última comprobación"
+
+msgid "Result"
+msgstr "Resultado"
+
+msgid "Next check"
+msgstr "Próxima comprobación"
+
+msgid "Status endpoint"
+msgstr "Endpoint de estado"
+
+msgid "Header"
+msgstr "Cabecera"
+
+msgid "Learn from real visits"
+msgstr "Aprender de visitas reales"
+
+msgid ""
+"Visitors who have consented report, once a week, the names (never the "
+"values) of the cookies and storage keys their browser holds for this site."
+msgstr ""
+"Los visitantes que han dado su consentimiento informan, una vez por semana, "
+"de los nombres (nunca los valores) de las cookies y claves de almacenamiento"
+" que su navegador guarda para este sitio."
+
+msgid "Alert email"
+msgstr "Email de avisos"
+
+msgid "Agency webhook"
+msgstr "Webhook de la agencia"
+
+msgid ""
+"Receives the status as JSON after every check, signed in the X-PCC-Signature"
+" header with HMAC-SHA256 and the token."
+msgstr ""
+"Recibe el estado en JSON tras cada comprobación, firmado en la cabecera "
+"X-PCC-Signature con HMAC-SHA256 y el token."
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Run the check now"
+msgstr "Comprobar ahora"
+
+msgid "New token"
+msgstr "Nuevo token"

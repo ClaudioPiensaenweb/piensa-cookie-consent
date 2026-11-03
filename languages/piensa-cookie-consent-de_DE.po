@@ -1383,3 +1383,12 @@ msgstr ""
 
 msgid "Cookies used on this website"
 msgstr "Auf dieser Website verwendete Cookies"
+
+msgid "Browser storage key detected on this site."
+msgstr "Auf dieser Website erkannter Browserspeicher-Schlüssel."
+
+msgid "Detected on this site."
+msgstr "Auf dieser Website erkannt."
+
+msgid "Until deleted"
+msgstr "Bis zur Löschung"

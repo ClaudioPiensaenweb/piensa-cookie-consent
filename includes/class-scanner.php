@@ -486,6 +486,8 @@ class Piensa_Cookie_Consent_Scanner {
 			];
 		}
 
+		$definitions = self::add_detected_cookies( $definitions, get_option( 'piensa_cookie_consent_detected_cookies', [] ) );
+
 		$custom = $this->parse_custom_cookies( $settings['custom_cookies'] );
 		foreach ( $custom as $category => $cookies ) {
 			if ( ! isset( $definitions[ $category ] ) ) {
@@ -508,6 +510,47 @@ class Piensa_Cookie_Consent_Scanner {
 		$definitions = self::annotate_origin( $definitions, (string) wp_parse_url( home_url(), PHP_URL_HOST ) );
 
 		self::sync_revision( $definitions );
+
+		return $definitions;
+	}
+
+	/**
+	 * Declare the cookies found on the site that nothing else declares.
+	 *
+	 * The scanner and real visits find cookies the built-in declarations do
+	 * not cover: Microsoft Clarity's `_clck` added by a theme option, a
+	 * LinkedIn tag pasted into the footer. Once classified they belong in the
+	 * policy and the banner; before, they were listed only on the scanner
+	 * screen, and the published declaration stayed short of what the site set.
+	 * Unclassified ones stay out until someone classifies them.
+	 *
+	 * @param array<string, array<string, mixed>> $definitions Cookie definitions by category.
+	 * @param mixed                               $detected    Detected cookies.
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	public static function add_detected_cookies( $definitions, $detected ) {
+		foreach ( is_array( $detected ) ? $detected : [] as $cookie ) {
+			$name     = isset( $cookie['name'] ) ? (string) $cookie['name'] : '';
+			$category = isset( $cookie['category'] ) ? (string) $cookie['category'] : 'unknown';
+
+			if ( $name === '' || ! isset( $definitions[ $category ] ) || Piensa_Cookie_Consent_Monitor::declared_category( $name, $definitions ) !== null ) {
+				continue;
+			}
+
+			$storage = isset( $cookie['type'] ) && $cookie['type'] === 'storage';
+
+			$definitions[ $category ]['cookies'][] = [
+				'name'        => $name,
+				'domain'      => isset( $cookie['domain'] ) ? (string) $cookie['domain'] : '',
+				'description' => $storage
+					? __( 'Browser storage key detected on this site.', 'piensa-cookie-consent' )
+					: __( 'Detected on this site.', 'piensa-cookie-consent' ),
+				'duration'    => $storage
+					? __( 'Until deleted', 'piensa-cookie-consent' )
+					: __( 'Not declared by the provider', 'piensa-cookie-consent' ),
+			];
+		}
 
 		return $definitions;
 	}

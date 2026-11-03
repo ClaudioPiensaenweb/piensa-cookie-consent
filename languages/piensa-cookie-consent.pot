@@ -1397,3 +1397,84 @@ msgstr ""
 
 msgid "Cookies used on this website"
 msgstr ""
+
+msgid "Browser storage key detected on this site."
+msgstr ""
+
+msgid "Detected on this site."
+msgstr ""
+
+msgid "Until deleted"
+msgstr ""
+
+msgid "[%s] The cookie compliance check now fails"
+msgstr ""
+
+msgid "[%s] New unclassified cookies or third parties"
+msgstr ""
+
+msgid "Found on the site and not yet in the cookie declaration:"
+msgstr ""
+
+msgid ""
+"Classify them in the scanner so the policy and the banner declare them, or "
+"block them if they should not be there."
+msgstr ""
+
+msgid "Failing checks:"
+msgstr ""
+
+msgid "Monitoring"
+msgstr ""
+
+msgid "Check completed."
+msgstr ""
+
+msgid ""
+"Keeps the cookie declaration up to date by itself: real visits report which "
+"cookies the site sets, a weekly check scans for anything new, and the agency"
+" is told."
+msgstr ""
+
+msgid "Last check"
+msgstr ""
+
+msgid "Result"
+msgstr ""
+
+msgid "Next check"
+msgstr ""
+
+msgid "Status endpoint"
+msgstr ""
+
+msgid "Header"
+msgstr ""
+
+msgid "Learn from real visits"
+msgstr ""
+
+msgid ""
+"Visitors who have consented report, once a week, the names (never the "
+"values) of the cookies and storage keys their browser holds for this site."
+msgstr ""
+
+msgid "Alert email"
+msgstr ""
+
+msgid "Agency webhook"
+msgstr ""
+
+msgid ""
+"Receives the status as JSON after every check, signed in the X-PCC-Signature"
+" header with HMAC-SHA256 and the token."
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Run the check now"
+msgstr ""
+
+msgid "New token"
+msgstr ""
