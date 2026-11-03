@@ -4,6 +4,47 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - 2026-11-03
+
+From an audit of the plugin against a live site (emedemuro.es) and the AEPD
+cookie guidance. Every item below is a way a site could install trackers or
+lose its proof of consent without anyone noticing.
+
+### Fixed
+- **Google Fonts reached Google before consent.** fonts.googleapis.com was
+  listed as a technical host and never blocked; Bricks loads its fonts from
+  there on every page. Stylesheets and `@import`s are now replaced with copies
+  downloaded once into the uploads folder, and `dns-prefetch`/`preconnect`
+  hints to Google are removed. A stylesheet not cached yet is removed from the
+  page and fetched by a background job, rather than left to reach Google.
+- **Scripts injected after load went straight through.** The blocker only
+  rewrites the HTML the server sends. A new inline script, first in `<head>`,
+  guards `appendChild`, `insertBefore` and `append`: scripts, iframes and
+  pixels on hosts the blocker would hold are neutralised the same way and
+  released when their category is accepted.
+- **`_ga` survived a refusal on `www.` sites.** It lives on the registrable
+  domain; deletion tried only the host. Deletion now covers the host and every
+  parent domain the browser accepts cookies for.
+- **The consent log stopped recording on cached pages.** Its nonce was cached
+  into the HTML and expired; every request after that was a silent 403. The
+  anonymous endpoint no longer uses one: a rate limit, a consent-id format
+  check, a whitelist of categories, the server's own time and same-site URLs
+  do that job.
+- **Behind Cloudflare or a proxy the log stopped after 20 consents an hour**,
+  because every visitor shared the proxy's address. The limit now applies to
+  the real visitor address, with a much higher ceiling per connecting address.
+- **The declaration used the request's Host header**, so a forged header could
+  reach the published policy and the deletion rules. It uses the site address.
+
+### Changed
+- Consent Mode defaults include `wait_for_update: 500` and
+  `ads_data_redaction`; `url_passthrough` follows a setting. A returning
+  visitor's stored choice is sent as an `update` immediately, before any tag,
+  instead of after DOMContentLoaded.
+- The policy revision rises by itself when the set of declared cookies
+  changes, so visitors are asked again. Rewording a description does not count
+  as a change.
+
 ## [1.12.0] - 2026-11-03
 
 Follows the Kit Digital correction request for emedemuro.es: the plugin was

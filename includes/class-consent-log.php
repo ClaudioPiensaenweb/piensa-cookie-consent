@@ -21,6 +21,11 @@ class Piensa_Cookie_Consent_Consent_Log {
 	const RATE_LIMIT = 20;
 
 	/**
+	 * Records an hour from one connecting address, for proxies and CDNs.
+	 */
+	const PROXY_RATE_LIMIT = 2000;
+
+	/**
 	 * Largest accepted size, in bytes, for the JSON fields.
 	 */
 	const MAX_JSON_BYTES = 2048;
@@ -99,7 +104,12 @@ class Piensa_Cookie_Consent_Consent_Log {
 	}
 
 	public function handle_log_request() {
-		check_ajax_referer( 'piensa_cookie_consent_log', 'nonce' );
+		// No nonce. It was written into the page, and a page cache (LiteSpeed,
+		// WP Rocket, Cloudflare) serves that page for longer than a nonce
+		// lives: every consent after that was answered 403, silently, and the
+		// site kept no proof of any of them. For an anonymous visitor the nonce
+		// was the same for everyone and stopped nothing a script could not
+		// read; the rate limit and the validation below do that job.
 
 		$settings = Piensa_Cookie_Consent_Admin::get_settings();
 		if ( empty( $settings['enable_consent_log'] ) ) {
@@ -129,10 +139,22 @@ class Piensa_Cookie_Consent_Consent_Log {
 			'url'               => isset( $_POST['url'] ) ? esc_url_raw( wp_unslash( $_POST['url'] ) ) : '',
 		];
 
-		$payload['categories'] = $this->normalize_json( $payload['categories'] );
+		$payload['categories'] = self::allowed_categories( $this->normalize_json( $payload['categories'] ) );
 		$payload['services']   = $this->normalize_json( $payload['services'] );
 
-		$ip                    = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		// Recorded as the server saw it. The time and the address of a record
+		// are what make it evidence; taking them from the request let anyone
+		// write whatever they liked.
+		$payload['consent_timestamp'] = current_time( 'mysql', true );
+		$payload['language']          = substr( preg_replace( '/[^A-Za-z_-]/', '', $payload['language'] ), 0, 12 );
+		if ( $payload['url'] !== '' && wp_parse_url( $payload['url'], PHP_URL_HOST ) !== wp_parse_url( home_url(), PHP_URL_HOST ) ) {
+			$payload['url'] = '';
+		}
+		if ( ! preg_match( '/^[A-Za-z0-9_-]{8,64}$/', $payload['consent_id'] ) ) {
+			wp_send_json_error( [ 'message' => 'Invalid consent id' ], 400 );
+		}
+
+		$ip                    = self::client_ip();
 		$payload['ip_hash']    = $ip !== '' ? hash( 'sha256', $ip . wp_salt( 'auth' ) ) : null;
 		$payload['user_agent'] = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : null;
 
@@ -349,22 +371,75 @@ class Piensa_Cookie_Consent_Consent_Log {
 	 * @return bool
 	 */
 	private function within_rate_limit() {
-		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		$ip     = self::client_ip();
+		$remote = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 
 		if ( $ip === '' ) {
 			return true;
 		}
 
-		$key   = 'pcc_rl_' . substr( hash( 'sha256', $ip . wp_salt( 'auth' ) ), 0, 32 );
-		$count = (int) get_transient( $key );
+		// Two ceilings. One per visitor, as before. One per connecting
+		// address, much higher: behind Cloudflare or a proxy every visitor
+		// connects from a handful of addresses, and a single per-address
+		// ceiling of 20 an hour stopped recording anyone's consent after the
+		// twentieth. The forwarded address alone could be made up, so the
+		// connecting address still caps what one source can write.
+		$limits = [
+			'pcc_rl_' . substr( hash( 'sha256', $ip . wp_salt( 'auth' ) ), 0, 32 )         => self::RATE_LIMIT,
+			'pcc_rlr_' . substr( hash( 'sha256', $remote . wp_salt( 'auth' ) ), 0, 32 ) => self::PROXY_RATE_LIMIT,
+		];
 
-		if ( $count >= self::RATE_LIMIT ) {
-			return false;
+		foreach ( $limits as $key => $limit ) {
+			if ( (int) get_transient( $key ) >= $limit ) {
+				return false;
+			}
 		}
 
-		set_transient( $key, $count + 1, HOUR_IN_SECONDS );
+		foreach ( $limits as $key => $limit ) {
+			set_transient( $key, (int) get_transient( $key ) + 1, HOUR_IN_SECONDS );
+		}
 
 		return true;
+	}
+
+	/**
+	 * The visitor's address, through Cloudflare or a reverse proxy.
+	 *
+	 * @return string
+	 */
+	public static function client_ip() {
+		$headers = [ 'HTTP_CF_CONNECTING_IP', 'HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR' ];
+
+		foreach ( $headers as $header ) {
+			if ( empty( $_SERVER[ $header ] ) ) {
+				continue;
+			}
+
+			// X-Forwarded-For lists the client first.
+			$candidate = trim( explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) )[0] );
+
+			if ( filter_var( $candidate, FILTER_VALIDATE_IP ) ) {
+				return $candidate;
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * Keep only the categories this site has.
+	 *
+	 * @param string $json Normalised JSON list.
+	 *
+	 * @return string
+	 */
+	public static function allowed_categories( $json ) {
+		$list = json_decode( (string) $json, true );
+		$list = is_array( $list ) ? $list : [];
+
+		$known = array_values( array_intersect( array_map( 'strval', $list ), [ 'necessary', 'analytics', 'marketing' ] ) );
+
+		return (string) wp_json_encode( $known );
 	}
 
 	/**

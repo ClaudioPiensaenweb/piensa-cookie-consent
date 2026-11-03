@@ -10,6 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Piensa_Cookie_Consent_Scanner {
+
+	/**
+	 * Option holding the fingerprint of the declared cookies.
+	 */
+	const DECLARATION_OPTION = 'piensa_cookie_consent_declaration';
+
 	public function get_active_categories() {
 		$categories = [
 			'necessary' => true,
@@ -499,7 +505,70 @@ class Piensa_Cookie_Consent_Scanner {
 		 */
 		$definitions = apply_filters( 'piensa_cookie_consent_cookie_definitions', $definitions );
 
-		return self::annotate_origin( $definitions, (string) wp_parse_url( home_url(), PHP_URL_HOST ) );
+		$definitions = self::annotate_origin( $definitions, (string) wp_parse_url( home_url(), PHP_URL_HOST ) );
+
+		self::sync_revision( $definitions );
+
+		return $definitions;
+	}
+
+	/**
+	 * Ask visitors again when the declared cookies change.
+	 *
+	 * Consent covers the cookies the visitor was told about. The revision that
+	 * makes the banner ask again used to be a number someone had to remember
+	 * to raise by hand, so a site could add a tracker and keep counting
+	 * consents given before it existed.
+	 *
+	 * @param array<string, array<string, mixed>> $definitions Cookie definitions by category.
+	 *
+	 * @return void
+	 */
+	private static function sync_revision( $definitions ) {
+		$fingerprint = self::declaration_fingerprint( $definitions );
+		$stored      = get_option( self::DECLARATION_OPTION, '' );
+
+		if ( $stored === $fingerprint ) {
+			return;
+		}
+
+		update_option( self::DECLARATION_OPTION, $fingerprint, true );
+
+		// The first fingerprint is the baseline, not a change.
+		if ( $stored === '' ) {
+			return;
+		}
+
+		$settings = get_option( 'piensa_cookie_consent_settings', [] );
+		if ( is_array( $settings ) ) {
+			$settings['policy_revision'] = ( isset( $settings['policy_revision'] ) ? (int) $settings['policy_revision'] : 1 ) + 1;
+			update_option( 'piensa_cookie_consent_settings', $settings );
+		}
+	}
+
+	/**
+	 * What the visitor consents to: each category and the cookies in it.
+	 *
+	 * Names only. Descriptions and durations are wording, and rewording a
+	 * purpose should not throw away every consent the site holds.
+	 *
+	 * @param array<string, array<string, mixed>> $definitions Cookie definitions by category.
+	 *
+	 * @return string
+	 */
+	public static function declaration_fingerprint( $definitions ) {
+		$summary = [];
+		foreach ( (array) $definitions as $category => $data ) {
+			$names = [];
+			foreach ( isset( $data['cookies'] ) ? (array) $data['cookies'] : [] as $cookie ) {
+				$names[] = isset( $cookie['name'] ) ? (string) $cookie['name'] : '';
+			}
+			sort( $names );
+			$summary[ $category ] = $names;
+		}
+		ksort( $summary );
+
+		return md5( (string) wp_json_encode( $summary ) );
 	}
 
 	/**
@@ -690,14 +759,18 @@ class Piensa_Cookie_Consent_Scanner {
 		];
 	}
 
+	/**
+	 * The domain the site's cookies are declared on.
+	 *
+	 * Taken from the site address rather than the Host header, which the
+	 * visitor controls: a forged header used to end up in the published
+	 * declaration and in the deletion rules.
+	 *
+	 * @return string
+	 */
 	private function get_cookie_domain() {
-		$host = isset( $_SERVER['HTTP_HOST'] )
-			? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) )
-			: wp_parse_url( home_url(), PHP_URL_HOST );
-		if ( is_string( $host ) && strpos( $host, ':' ) !== false ) {
-			$host = preg_replace( '/:\\d+$/', '', $host );
-		}
-		return $host ? $host : '';
+		$host = wp_parse_url( home_url(), PHP_URL_HOST );
+		return is_string( $host ) ? $host : '';
 	}
 
 	private function parse_custom_cookies( $raw ) {

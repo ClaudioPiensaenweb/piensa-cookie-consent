@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.12.0
+Stable tag: 1.13.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,15 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 1.13.0 =
+* **Google Fonts are served from the site itself.** Stylesheets from fonts.googleapis.com (Bricks, Elementor, Divi, themes) sent every visitor's IP address to Google before consent. They are now downloaded once and served locally; the page looks the same.
+* **Trackers injected after the page loads are held back too.** A guard in the page head stops scripts, iframes and pixels added by other scripts (a GTM container, a Meta pixel) until their category is accepted.
+* **Google Analytics cookies are deleted on refusal on `www.` sites**, where they live on the parent domain.
+* **The consent log keeps working on cached pages and behind Cloudflare.** It no longer depends on a nonce cached into the page, rate-limits by the real visitor address, and records the time on the server.
+* **Consent Mode v2:** `wait_for_update` and `ads_data_redaction` by default, and returning visitors' consent is sent before any tag runs.
+* **Visitors are asked again when the declared cookies change**, without anyone having to raise the policy revision by hand.
+* The cookie declaration uses the site address, never the request's Host header.
 
 = 1.12.0 =
 * **Kit Digital compliance certificate.** A new "Certificado Kit Digital" page checks the live site against what Red.es LSSI correction requests ask for — banner, refusing as easily as accepting, prior blocking, policy published, cookies defined by origin and type, every cookie described, consent withdrawal and the consent log — and generates a printable document with the file data (beneficiary, agreement, digital voucher) and the evidence for each point, ready to save as PDF.

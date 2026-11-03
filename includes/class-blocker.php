@@ -183,6 +183,7 @@ class Piensa_Cookie_Consent_Blocker {
 	 * @return string
 	 */
 	public function process_html( $html ) {
+		$html = Piensa_Cookie_Consent_Fonts::localize( $html );
 		$this->discover_third_party_sources( $html );
 		$this->allowed_categories = $this->get_allowed_categories();
 

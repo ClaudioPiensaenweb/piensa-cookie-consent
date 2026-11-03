@@ -24,6 +24,7 @@ require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-consent-api.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-retention-sync.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-woocommerce.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-policy-page.php';
+require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-fonts.php';
 require_once PIENSA_COOKIE_CONSENT_PATH . 'includes/class-certificate.php';
 
 class Piensa_Cookie_Consent_Core {
@@ -37,6 +38,7 @@ class Piensa_Cookie_Consent_Core {
 	private $retention_sync;
 	private $woocommerce;
 	private $policy_page;
+	private $fonts;
 	private $certificate;
 
 	public function __construct() {
@@ -50,6 +52,7 @@ class Piensa_Cookie_Consent_Core {
 		$this->woocommerce    = new Piensa_Cookie_Consent_WooCommerce();
 		$this->policy_page    = new Piensa_Cookie_Consent_Policy_Page( [ $this, 'render_cookie_policy_shortcode' ] );
 		$this->certificate    = new Piensa_Cookie_Consent_Certificate( $this->scanner );
+		$this->fonts          = new Piensa_Cookie_Consent_Fonts();
 	}
 
 	public function init() {
@@ -64,6 +67,7 @@ class Piensa_Cookie_Consent_Core {
 		$this->woocommerce->init();
 		$this->policy_page->init();
 		$this->certificate->init();
+		$this->fonts->init();
 		$this->maybe_init_updater();
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );

@@ -25,6 +25,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
  */
 const sources = [
     'assets/js/piensa-cookie-consent.js',
+    'assets/js/piensa-cookie-consent-head.js',
     'assets/js/piensa-cookie-consent-admin.js',
     'assets/js/piensa-cookie-consent-audit.js',
     'assets/css/piensa-cookie-consent.css',
