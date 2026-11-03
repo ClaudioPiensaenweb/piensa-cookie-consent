@@ -17,6 +17,10 @@ and type (first-party, third-party, technical, analytics, advertising)".
   because `_ga` is stored on the site's own domain. Origin now follows who
   manages the cookie: a declared cookie with a `provider` (Google, Meta,
   Stripe) is third-party wherever it is stored.
+- **Button labels were cut with an ellipsis** in the banner and the
+  preferences panel ("Gestionar prefer…"). Buttons now grow to fit their
+  label and wrap to a new row instead, the box layout is wider, and phones
+  show one button per row.
 
 ### Added
 - The `[piensa_cookie_consent_policy]` shortcode opens with the definitions
