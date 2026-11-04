@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-11-04
+
+### Fixed
+- **PHP warnings on every page.** The front-end configuration still read the
+  flat `banner_*` keys that 1.5.0 moved into per-language texts, so sites
+  upgraded from earlier versions printed "Undefined array key banner_title"
+  (and six more) wherever `display_errors` was on. The texts now come from the
+  banner's default language.
+
 ## [2.0.0] - 2026-11-03
 
 A major version because of what the plugin now does, not because anything

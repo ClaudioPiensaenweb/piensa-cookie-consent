@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,9 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 2.0.1 =
+* **Fixed PHP warnings on every page** ("Undefined array key banner_title") on sites upgraded from versions before 1.5.0.
 
 = 2.0.0 =
 The plugin now keeps a site compliant by itself and can prove it. 2.0 completes the work of 1.11–1.14: cookies classified by origin and type, the policy declaration placed on the page automatically, a Kit Digital compliance certificate, Google Fonts served locally, a guard for trackers injected after load, a consent log that survives page caches and proxies, cookies learnt from real visits, weekly checks with email alerts and agency monitoring. This release adds:

@@ -246,6 +246,11 @@ class Piensa_Cookie_Consent_Core {
 			}
 		}
 		$site_lang = substr( get_locale(), 0, 2 );
+		// The flat banner_* keys were folded into per-language texts in 1.5.0.
+		$banner_text = Piensa_Cookie_Consent_Banner_Text::get_text(
+			! empty( $settings['default_language'] ) ? $settings['default_language'] : 'es',
+			$settings
+		);
 		wp_localize_script(
 			'piensa-cookie-consent-main',
 			'PiensaCookieConsentConfig',
@@ -313,13 +318,13 @@ class Piensa_Cookie_Consent_Core {
 					'ajaxUrl'          => admin_url( 'admin-ajax.php' ),
 					'nonce'            => wp_create_nonce( 'piensa_cookie_consent_log' ),
 					'banner'           => [
-						'title'            => $settings['banner_title'],
-						'description'      => $settings['banner_description'],
-						'acceptAll'        => $settings['banner_accept_all'],
-						'rejectAll'        => $settings['banner_reject_all'],
-						'managePrefs'      => $settings['banner_manage_prefs'],
-						'savePrefs'        => $settings['banner_save_prefs'],
-						'preferencesTitle' => $settings['banner_preferences_title'],
+						'title'            => $banner_text['banner_title'],
+						'description'      => $banner_text['banner_description'],
+						'acceptAll'        => $banner_text['banner_accept_all'],
+						'rejectAll'        => $banner_text['banner_reject_all'],
+						'managePrefs'      => $banner_text['banner_manage_prefs'],
+						'savePrefs'        => $banner_text['banner_save_prefs'],
+						'preferencesTitle' => $banner_text['banner_preferences_title'],
 					],
 				],
 			]
