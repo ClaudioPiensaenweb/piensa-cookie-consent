@@ -567,6 +567,12 @@ msgstr "URL del logo (opcional)"
 msgid "Hide branding in the banner"
 msgstr "Ocultar branding en el banner"
 
+msgid "Give every button the same style"
+msgstr "Todos los botones con el mismo estilo"
+
+msgid "Accept, reject and manage preferences look identical, so accepting is not made more prominent than refusing. Recommended by data protection guidance."
+msgstr "Aceptar, rechazar y gestionar preferencias se ven iguales, para que aceptar no destaque más que rechazar. Es lo que recomiendan las guías de protección de datos."
+
 #: includes/class-admin.php:961
 msgid "Download settings (JSON)"
 msgstr "Descargar configuración (JSON)"

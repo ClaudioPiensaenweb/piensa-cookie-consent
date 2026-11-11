@@ -507,3 +507,20 @@
         justify-content: center;
     }
 }
+
+/* Equal buttons: accept, reject and manage look the same (no nudging). */
+.pcc-equal-buttons #cc-main .cm__btn,
+.pcc-equal-buttons #cc-main .pm__btn {
+    background: var(--cc-btn-primary-bg) !important;
+    color: var(--cc-btn-primary-color) !important;
+    border: 2px solid var(--cc-btn-primary-bg) !important;
+    font-weight: 600 !important;
+}
+
+.pcc-equal-buttons #cc-main .cm__btn:hover,
+.pcc-equal-buttons #cc-main .pm__btn:hover {
+    background: var(--cc-btn-primary-bg) !important;
+    border-color: var(--cc-btn-primary-bg) !important;
+    filter: brightness(1.1) !important;
+    transform: none !important;
+}

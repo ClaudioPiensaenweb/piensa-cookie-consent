@@ -154,6 +154,7 @@
                     secondaryBtnColor: getValue(data, 'theme_btn_secondary_color', '#2c2f31'),
                     modalRadius: getInt(data, 'theme_modal_radius', 8),
                     buttonRadius: getInt(data, 'theme_button_radius', 6),
+                    equalButtons: getBool(data, 'equal_buttons'),
                 },
                 language: {
                     mode: 'custom',

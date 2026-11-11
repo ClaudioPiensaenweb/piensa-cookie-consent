@@ -28,7 +28,7 @@ const source = readFileSync(join(here, '..', 'assets', 'js', 'piensa-cookie-cons
 function fakeElement() {
     const node = {
         style: { setProperty() {} },
-        classList: { add() {}, remove() {} },
+        classList: { add() {}, remove() {}, toggle() {} },
         dataset: {},
         children: [],
         tagName: 'DIV',
