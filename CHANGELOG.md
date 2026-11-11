@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-11-11
+
+### Added
+- **Same style for every button.** Data protection guidance asks that
+  accepting cookies is not made more prominent than refusing them. A new
+  setting under the banner colours, on by default, gives Accept all, Reject
+  and Manage preferences the primary button style in both the banner and the
+  preferences modal. It can be turned off per site.
+
 ## [2.0.1] - 2026-11-04
 
 ### Fixed
