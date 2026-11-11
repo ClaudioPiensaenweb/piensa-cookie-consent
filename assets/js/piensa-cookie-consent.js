@@ -960,6 +960,9 @@ function applyThemeVars(theme) {
         setVar('--cc-btn-border-radius', theme.buttonRadius + 'px');
         setVar('--cc-pm-toggle-border-radius', theme.buttonRadius + 'px');
     }
+    // Accept must not stand out over reject or manage: every button takes
+    // the primary style. On by default, it can be switched off per site.
+    root.classList.toggle('pcc-equal-buttons', theme.equalButtons !== false);
 }
 
 function logConsent(cookie, actionType, fingerprint) {

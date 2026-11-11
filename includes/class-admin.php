@@ -779,6 +779,8 @@ class Piensa_Cookie_Consent_Admin {
 		echo '<label>' . esc_html__( 'Modal radius (px)', 'piensa-cookie-consent' ) . ' <input class="small-text" type="number" min="0" name="' . esc_attr( $this->option_name ) . '[theme_modal_radius]" value="' . esc_attr( $settings['theme_modal_radius'] ) . '" /></label>';
 		echo '<label>Radio botones (px) <input class="small-text" type="number" min="0" name="' . esc_attr( $this->option_name ) . '[theme_button_radius]" value="' . esc_attr( $settings['theme_button_radius'] ) . '" /></label>';
 		echo '</div>';
+		echo '<p style="margin-top:12px;"><label><input type="checkbox" data-ag-equal-buttons="1" name="' . esc_attr( $this->option_name ) . '[equal_buttons]" value="1" ' . checked( ! empty( $settings['equal_buttons'] ), true, false ) . '> ' . esc_html__( 'Give every button the same style', 'piensa-cookie-consent' ) . '</label></p>';
+		echo '<p class="description">' . esc_html__( 'Accept, reject and manage preferences look identical, so accepting is not made more prominent than refusing. Recommended by data protection guidance.', 'piensa-cookie-consent' ) . '</p>';
 	}
 
 	public function render_theme_presets_field() {
@@ -1602,6 +1604,7 @@ class Piensa_Cookie_Consent_Admin {
 				'secondaryBtnColor' => $settings['theme_btn_secondary_color'],
 				'modalRadius'       => $settings['theme_modal_radius'],
 				'buttonRadius'      => $settings['theme_button_radius'],
+				'equalButtons'      => ! empty( $settings['equal_buttons'] ),
 			],
 			'language'          => [
 				'mode'    => 'custom',
@@ -1749,6 +1752,7 @@ class Piensa_Cookie_Consent_Admin {
 		$brand_name     = isset( $value['brand_name'] ) ? wp_strip_all_tags( (string) $value['brand_name'] ) : '';
 		$brand_logo_url = isset( $value['brand_logo_url'] ) ? esc_url_raw( (string) $value['brand_logo_url'] ) : '';
 		$hide_branding  = ! empty( $value['hide_branding'] ) ? true : false;
+		$equal_buttons  = ! empty( $value['equal_buttons'] );
 
 		$domain_overrides = [];
 		if ( ! empty( $value['domain_overrides'] ) && is_array( $value['domain_overrides'] ) ) {
@@ -1813,6 +1817,7 @@ class Piensa_Cookie_Consent_Admin {
 			'brand_name'                => $brand_name !== '' ? $brand_name : $defaults['brand_name'],
 			'brand_logo_url'            => $brand_logo_url !== '' ? $brand_logo_url : $defaults['brand_logo_url'],
 			'hide_branding'             => $hide_branding,
+			'equal_buttons'             => $equal_buttons,
 		];
 	}
 
@@ -1980,6 +1985,7 @@ class Piensa_Cookie_Consent_Admin {
 			'brand_name'                => '',
 			'brand_logo_url'            => '',
 			'hide_branding'             => false,
+			'equal_buttons'             => true,
 		];
 	}
 

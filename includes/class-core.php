@@ -290,6 +290,7 @@ class Piensa_Cookie_Consent_Core {
 					'secondaryBtnColor' => $settings['theme_btn_secondary_color'],
 					'modalRadius'       => $settings['theme_modal_radius'],
 					'buttonRadius'      => $settings['theme_button_radius'],
+					'equalButtons'      => ! empty( $settings['equal_buttons'] ),
 				],
 				'language'          => [
 					'mode'    => $settings['language_mode'],
