@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2026-11-12
+
+### Fixed
+- **Scripts from unrecognised services never loaded, even after "Accept
+  all".** The blocker tagged them `data-category="unknown"`, a category the
+  banner never offers, so they stayed `text/plain` for good. Trustindex
+  reviews on patriciamartinezpsicoterapia.com were an empty box. Such scripts
+  are now released with marketing, as images and iframes already were.
+
 ## [2.1.0] - 2026-11-11
 
 ### Added

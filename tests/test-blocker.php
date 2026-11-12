@@ -40,6 +40,12 @@ return function ( $assert ) {
 	$iframe = Piensa_Cookie_Consent_Blocker::IFRAME_PATTERN;
 	$img    = Piensa_Cookie_Consent_Blocker::IMG_PATTERN;
 
+	// No visitor can accept "unknown", so anything filed there must be
+	// released under marketing or it stays blocked after "Accept all".
+	$assert( 'marketing' === Piensa_Cookie_Consent_Blocker::consent_category( 'unknown' ), 'an unrecognised host is released with marketing' );
+	$assert( 'marketing' === Piensa_Cookie_Consent_Blocker::consent_category( '' ), 'a host with no category is released with marketing' );
+	$assert( 'analytics' === Piensa_Cookie_Consent_Blocker::consent_category( 'analytics' ), 'a known category is kept' );
+
 	// Both quote styles. Only double quotes were accepted before, so a tag
 	// written with single quotes was served to the visitor unblocked — the
 	// plugin reported it was blocking and it was not.

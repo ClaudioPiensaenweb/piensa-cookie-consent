@@ -242,7 +242,7 @@ class Piensa_Cookie_Consent_Blocker {
 		$title  = esc_html( $this->placeholder_title );
 		$button = esc_html( $this->placeholder_button );
 
-		$target_category = $category && $category !== 'unknown' ? $category : 'marketing';
+		$target_category = self::consent_category( $category );
 		$neutralized_tag = str_replace( 'src=', 'data-src=', $full_tag );
 		$extra           = ' class="ag-blocked-content" data-cookie-category="' . esc_attr( $target_category ) . '"';
 		if ( $service ) {
@@ -359,7 +359,7 @@ class Piensa_Cookie_Consent_Blocker {
 		$tag          = preg_replace( '/\\s+type=([\"\\\']).*?\\1/i', '', $full_tag );
 		$tag          = preg_replace( '/\\s+data-category=([\"\\\']).*?\\1/i', '', $tag );
 		$service_attr = $service ? ' data-service="' . esc_attr( $service ) . '"' : '';
-		$tag          = str_replace( '<script', '<script type="text/plain" data-category="' . esc_attr( $category ) . '"' . $service_attr, $tag );
+		$tag          = str_replace( '<script', '<script type="text/plain" data-category="' . esc_attr( self::consent_category( $category ) ) . '"' . $service_attr, $tag );
 
 		return $tag;
 	}
@@ -493,7 +493,7 @@ class Piensa_Cookie_Consent_Blocker {
 			return $full_tag;
 		}
 
-		$target_category = $category && $category !== 'unknown' ? $category : 'marketing';
+		$target_category = self::consent_category( $category );
 		$tag             = str_replace( 'src=', 'data-src=', $full_tag );
 		$tag             = preg_replace( '/\\s+srcset=([\"\\\']).*?\\1/i', '', $tag );
 		$tag             = preg_replace( '/\\s+loading=([\"\\\']).*?\\1/i', '', $tag );
@@ -528,7 +528,7 @@ class Piensa_Cookie_Consent_Blocker {
 			return $full_tag;
 		}
 
-		$target_category = $category && $category !== 'unknown' ? $category : 'marketing';
+		$target_category = self::consent_category( $category );
 		$tag             = str_replace( 'href=', 'data-href=', $full_tag );
 		if ( preg_match( '/\\srel=([\"\\\'])([^\"\\\']*)\\1/i', $full_tag, $rel_match ) ) {
 			$rel_value = $rel_match[2];
@@ -646,6 +646,24 @@ class Piensa_Cookie_Consent_Blocker {
 		}
 
 		return strtolower( $host );
+	}
+
+	/**
+	 * The consent category a blocked resource is released under.
+	 *
+	 * "unknown" is how the blocker files a host it does not recognise, but no
+	 * visitor can accept it: the banner only offers necessary, analytics and
+	 * marketing. A script tagged data-category="unknown" therefore stayed
+	 * blocked even after "Accept all" (Trustindex reviews on
+	 * patriciamartinezpsicoterapia.com never appeared). Unrecognised third
+	 * parties are released with marketing, as images and iframes already were.
+	 *
+	 * @param string $category Category resolved for the host.
+	 *
+	 * @return string
+	 */
+	public static function consent_category( $category ) {
+		return $category && 'unknown' !== $category ? (string) $category : 'marketing';
 	}
 
 	private function categorize_domain( $host ) {

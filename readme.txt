@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy, cookie-banner
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,9 @@ Yes, and this is the setting that matters most for compliance. A third-party scr
 Yes. The plugin is fully internationalised and ships with a Spanish translation. Other locales can be contributed through translate.wordpress.org.
 
 == Changelog ==
+
+= 2.1.1 =
+* **Scripts from unrecognised services now load after consent.** They were filed under a category no visitor can accept, so widgets such as Trustindex reviews stayed hidden even after "Accept all".
 
 = 2.1.0 =
 * **Every banner button can look the same.** A new setting, on by default, gives Accept, Reject and Manage preferences the same style, so accepting is not more prominent than refusing.
